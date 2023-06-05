@@ -65,3 +65,6 @@
 # 3D Images
 *.3dm
 *.max
+
+# Pycache
+__pycache__/

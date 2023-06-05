@@ -15,7 +15,7 @@ resnet50_model = torchvision.models.resnet50(pretrained=True)
 resnet50_model.eval()
 
 # Open labels
-with open('/home/pi/sysml/ModelClassification/testModel/labels.txt', 'r') as f:
+with open('/home/pi/sysml/image_classification/testing/labels.txt', 'r') as f:
     labels = [line.strip() for line in f.readlines()]
 
 # Create the transform

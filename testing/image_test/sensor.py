@@ -7,7 +7,7 @@ import win32gui
 WINDOW_TITLE = "UM25C PC Software V1.3"
 RELATIVE_X = 225
 RELATIVE_Y = 75
-
+    
 # Example for running image classification in pi3
 # command = "ssh pi@172.28.69.200 'python /home/pi/sysml/ModelClassification/testModel/image_classification_test.py'"
 
