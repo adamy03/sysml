@@ -2,6 +2,18 @@ import pyautogui
 import subprocess
 import win32gui
 
+
+# Set the title of the window you want to click within
+WINDOW_TITLE = "UM25C PC Software V1.3"
+RELATIVE_X = 225
+RELATIVE_Y = 75
+
+# Example for running image classification in pi3
+# command = "ssh pi@172.28.69.200 'python /home/pi/sysml/ModelClassification/testModel/image_classification_test.py'"
+
+"""
+Finds region and clicks in window
+"""
 def click_button(window_title, relative_x, relative_y):
     # Find the window by its title
     window_handle = win32gui.FindWindow(None, window_title)
@@ -24,17 +36,8 @@ def click_button(window_title, relative_x, relative_y):
     pyautogui.click()
     pyautogui.click()
 
-# Set the title of the window you want to click within
-window_title = "UM25C PC Software V1.3"
-
-# Set the relative coordinates within the window
-relative_x = 225
-relative_y = 75
-
-# Click the button inside the window to start the testing process
-click_button(window_title, relative_x, relative_y)
-
-command = "ssh pi@172.28.69.200 'python /home/pi/sysml/ModelClassification/testModel/image_classification_test.py'"
-
-# Run pi file
-subprocess.run(command, shell = True)
+def exec_file(command):
+    print('starting sensor...')
+    click_button(WINDOW_TITLE, RELATIVE_X, RELATIVE_Y)
+    print('running file...')
+    subprocess.run(command, shell = True)

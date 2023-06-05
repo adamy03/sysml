@@ -1,21 +1,23 @@
-import cv2
 from PIL import Image
 import torch
 import torchvision
+import pandas as pd
 
-import time
 from picamera2 import Picamera2, Preview
 
-picam2 = Picamera2()
 
+# Initialize camera
+picam2 = Picamera2()
 preview_config = picam2.create_preview_configuration(main={"size": (800, 600)})
 
+# Import resnet50 model
 resnet50_model = torchvision.models.resnet50(pretrained=True)
 resnet50_model.eval()
 
-with open('labels.txt', 'r') as f:
+# Open labels
+with open('/home/pi/sysml/ModelClassification/testModel/labels.txt', 'r') as f:
     labels = [line.strip() for line in f.readlines()]
-print("1")
+
 # Create the transform
 my_transform = torchvision.transforms.Compose([
     torchvision.transforms.Resize(256),
@@ -24,8 +26,7 @@ my_transform = torchvision.transforms.Compose([
     torchvision.transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
 ])
 
-print("2")
-
+# Defines model inference pipeline
 def modelOut(img):
     #img = Image.fromarray(frame)
     transformed_img = my_transform(img).unsqueeze(0)
@@ -42,6 +43,7 @@ def modelOut(img):
     print(outList)
     return outList
 
+# Start camera
 picam2.start()
 
 #while True:
@@ -49,7 +51,19 @@ picam2.start()
 #    img = Image.open("test.jpeg")
 #    modelOut(img)
 
-for i in range(60):
-    metadata = picam2.capture_file("test.jpeg")
-    img = Image.open("test.jpeg")
-    modelOut(img)
+# Run inference on a series of images
+out = []
+for i in range(5):
+    # capture image and save into test.jpeg
+    metadata = picam2.capture_file("/home/pi/sysml/image_classification/testing/test.jpeg")
+    # reopens captured image
+    img = Image.open("/home/pi/sysml/image_classification/testing/test.jpeg")
+    # append inference to out array
+    out.append(modelOut(img)[0])
+
+# Convert out array to data frame, then save as csv
+df = pd.DataFrame(out)
+df.to_csv('/home/pi/sysml/image_classification/testing/model_output.csv')
+
+# Stop camera
+picam2.stop()
