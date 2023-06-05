@@ -34,8 +34,7 @@ relative_y = 75
 # Click the button inside the window to start the testing process
 click_button(window_title, relative_x, relative_y)
 
-# Specify the path to your Python file
-python_file_path = "testModel.py"
+command = "~/sysml/ModelClassification/image_classification_test.py"
 
-# Run the Python file using subprocess
-subprocess.call(["python", python_file_path])
+# Run pi file
+subprocess.run(command, shell = True)
