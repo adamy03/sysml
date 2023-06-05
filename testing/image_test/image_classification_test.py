@@ -55,12 +55,3 @@ for i in range(60):
     metadata = picam2.capture_file("test.jpeg")
     img = Image.open("test.jpeg")
     modelOut(img)
-    print(i)
-
-picam2.resolution = (1280, 720)
-
-for i in range(60):
-    metadata = picam2.capture_file("test.jpeg")
-    img = Image.open("test.jpeg")
-    modelOut(img)
-    print(i)
