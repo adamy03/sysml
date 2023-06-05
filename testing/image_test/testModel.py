@@ -10,7 +10,7 @@ picam2 = Picamera2()
 
 preview_config = picam2.create_preview_configuration(main={"size": (800, 600)})
 
-
+print("Current Resolution:", picam2.resolution)
 
 resnet50_model = torchvision.models.resnet50(pretrained=True)
 resnet50_model.eval()
@@ -45,7 +45,22 @@ def modelOut(img):
     return outList
 
 picam2.start()
-metadata = picam2.capture_file("test.jpeg")
-img = Image.open("test.jpeg")
-modelOut(img)
 
+#while True:
+#    metadata = picam2.capture_file("test.jpeg")
+#    img = Image.open("test.jpeg")
+#    modelOut(img)
+
+for i in range(60):
+    metadata = picam2.capture_file("test.jpeg")
+    img = Image.open("test.jpeg")
+    modelOut(img)
+    print(i)
+
+picam2.resolution = (1280, 720)
+
+for i in range(60):
+    metadata = picam2.capture_file("test.jpeg")
+    img = Image.open("test.jpeg")
+    modelOut(img)
+    print(i)
