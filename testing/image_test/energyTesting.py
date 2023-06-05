@@ -14,7 +14,7 @@ button_y = 200
 click_button(button_x, button_y)
 
 # Specify the path to your Python file
-python_file_path = "test_image_power.py"
+python_file_path = "testModel.py"
 
 # Run the Python file using subprocess
 subprocess.call(["python", python_file_path])
