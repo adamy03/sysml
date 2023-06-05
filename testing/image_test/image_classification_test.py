@@ -10,8 +10,6 @@ picam2 = Picamera2()
 
 preview_config = picam2.create_preview_configuration(main={"size": (800, 600)})
 
-print("Current Resolution:", picam2.resolution)
-
 resnet50_model = torchvision.models.resnet50(pretrained=True)
 resnet50_model.eval()
 

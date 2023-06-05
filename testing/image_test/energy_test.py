@@ -34,7 +34,7 @@ relative_y = 75
 # Click the button inside the window to start the testing process
 click_button(window_title, relative_x, relative_y)
 
-command = "ssh pi@172.28.69.200 'python /sysml/ModelClassification/image_classification_test.py'"
+command = "ssh pi@172.28.69.200 'python /home/pi/sysml/ModelClassification/image_classification_test.py'"
 
 # Run pi file
 subprocess.run(command, shell = True)
