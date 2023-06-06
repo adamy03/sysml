@@ -68,3 +68,6 @@
 
 # Pycache
 __pycache__/
+
+# Virtual environment
+venv/
