@@ -14,7 +14,7 @@ RELATIVE_Y = 75
 """
 Finds region and clicks in window
 """
-def click_button(window_title, relative_x, relative_y):
+def click_button_start(window_title, relative_x, relative_y):
     # Find the window by its title
     window_handle = win32gui.FindWindow(None, window_title)
 
@@ -36,6 +36,27 @@ def click_button(window_title, relative_x, relative_y):
     pyautogui.click()
     pyautogui.click()
 
+def click_button_end(window_title, relative_x, relative_y):
+        # Find the window by its title
+    window_handle = win32gui.FindWindow(None, window_title)
+
+    if window_handle == 0:
+        print(f"Window '{window_title}' not found.")
+        return
+
+    # Get the window's position
+    window_rect = win32gui.GetWindowRect(window_handle)
+    window_x = window_rect[0]
+    window_y = window_rect[1]
+
+    # Calculate the absolute coordinates inside the window
+    x = window_x + relative_x
+    y = window_y + relative_y
+
+    # Move the mouse to the specified coordinates and click
+    pyautogui.moveTo(x, y)
+    pyautogui.click()
+
 """
 Runs file on pi from local machine, and begins UM25 logger. Note logger software
 must be open in separate window and within view (eg: split the screen between the terminal
@@ -43,6 +64,10 @@ and logger so the click will register on connect)
 """
 def exec_file(command):
     print('starting sensor...')
-    click_button(WINDOW_TITLE, RELATIVE_X, RELATIVE_Y)
+    click_button_start(WINDOW_TITLE, RELATIVE_X, RELATIVE_Y)
+
     print('running file...')
     subprocess.run(command, shell = True)
+    
+    print('stopping sensor')
+    click_button_end(WINDOW_TITLE, RELATIVE_X, RELATIVE_Y)
