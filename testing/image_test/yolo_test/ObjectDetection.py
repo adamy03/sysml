@@ -16,14 +16,11 @@ import subprocess
 
 # print(current_directory)
 
-
 script_path = "config/download_weights.sh"
 #subprocess.run(["bash", "-c", f'"{script_path}"'])
 
-
 #process = subprocess.Popen([script_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 #process.wait() # Wait for process to complete.
-
 
 # Load pre-trained weights and configurations along with names of the COCO dataset
 config_path='config/yolov3.cfg'
