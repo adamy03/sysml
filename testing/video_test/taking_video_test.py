@@ -36,8 +36,13 @@ Define execution of desired tests here:
 """
 def run_tests():
     # Varying resolution with 25 fps and 10 sec
+    time.sleep(3)
     test_camera_video(640, 480, 25, 10, "640x480_vid.mp4")
+    
+    time.sleep(3)
     test_camera_video(1280, 720, 25, 10, "1280x720_vid.mp4")
+    
+    time.sleep(3)
     test_camera_video(1920, 1080, 25, 10, "1920x1080_vid.mp4")
 
 if __name__ == '__main__':

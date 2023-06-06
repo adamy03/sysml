@@ -4,14 +4,18 @@ file using exec_file().
 """
 
 from sensor import exec_file
+import subprocess
 import time
-
-"""
-ex:
-exec_file("ssh pi@172.28.69.200 'python /home/pi/sysml/image_classification/testing/image_classification_test.py'")
-"""
 
 SSH_PI3 = "ssh pi@172.28.69.200"
 
+"""
+Just runs python file, nothing else
+"""
+def run_file(command):
+    subprocess.run(command, shell = True)
+
+
 if __name__ == '__main__':
-    exec_file(SSH_PI3 + ' ' + "'python /home/pi/sysml/testing/model_test/inference_test.py'")
+    # exec_file(SSH_PI3 + ' ' + "'python /home/pi/sysml/testing/video_test/taking_video_test.py'")
+    run_file(SSH_PI3 + ' ' + "'python /home/pi/sysml/testing/video_test/taking_video_test.py'")
