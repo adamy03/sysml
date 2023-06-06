@@ -22,7 +22,7 @@ def test_camera_idle(x_resolution, y_resolution, wait_time):
     print("starting camera...")
     picam2.start()
     print("waiting %i seconds..." % (wait_time))
-    time.wait(wait_time)
+    time.sleep(wait_time)
     picam2.stop()
 
     return
