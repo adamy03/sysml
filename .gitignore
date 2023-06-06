@@ -71,3 +71,6 @@ __pycache__/
 
 # Virtual environment
 venv/
+
+# Model Weights
+*.weights
