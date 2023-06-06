@@ -4,6 +4,7 @@ file using exec_file().
 """
 
 from sensor import exec_file
+import time
 
 """
 ex:

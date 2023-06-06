@@ -8,6 +8,10 @@ from PIL import Image
 import torch
 import torchvision
 import pandas as pd
+import time
+
+
+time.sleep(3)
 
 # Import resnet50 model
 resnet50_model = torchvision.models.resnet50(pretrained=True)
@@ -54,3 +58,5 @@ for i in range(5):
 # Convert out array to data frame, then save as csv
 df = pd.DataFrame(out)
 df.to_csv('/home/pi/sysml/testing/model_test/model_output.csv')
+
+time.sleep(3)
