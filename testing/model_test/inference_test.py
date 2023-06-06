@@ -10,7 +10,7 @@ resnet50_model = torchvision.models.resnet50(pretrained=True)
 resnet50_model.eval()
 
 # Open labels
-with open('/home/pi/sysml/image_classification/testing/labels.txt', 'r') as f:
+with open('/home/pi/sysml/testing/model_test/labels.txt', 'r') as f:
     labels = [line.strip() for line in f.readlines()]
 
 # Create the transform
@@ -43,10 +43,10 @@ def modelOut(img):
 out = []
 for i in range(50):
     # open image
-    img = Image.open("/home/pi/sysml/image_classification/testing/golden.jpeg")
+    img = Image.open("/home/pi/sysml/testing/model_test/golden.jpeg")
     # append inference to out array
     out.append(modelOut(img)[0])
 
 # Convert out array to data frame, then save as csv
 df = pd.DataFrame(out)
-df.to_csv('/home/pi/sysml/image_classification/testing/model_output.csv')
+df.to_csv('/home/pi/sysml/testing/model_test/model_output.csv')
