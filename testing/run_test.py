@@ -13,4 +13,4 @@ exec_file("ssh pi@172.28.69.200 'python /home/pi/sysml/image_classification/test
 SSH_PI3 = "ssh pi@172.28.69.200"
 
 if __name__ == '__main__':
-    exec_file(SSH_PI3 + ' ' + "'python /home/pi/sysml/testing/model_test/inference.py'")
+    exec_file(SSH_PI3 + ' ' + "'python /home/pi/sysml/testing/model_test/inference_test.py'")
