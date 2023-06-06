@@ -1,9 +1,13 @@
+"""
+This file tests energy usage of Raspberry Pi while it
+runs the ResNet50 model to perform object detection
+on a presaved image.
+"""
+
 from PIL import Image
 import torch
 import torchvision
 import pandas as pd
-
-# Running inference 50 times on a presaved image --------------------
 
 # Import resnet50 model
 resnet50_model = torchvision.models.resnet50(pretrained=True)
@@ -41,7 +45,7 @@ def modelOut(img):
 
 # Run inference on an image 50 times
 out = []
-for i in range(50):
+for i in range(5):
     # open image
     img = Image.open("/home/pi/sysml/image_classification/testing/golden.jpeg")
     # append inference to out array
