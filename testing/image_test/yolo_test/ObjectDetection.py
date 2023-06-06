@@ -11,10 +11,10 @@ from PIL import Image
 import subprocess
 
 #Download weights
-result = subprocess.run(["cmd", "/c", "cd"], capture_output=True, text=True)
-current_directory = result.stdout.strip()
+# result = subprocess.run(["cmd", "/c", "cd"], capture_output=True, text=True)
+# current_directory = result.stdout.strip()
 
-print(current_directory)
+# print(current_directory)
 
 
 script_path = "config/download_weights.sh"
@@ -36,7 +36,7 @@ nms_thres=0.4
 # Load model and weights
 model = Darknet(config_path, img_size=img_size)
 model.load_weights(weights_path)
-model.cuda()
+#model.cuda()
 model.eval()
 classes = utils.load_classes(class_path)
 Tensor = torch.cuda.FloatTensor
@@ -64,7 +64,7 @@ def detect_image(img):
 
 
 #img_path = "testing/image_test/testImages/Intersection-Counts.jpg"
-img_path = "C:/Users/holli/Desktop/sysml/testing/image_test/testImages/Intersection-Counts.jpg"
+img_path = "Intersection-Counts.jpg"
 prev_time = time.time()
 img = Image.open(img_path)
 detections = detect_image(img)
