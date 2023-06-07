@@ -8,6 +8,10 @@ from PIL import Image
 import torch
 import torchvision
 import pandas as pd
+import time
+
+
+time.sleep(3)
 
 
 """
@@ -20,9 +24,9 @@ def inference_setup():
     resnet50_model = torchvision.models.resnet50(pretrained=True)
     resnet50_model.eval()
 
-    # Open labels
-    with open('/home/pi/sysml/image_classification/testing/labels.txt', 'r') as f:
-        labels = [line.strip() for line in f.readlines()]
+# Open labels
+with open('/home/pi/sysml/testing/model_test/labels.txt', 'r') as f:
+    labels = [line.strip() for line in f.readlines()]
 
     # Create the transform
     my_transform = torchvision.transforms.Compose([
@@ -65,9 +69,9 @@ def test_inference(num_imgs):
         # append inference to out array
         out.append(model_out(img)[0])
 
-    # Convert out array to data frame, then save as csv
-    df = pd.DataFrame(out)
-    df.to_csv('/home/pi/sysml/image_classification/testing/model_output.csv')
+# Convert out array to data frame, then save as csv
+df = pd.DataFrame(out)
+df.to_csv('/home/pi/sysml/testing/model_test/model_output.csv')
 
 
 """
@@ -80,3 +84,4 @@ def run_tests():
 if __name__ == '__main__':
     run_tests()
     
+time.sleep(3)

@@ -45,6 +45,7 @@ def test_camera_video(picam2, x_resolution, y_resolution, fps, num_seconds, file
 Define execution of desired tests here:
 """
 def run_tests():
+<<<<<<< HEAD
     # Initialize camera
     picam2 = init_camera()
     
@@ -52,6 +53,17 @@ def run_tests():
     test_camera_video(picam2, 64, 64, 30, 10, "64x64_vid.mp4")
     test_camera_video(picam2, 640, 480, 30, 10, "640x480_vid.mp4")
     test_camera_video(picam2, 1920, 1080, 30, 10, "1920x1080_vid.mp4")
+=======
+    # Varying resolution with 25 fps and 10 sec
+    time.sleep(3)
+    test_camera_video(640, 480, 25, 10, "640x480_vid.mp4")
+    
+    time.sleep(3)
+    test_camera_video(1280, 720, 25, 10, "1280x720_vid.mp4")
+    
+    time.sleep(3)
+    test_camera_video(1920, 1080, 25, 10, "1920x1080_vid.mp4")
+>>>>>>> d442c672abca8664c03552c06f8ab49856f4978f
 
 if __name__ == '__main__':
     run_tests()
