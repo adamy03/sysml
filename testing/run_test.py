@@ -17,4 +17,4 @@ def run_file(command):
 
 
 if __name__ == '__main__':
-    run_file(SSH_PI3 + ' ' + "'python /home/pi/sysml/testing/sensing/image_test/image_tests.py'")
+    exec_file(SSH_PI3 + ' ' + "'python /home/pi/sysml/testing/sensing/image_test/image_tests.py'")
