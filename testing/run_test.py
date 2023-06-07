@@ -18,4 +18,4 @@ def run_file(command):
 
 if __name__ == '__main__':
     # exec_file(SSH_PI3 + ' ' + "'python /home/pi/sysml/testing/video_test/taking_video_test.py'")
-    run_file(SSH_PI3 + ' ' + "'python /home/pi/sysml/testing/video_test/taking_video_test.py'")
+    exec_file(SSH_PI3 + ' ' + "'python /home/pi/sysml/testing/sensing/video_test/taking_video_test.py'")
