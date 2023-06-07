@@ -1,9 +1,14 @@
+filterpy==1.4.5
+matplotlib==3.7.1
+numba==0.57.0
+numpy==1.24.3
 pandas==2.0.2
 picamera2==0.3.9
 Pillow==9.5.0
 Pillow==9.5.0
 PyAutoGUI==0.9.54
 pywin32==306
+scikit_learn==1.2.2
+skimage==0.0
 torch==2.0.1
 torchvision==0.15.2
-matplotlib==3.3.4
