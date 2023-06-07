@@ -12,34 +12,21 @@ import time
 
 
 """
-Prepares the program for inference: imports model, opens labels,
-and creates the transform.
-"""
-
-def inference_setup():
-    # Import resnet50 model
-    resnet50_model = torchvision.models.resnet50(pretrained=True)
-    resnet50_model.eval()
-
-    # Open labels
-    with open('/home/pi/sysml/image_classification/testing/labels.txt', 'r') as f:
-        labels = [line.strip() for line in f.readlines()]
-
-    # Create the transform
-    my_transform = torchvision.transforms.Compose([
-        torchvision.transforms.Resize(256),
-        torchvision.transforms.CenterCrop(224),
-        torchvision.transforms.ToTensor(),
-        torchvision.transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-    ])
-
-
-"""
 Function that runs the ResNet50 model on one image.
 """
 def model_out(img):
     transformed_img = my_transform(img).unsqueeze(0)
     out = resnet50_model(transformed_img)
+    softmaxed = torch.nn.functional.softmax(out, dim=1)
+    score, index = torch.max(softmaxed, 1)
+
+    sorted_scores, top_indices = torch.sort(softmaxed, descending=True)
+
+    outList = []
+    for i, idx in enumerate(top_indices[0][:5]):
+        outList += [[labels[idx], sorted_scores[0][i].item()]]
+    print(outList)
+    return outList
 
 
 """
@@ -49,7 +36,7 @@ saves the results.
 def test_inference(num_imgs):
     # Run inference on an image 50 times
     out = []
-    for i in range(5):
+    for i in range(num_imgs):
         # open image
         img = Image.open("/home/pi/sysml/testing/model_test/golden.jpeg")
         # append inference to out array
@@ -64,8 +51,33 @@ def test_inference(num_imgs):
 Define execution of desired tests here
 """
 def run_tests():
-    test_inference(5)
+    test_inference(4)
 
 
-if __name__ == '__main__':
-    run_tests()
+"""
+Inference setup
+"""
+# Import resnet50 model
+resnet50_model = torchvision.models.resnet50(pretrained=True)
+resnet50_model.eval()
+
+# Open labels
+with open('/home/pi/sysml/image_classification/testing/labels.txt', 'r') as f:
+    labels = [line.strip() for line in f.readlines()]
+
+# Create the transform
+my_transform = torchvision.transforms.Compose([
+    torchvision.transforms.Resize(256),
+    torchvision.transforms.CenterCrop(224),
+    torchvision.transforms.ToTensor(),
+    torchvision.transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+])
+
+# Wait before proceeding
+time.sleep(3)
+
+
+"""
+Run tests
+"""
+run_tests()
