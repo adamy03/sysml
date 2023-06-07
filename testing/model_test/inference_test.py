@@ -14,6 +14,8 @@ import time
 """
 Function that runs the ResNet50 model on one image.
 """
+
+
 def model_out(img):
     transformed_img = my_transform(img).unsqueeze(0)
     out = resnet50_model(transformed_img)
@@ -30,9 +32,11 @@ def model_out(img):
 
 
 """
-Runs the model on an image 'num_imgs' number of times and 
+Runs the model on an image 'num_imgs' number of times and
 saves the results.
 """
+
+
 def test_inference(num_imgs):
     # Run inference on an image 50 times
     out = []
@@ -50,6 +54,8 @@ def test_inference(num_imgs):
 """
 Define execution of desired tests here
 """
+
+
 def run_tests():
     test_inference(4)
 

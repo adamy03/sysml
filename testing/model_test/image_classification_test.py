@@ -3,7 +3,7 @@ import torch
 import torchvision
 import pandas as pd
 
-from picamera2 import Picamera2, Preview
+from picamera2 import Picamera2
 
 
 # Initialize camera
@@ -23,12 +23,18 @@ my_transform = torchvision.transforms.Compose([
     torchvision.transforms.Resize(256),
     torchvision.transforms.CenterCrop(224),
     torchvision.transforms.ToTensor(),
-    torchvision.transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    torchvision.transforms.Normalize([0.485, 0.456, 0.406],
+                                     [0.229, 0.224, 0.225])
 ])
 
-# Defines model inference pipeline
+
+"""
+Defines model inference pipeline: runs model on one image
+"""
+
+
 def modelOut(img):
-    #img = Image.fromarray(frame)
+    # img = Image.fromarray(frame)
     transformed_img = my_transform(img).unsqueeze(0)
     out = resnet50_model(transformed_img)
 
@@ -43,13 +49,9 @@ def modelOut(img):
     print(outList)
     return outList
 
+
 # Start camera
 picam2.start()
-
-#while True:
-#    metadata = picam2.capture_file("test.jpeg")
-#    img = Image.open("test.jpeg")
-#    modelOut(img)
 
 # Run inference on a series of images
 out = []

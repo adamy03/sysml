@@ -1,37 +1,37 @@
 import torch
-import torchvision
-import torchvision.transforms as transforms
 import torch.functional as F
 
 
 """
 Adapted from
-    Prof. Arthi 
+    Prof. Arthi
     https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
 """
 
 """
 Basic Neural Net
 """
+
+
 class Net(torch.nn.Module):
-  def __init__(self, input_size, hidden_size, num_classes):
-    super(Net,self).__init__()
-    self.fc1 = torch.nn.Linear(input_size, hidden_size)
-    self.relu = torch.nn.ReLU()
-    self.fc2 = torch.nn.Linear(hidden_size, num_classes)
-  
-  def forward(self,x):
-    out = self.fc1(x)
-    out = self.relu(out)
-    out = self.fc2(out)
-    return out
-  
+    def __init__(self, input_size, hidden_size, num_classes):
+        super(Net, self).__init__()
+        self.fc1 = torch.nn.Linear(input_size, hidden_size)
+        self.relu = torch.nn.ReLU()
+        self.fc2 = torch.nn.Linear(hidden_size, num_classes)
+
+    def forward(self, x):
+        out = self.fc1(x)
+        out = self.relu(out)
+        out = self.fc2(out)
+        return out
+
 
 class LeNet(torch.nn.Module):
 
     def __init__(self):
         super(LeNet, self).__init__()
-        # 1 input image channel (black & white), 6 output channels, 5x5 square convolution
+        # 1 input img channel (b&w), 6 output channels, 5x5 square convolution
         # kernel
         self.conv1 = torch.nn.Conv2d(1, 6, 5)
         self.conv2 = torch.nn.Conv2d(6, 16, 3)
