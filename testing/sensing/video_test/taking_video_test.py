@@ -22,7 +22,7 @@ def test_camera_video(x_resolution, y_resolution, num_seconds, file_name):
     encoder = H264Encoder()
     output = FfmpegOutput(file_name)
 
-    # Set resolution and frame rate
+    # Set resolution and/or frame rate
     video_config = picam2.create_video_configuration(
         main={"size": (x_resolution, y_resolution)}
         )
