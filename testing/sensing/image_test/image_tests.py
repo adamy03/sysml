@@ -10,11 +10,11 @@ from PIL import Image
 from picamera2 import Picamera2
 
 """
-Testing camera while idle.
+Testing camera while idle. Wait time in seconds
 """
-def test_camera_idle(x_resolution, y_resolution, wait_time):
+def test_camera_idle(x_resolution: int, y_resolution: int, wait_time: int):
     picamera = Picamera2()
-    config = picamera.create_preview_configuration(
+    config = picamera.create_video_configuration(
         main={"size": (x_resolution, y_resolution)}
     )
     picamera.configure(config)
@@ -56,10 +56,5 @@ Define execution of desired tests here:
 """
 if __name__ == '__main__':
     start = time.time()
-    print("64 x 64")
-    test_camera_image(64, 64, 1)
-    print("640 x 480")
-    test_camera_image(640, 480, 1)
-    print("1920 x 1080")
-    test_camera_image(1920, 1080, 1)
+    test_camera_idle(1920, 1080, 5)
     print("pi start to end: {}".format(time.time()-start))

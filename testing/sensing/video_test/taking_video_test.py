@@ -27,7 +27,7 @@ def test_camera_video(x_resolution, y_resolution, num_seconds, file_name):
         main={"size": (x_resolution, y_resolution)}
         )
     picam2.configure(video_config)
-
+    
     # Debugging to confirm resolution is properly set:
     # print(picam2.video_configuration)
 
