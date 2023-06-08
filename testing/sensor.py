@@ -1,6 +1,7 @@
 import pyautogui
 import subprocess
 import win32gui
+import time
 
 
 # Set the title of the window you want to click within
@@ -66,9 +67,8 @@ Runs file on Pi from local machine, and begins UM25 logger. Note that logger
 software must be open in separate window and within view (eg: split the screen
 between the terminal and logger so the click will register on connect)
 """
-
-
 def exec_file(command):
+    start = time.time()
     print('starting sensor...')
     click_button_start(WINDOW_TITLE, RELATIVE_X, RELATIVE_Y)
 
@@ -77,3 +77,6 @@ def exec_file(command):
 
     print('stopping sensor')
     click_button_end(WINDOW_TITLE, RELATIVE_X, RELATIVE_Y)
+    print("exec file time: {}".format(time.time() - start))
+
+

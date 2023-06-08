@@ -55,9 +55,11 @@ def test_camera_image(x_resolution: int, y_resolution: int, no_images: int, save
 Define execution of desired tests here:
 """
 if __name__ == '__main__':
+    start = time.time()
     print("64 x 64")
-    test_camera_image(64, 64, 5, False)
+    test_camera_image(64, 64, 1)
     print("640 x 480")
-    test_camera_image(640, 480, 5, False)
+    test_camera_image(640, 480, 1)
     print("1920 x 1080")
-    test_camera_image(1920, 1080, 5, False)
+    test_camera_image(1920, 1080, 1)
+    print("pi start to end: {}".format(time.time()-start))
