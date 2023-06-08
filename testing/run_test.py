@@ -17,6 +17,5 @@ Just runs python file, nothing else
 def run_file(command):
     subprocess.run(command, shell=True)
 
-
 if __name__ == '__main__':
     exec_file(SSH_PI4 + ' ' + "'python3 /home/pi/yolov5-on-rpi4-2020/johnston_yolov5/yolov5/detect.py --weights yolov5s.pt --conf 0.2 --source /home/pi/yolov5-on-rpi4-2020/johnston_yolov5/yolov5/images/shortVidIntersection.mp4'")

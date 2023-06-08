@@ -52,9 +52,9 @@ Define execution of desired tests here:
 def run_tests():
 
     # Varying resolution with 30 fps and 10 sec
-    test_camera_video(64, 64, 10, "64x64_vid.mp4")
     test_camera_video(640, 480, 10, "640x480_vid.mp4")
-    test_camera_video(1920, 1080, 10, "1920x1080_vid.mp4")
+    #test_camera_video(1280, 720, 10, "1280x720_vid.mp4")
+    #test_camera_video(1920, 1080, 10, "1920x1080_vid.mp4")
 
 
 if __name__ == '__main__':
