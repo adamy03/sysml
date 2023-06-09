@@ -80,8 +80,6 @@ def process_video(video_path, model):
         if not ret:
             break
         index += 1
-        if index > 1:
-            break
         if index % 100 == 0:
             print(f'Reached index {index}')
         image_id = f'image{index}'
