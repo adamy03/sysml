@@ -25,8 +25,6 @@ is_running = True
 """
 Finds region and clicks in window
 """
-
-
 def click_button_start(window_title, relative_x, relative_y):
     # Find the window by its title
     window_handle = win32gui.FindWindow(None, window_title)
@@ -76,12 +74,11 @@ def click_button_end(window_title, relative_x, relative_y):
     is_running = False 
 
 
-
 """
 Returns graph of voltage, current, and power from UM25 software.
 TODO: Implement proper scaling of readTimes to Sec, align Temp_data, align "Event" data
 """
-def get_graph(cpu_temp_data):
+def get_energy(exec_time: int = 0, scale_axis: bool=False):
     window_handle = win32gui.FindWindow(None, UM25_WINDOW)
     
     window_rect = win32gui.GetWindowRect(window_handle)
@@ -106,19 +103,19 @@ def get_graph(cpu_temp_data):
     pyautogui.click()
 
     df = pd.read_clipboard()
+
     df.drop(labels='Unnamed: 4', axis=1, inplace=True)
     df['Power (W)'] = df['Voltage(V) - Voltage  graph'] * df['Current(A) - Current graph'] 
 
-    # Appends cpu_temp column
-    cpu_temp_data = pd.Series(cpu_temp_data) #aligns data based on index, not proper time
-    df['Temperature/Sec'] = cpu_temp_data
+    if scale_axis:
+        factor = df['Read times - Voltage  graph'][-1] / exec_time
+        df['Read times - Voltage  graph'], df['Read times - Current  graph'] = factor * df['Read times - Voltage  graph']
 
     return df
 
 """
 Returns a Dataframe Column of CPU Temp Readings
 """
-
 def check_cpu_temp(command):
     command = command[:-3] #removes .py to command 
     command += ".txt" 
@@ -134,35 +131,35 @@ def check_cpu_temp(command):
 Runs file on Pi from local machine, and begins UM25 logger. Note that logger
 software must be open in separate window and within view (eg: split the screen
 between the terminal and logger so the click will register on connect)
+#TODO add option for logging temp
 """
 def exec_file(command):
     start = time.time()
-
-    temperature_process = multiprocessing.Process(target=check_cpu_temp)
+    # temperature_process = multiprocessing.Process(target=check_cpu_temp)
 
     # Start the temperature checking process
-    temperature_process.start()
+    # temperature_process.start()
 
     print('starting sensor...')
     click_button_start(UM25_WINDOW, CONNECT_X, CONNECT_Y)
 
-
-
     print('running file...')
     subprocess.run(command, shell=True)
 
-
-
     print('stopping sensor')
     click_button_end(UM25_WINDOW, CONNECT_X, CONNECT_Y)
-    print("exec file time: {}".format(time.time() - start))
+    end = time.time()
 
+    #TODO sort out this section
     # Wait for the temperature checking process to finish
-    temperature_process.join()
+    # temperature_process.join()
 
     # Returns a Column of temps every second from the temperature checking process
-    cpu_temp_data = temperature_process.get()
+    # cpu_temp_data = temperature_process.get()
+    # Appends cpu_temp column
+    # cpu_temp_data = pd.Series(cpu_temp_data) #aligns data based on index, not proper time
+    # df['Temperature/Sec'] = cpu_temp_data
 
-    return get_graph(cpu_temp_data)
+    return get_energy()
 
 
