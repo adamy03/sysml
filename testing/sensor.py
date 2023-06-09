@@ -3,7 +3,10 @@ import subprocess
 import win32gui
 import time
 import pandas as pd
+import multiprocessing
 
+SSH_PI3 = "ssh pi@172.28.69.200"
+SSH_PI4 = "ssh pi@172.28.81.58"
 
 # Set the title of the window you want to click within
 UM25_WINDOW = 'UM25C PC Software V1.3'
@@ -15,6 +18,9 @@ GRAPH_Y = 75
 
 # Example for running image classification in pi3
 # command = "ssh pi@172.28.69.200 'python /home/pi/sysml/ModelClassification/testModel/image_classification_test.py'"
+
+# To start/stop Temp Sensing
+is_running = True
 
 """
 Finds region and clicks in window
@@ -64,11 +70,18 @@ def click_button_end(window_title, relative_x, relative_y):
     # Move the mouse to the specified coordinates and click
     pyautogui.moveTo(x, y)
     pyautogui.click()
+    
+    # Marks the end of the program running
+    global is_running
+    is_running = False 
+
+
 
 """
 Returns graph of voltage, current, and power from UM25 software.
+TODO: Implement proper scaling of readTimes to Sec, align Temp_data, align "Event" data
 """
-def get_graph():
+def get_graph(cpu_temp_data):
     window_handle = win32gui.FindWindow(None, UM25_WINDOW)
     
     window_rect = win32gui.GetWindowRect(window_handle)
@@ -96,8 +109,22 @@ def get_graph():
     df.drop(labels='Unnamed: 4', axis=1, inplace=True)
     df['Power (W)'] = df['Voltage(V) - Voltage  graph'] * df['Current(A) - Current graph'] 
 
+    # Appends cpu_temp column
+    cpu_temp_data = pd.Series(cpu_temp_data) #aligns data based on index, not proper time
+    df['Temperature/Sec'] = cpu_temp_data
+
     return df
 
+def check_cpu_temp(command):
+    command = command[:-3] #removes .py to command 
+    command += ".txt" 
+    tempList = []
+    while is_running:
+        temp = subprocess.run(command)
+        tempList += [temp]
+        time.sleep(1)
+    df2 = pd.DataFrame(tempList)
+    return df2
 
 """
 Runs file on Pi from local machine, and begins UM25 logger. Note that logger
@@ -106,16 +133,32 @@ between the terminal and logger so the click will register on connect)
 """
 def exec_file(command):
     start = time.time()
+
+    temperature_process = multiprocessing.Process(target=check_cpu_temp)
+
+    # Start the temperature checking process
+    temperature_process.start()
+
     print('starting sensor...')
     click_button_start(UM25_WINDOW, CONNECT_X, CONNECT_Y)
 
+
+
     print('running file...')
     subprocess.run(command, shell=True)
+
+
 
     print('stopping sensor')
     click_button_end(UM25_WINDOW, CONNECT_X, CONNECT_Y)
     print("exec file time: {}".format(time.time() - start))
 
-    return get_graph()
+    # Wait for the temperature checking process to finish
+    temperature_process.join()
+
+    # Returns a Column of temps every second from the temperature checking process
+    cpu_temp_data = temperature_process.get()
+
+    return get_graph(cpu_temp_data)
 
 
