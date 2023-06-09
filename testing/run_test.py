@@ -18,7 +18,7 @@ def run_file(command):
     subprocess.run(command, shell=True)
 
 if __name__ == '__main__':
-    out = exec_file(SSH_PI3 + ' ' + "'python /home/pi/sysml/testing/sensing/video_test/taking_video_test.py'")
+    out = exec_file(SSH_PI3 + ' ' + "'python /home/pi/sysml/testing/model_test/resnet_vid_test.py'")
 
     # Change file name/path as needed, assumes run_test is run from sysml directory
-    out.to_csv("./testing/test_results/auto_test.csv")
+    out.to_csv("./testing/test_results/resnet18_720vid.csv")
