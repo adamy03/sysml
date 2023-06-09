@@ -78,7 +78,7 @@ def click_button_end(window_title, relative_x, relative_y):
 Returns graph of voltage, current, and power from UM25 software.
 TODO: Implement proper scaling of readTimes to Sec, align Temp_data, align "Event" data
 """
-def get_energy(exec_time: int = 0, scale_axis: bool=False):
+def get_energy(exec_time = -1):
     window_handle = win32gui.FindWindow(None, UM25_WINDOW)
     
     window_rect = win32gui.GetWindowRect(window_handle)
@@ -107,8 +107,8 @@ def get_energy(exec_time: int = 0, scale_axis: bool=False):
     df.drop(labels='Unnamed: 4', axis=1, inplace=True)
     df['Power (W)'] = df['Voltage(V) - Voltage  graph'] * df['Current(A) - Current graph'] 
 
-    if scale_axis:
-        factor = df['Read times - Voltage  graph'][-1] / exec_time
+    if exec_time != -1:
+        factor = df['Read times - Voltage  graph'].iloc[-1] / exec_time
         df['Read times - Voltage  graph'], df['Read times - Current  graph'] = factor * df['Read times - Voltage  graph']
 
     return df
@@ -150,16 +150,16 @@ def exec_file(command):
     click_button_end(UM25_WINDOW, CONNECT_X, CONNECT_Y)
     end = time.time()
 
+    # temps = ???
+    energy = get_energy(end-start)
     #TODO sort out this section
     # Wait for the temperature checking process to finish
     # temperature_process.join()
 
     # Returns a Column of temps every second from the temperature checking process
-    # cpu_temp_data = temperature_process.get()
-    # Appends cpu_temp column
-    # cpu_temp_data = pd.Series(cpu_temp_data) #aligns data based on index, not proper time
-    # df['Temperature/Sec'] = cpu_temp_data
-
-    return get_energy()
+    # temp = temperature_process.get()
+    
+    #TODO: align temp and energy
+    return energy
 
 
