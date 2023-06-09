@@ -115,6 +115,10 @@ def get_graph(cpu_temp_data):
 
     return df
 
+"""
+Returns a Dataframe Column of CPU Temp Readings
+"""
+
 def check_cpu_temp(command):
     command = command[:-3] #removes .py to command 
     command += ".txt" 
