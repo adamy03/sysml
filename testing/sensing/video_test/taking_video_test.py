@@ -13,7 +13,7 @@ Testing taking a video with varying resolutions, fps, and duration.
 """
 
 
-def test_camera_video(x_resolution, y_resolution, num_seconds, file_name):
+def take_video(x_resolution, y_resolution, fps, num_seconds, file_name):
     # Initialize camera
     print("Initializing camera...")
     picam2 = Picamera2()
@@ -22,14 +22,18 @@ def test_camera_video(x_resolution, y_resolution, num_seconds, file_name):
     encoder = H264Encoder()
     output = FfmpegOutput(file_name)
 
-    # Set resolution and/or frame rate
+    # Set resolution and/or fps
+    frame_dur = int(1.0 / fps * 1000000)
     video_config = picam2.create_video_configuration(
-        main={"size": (x_resolution, y_resolution)}
+        main={"size": (x_resolution, y_resolution)},
+        controls={"FrameDurationLimits": (frame_dur, frame_dur)}
         )
+    # UNCOMMENT JUST the line starting "controls=" if you want to set fps
+    
     picam2.configure(video_config)
     
-    # Debugging to confirm resolution is properly set:
-    # print(picam2.video_configuration)
+    # Debugging to confirm the settings are correct
+    print(picam2.video_configuration)
 
     # Take video
     print("Starting video...")
@@ -40,9 +44,6 @@ def test_camera_video(x_resolution, y_resolution, num_seconds, file_name):
     print("Stopped video...")
     picam2.close()
 
-    # Wait after each test
-    time.sleep(3)
-
 
 """
 Define execution of desired tests here:
@@ -52,9 +53,14 @@ Define execution of desired tests here:
 def run_tests():
 
     # Varying resolution with 30 fps and 10 sec
-    test_camera_video(640, 480, 10, "640x480_vid.mp4")
-    #test_camera_video(1280, 720, 10, "1280x720_vid.mp4")
-    #test_camera_video(1920, 1080, 10, "1920x1080_vid.mp4")
+    #take_video(640, 480, 30, 10, "640x480_vid.mp4")
+    #take_video(1280, 720, 30, 10, "1280x720_vid.mp4")
+    #take_video(1920, 1080, 30, 10, "1920x1080_vid.mp4")
+    
+    # Varying fps with 1280x720 and 10 sec
+    #take_video(1280, 720, 30, 10, "30fps_vid.mp4")
+    #take_video(1280, 720, 15, 10, "15fps_vid.mp4")
+    take_video(1280, 720, 1, 10, "1fps_vid.mp4")
 
 
 if __name__ == '__main__':
