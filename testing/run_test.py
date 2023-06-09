@@ -18,4 +18,7 @@ def run_file(command):
     subprocess.run(command, shell=True)
 
 if __name__ == '__main__':
-    exec_file(SSH_PI4 + ' ' + "'python3 /home/pi/yolov5-on-rpi4-2020/johnston_yolov5/yolov5/detect.py --weights yolov5s.pt --conf 0.2 --source /home/pi/yolov5-on-rpi4-2020/johnston_yolov5/yolov5/images/shortVidIntersection.mp4'")
+    out = exec_file(SSH_PI3 + ' ' + "'python /home/pi/sysml/testing/sensing/video_test/taking_video_test.py'")
+
+    # Change file name/path as needed, assumes run_test is run from sysml directory
+    out.to_csv("./testing/test_results/auto_test.csv")
