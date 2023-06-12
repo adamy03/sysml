@@ -19,9 +19,9 @@ def run_file(command):
 
 if __name__ == '__main__':
     
-    #out = exec_file(SSH_PI3 + ' ' + "'python ~/sysml/testing/sensing/video_test/taking_video_test.py'")
-    out = exec_file(SSH_PI3 + ' ' + "'python ~/sysml/testing/model_test/resnet_vid_test.py'")
+    # out = exec_file(SSH_PI3 + ' ' + "'python ~/sysml/testing/sensing/video_test/taking_video_test.py'")
+    out = exec_file(SSH_PI3 + ' ' + "'python ~/sysml/testing/model_test/resnet_pipeline_test.py'")
     
     # Change file name/path as needed, assumes run_test is run from sysml directory
-    out.to_csv("~/sysml/testing/test_results/5sec_preprocessing.csv")
-    #out.to_csv("./testing/test_results/resnet18_720vid.csv")
+    # out.to_csv("~/sysml/testing/test_results/5sec_vid.csv")
+    out.to_csv("~/sysml/testing/test_results/5sec_resnet50.csv")

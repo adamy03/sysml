@@ -54,6 +54,8 @@ def process_video(video_path, model):
 
     index = 1
     start_time = time.time()
+    
+    print("Looping through frames...")
 
     # Loop through frames
     while cap.isOpened():
@@ -72,7 +74,7 @@ def process_video(video_path, model):
         # Run prediction on this frame
         # COMMENT OUT the call to predict() if only testing preprocessing
         score = None
-        # score = predict(transformed_img)
+        score = predict(transformed_img)
         frame_scores[index] = score
 
     total_time = time.time() - start_time
@@ -87,6 +89,8 @@ def process_video(video_path, model):
 Setup for running the model
 """
 
+print("Setting up the transform...")
+
 # Define the torchvision image transforms
 transform = transforms.Compose([transforms.ToTensor(), ])
 
@@ -99,6 +103,8 @@ my_transform = torchvision.transforms.Compose([
                                      [0.229, 0.224, 0.225])
 ])
 
+print("Opening labels.txt...")
+
 # Open labels
 with open('/home/pi/sysml/testing/model_test/labels.txt', 'r') as f:
     labels = [line.strip() for line in f.readlines()]
@@ -109,6 +115,9 @@ Set up the Resnet model.
 FOR TESTING DIFF MODEL SIZES: update the model number below
 ex: Resnet 18, 34, 50, 101, 152 (# of layers in each)
 """
+
+print("Setting up Resnet model...")
+
 # Load the object classification model and set mode to eval
 resnet_model = torchvision.models.resnet18(pretrained=True)
 resnet_model.eval()
