@@ -109,7 +109,7 @@ def get_energy(exec_time = -1):
 
     if exec_time != -1:
         factor = df['Read times - Voltage  graph'].iloc[-1] / exec_time
-        df['Read times - Voltage  graph'], df['Read times - Current  graph'] = factor * df['Read times - Voltage  graph']
+        df['Time (S)'] = factor * df['Read times - Voltage  graph']
 
     return df
 
@@ -133,7 +133,7 @@ software must be open in separate window and within view (eg: split the screen
 between the terminal and logger so the click will register on connect)
 #TODO add option for logging temp
 """
-def exec_file(command):
+def exec_file(command: str) -> pd.DataFrame:
     start = time.time()
     # temperature_process = multiprocessing.Process(target=check_cpu_temp)
 
