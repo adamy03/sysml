@@ -53,8 +53,7 @@ def click_button_end(window_title, relative_x, relative_y):
     window_handle = win32gui.FindWindow(None, window_title)
 
     if window_handle == 0:
-        print(f"Window '{window_title}' not found.")
-        return
+        raise RuntimeError(f"Window '{window_title}' not found.")
 
     # Get the window's position
     window_rect = win32gui.GetWindowRect(window_handle)
@@ -78,7 +77,7 @@ def click_button_end(window_title, relative_x, relative_y):
 Returns graph of voltage, current, and power from UM25 software.
 TODO: Implement proper scaling of readTimes to Sec, align Temp_data, align "Event" data
 """
-def get_energy(exec_time: int = 0, scale_axis: bool=False):
+def get_energy(exec_time = -1):
     window_handle = win32gui.FindWindow(None, UM25_WINDOW)
     
     window_rect = win32gui.GetWindowRect(window_handle)
@@ -107,9 +106,9 @@ def get_energy(exec_time: int = 0, scale_axis: bool=False):
     df.drop(labels='Unnamed: 4', axis=1, inplace=True)
     df['Power (W)'] = df['Voltage(V) - Voltage  graph'] * df['Current(A) - Current graph'] 
 
-    if scale_axis:
-        factor = df['Read times - Voltage  graph'][-1] / exec_time
-        df['Read times - Voltage  graph'], df['Read times - Current  graph'] = factor * df['Read times - Voltage  graph']
+    if exec_time != -1:
+        factor = exec_time / df['Read times - Voltage  graph'].iloc[-1]
+        df['Time (s)'] = factor * df['Read times - Voltage  graph']
 
     return df
 
@@ -133,7 +132,7 @@ software must be open in separate window and within view (eg: split the screen
 between the terminal and logger so the click will register on connect)
 #TODO add option for logging temp
 """
-def exec_file(command):
+def exec_file(command: str) -> pd.DataFrame:
     start = time.time()
     # temperature_process = multiprocessing.Process(target=check_cpu_temp)
 
@@ -144,12 +143,19 @@ def exec_file(command):
     click_button_start(UM25_WINDOW, CONNECT_X, CONNECT_Y)
 
     print('running file...')
-    subprocess.run(command, shell=True)
+    out = subprocess.run(command, shell=True)
+
+    if out.returncode == 255:
+        raise ConnectionError("Failied to SSH")
+    if out.returncode != 0:
+        raise RuntimeError("Subprocess failed with exit code: {}".format(out.returncode))
 
     print('stopping sensor')
     click_button_end(UM25_WINDOW, CONNECT_X, CONNECT_Y)
     end = time.time()
 
+    # temps = ???
+    energy = get_energy(end-start)
     #TODO sort out this section
     # Wait for the temperature checking process to finish
     # temperature_process.join()
