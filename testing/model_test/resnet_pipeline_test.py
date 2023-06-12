@@ -19,8 +19,14 @@ Note: Can test different model sizes by changing the Resnet model number
 Conducts preprocessing for all frames in the video.
 """
 
+def compress_image(frame, scale, w, h):
+    resized = cv2.resize(frame, (int(w * scale), int(h * scale)))
+    return resized
+
 
 def preprocess_frames(cap):  
+    frame_width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+    frame_height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
     frames = []
     index = 1
     print("Looping through frames...")
@@ -31,6 +37,8 @@ def preprocess_frames(cap):
         ret, frame = cap.read()
         if not ret:  # no more frames to read
             break
+
+        compress_image(frame, 0.5, frame_width, frame_height)
         frame_pil = Image.fromarray(frame)
         transformed_img = my_transform(frame_pil).unsqueeze(0)
         frames.append(transformed_img)
@@ -144,7 +152,6 @@ print("Setting up Resnet model...")
 # Load the object classification model and set mode to eval
 resnet_model = torchvision.models.resnet50(pretrained=True)
 resnet_model.eval()
-
 
 """
 Run the video through the model and get results

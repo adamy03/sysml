@@ -6,7 +6,6 @@ from PIL import Image
 
 def test_compress(file_path, out_path, scaleX, scaleY, out_fps):
     cap = cv2.VideoCapture(file_path)
-    fps = cap.get(cv2.CAP_PROP_FPS)
 
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -28,7 +27,7 @@ def test_compress(file_path, out_path, scaleX, scaleY, out_fps):
 
         if not ret:  # no more frames to read
             break
-        
+
         resized = cv2.resize(frame, (out_width, out_height))
         out.write(resized)
 
