@@ -72,7 +72,7 @@ def process_video(video_path, model):
         # Run prediction on this frame
         # COMMENT OUT the call to predict() if only testing preprocessing
         score = None
-        score = predict(transformed_img)
+        # score = predict(transformed_img)
         frame_scores[index] = score
 
     total_time = time.time() - start_time
@@ -100,7 +100,7 @@ my_transform = torchvision.transforms.Compose([
 ])
 
 # Open labels
-with open('C:/Users/shiva/vids/labels.txt', 'r') as f:
+with open('/home/pi/sysml/testing/model_test/labels.txt', 'r') as f:
     labels = [line.strip() for line in f.readlines()]
 
 
@@ -117,5 +117,5 @@ resnet_model.eval()
 """
 Run the video through the model and get results
 """
-frame_scores = process_video('C:/Users/shiva/vids/64x64_vid.mp4', resnet_model)
+frame_scores = process_video('/home/pi/5sec_vid.mp4', resnet_model)
 # print(frame_scores)

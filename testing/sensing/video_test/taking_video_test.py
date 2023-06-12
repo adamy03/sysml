@@ -60,7 +60,10 @@ def run_tests():
     # Varying fps with 1280x720 and 10 sec
     #take_video(1280, 720, 30, 10, "30fps_vid.mp4")
     #take_video(1280, 720, 15, 10, "15fps_vid.mp4")
-    take_video(1280, 720, 1, 10, "1fps_vid.mp4")
+    #take_video(1280, 720, 1, 10, "1fps_vid.mp4")
+    
+    # 5 second video, 1280x720 and 15fps
+    take_video(1280, 720, 15, 5, "5sec_vid.mp4")
 
 
 if __name__ == '__main__':
