@@ -161,9 +161,11 @@ def exec_file(command: str) -> pd.DataFrame:
     # temperature_process.join()
 
     # Returns a Column of temps every second from the temperature checking process
-    # temp = temperature_process.get()
-    
-    #TODO: align temp and energy
-    return energy
+    # cpu_temp_data = temperature_process.get()
+    # Appends cpu_temp column
+    # cpu_temp_data = pd.Series(cpu_temp_data) #aligns data based on index, not proper time
+    #df['Temperature/Sec'] = cpu_temp_data
+
+    return get_energy()
 
 
