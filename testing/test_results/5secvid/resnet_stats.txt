@@ -14,4 +14,7 @@ Total time for prediction: 126.69167685508728
 Time per frame: 1.8909205500759296
 
 resnet50:
-
+Total time for preprocessing: 4.948086977005005
+Time per frame: 0.07385204443291052
+Total time for prediction: 145.3525002002716
+Time per frame: 2.16944030149659
