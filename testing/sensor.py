@@ -108,7 +108,7 @@ def get_energy(exec_time = -1):
     df['Power (W)'] = df['Voltage(V) - Voltage  graph'] * df['Current(A) - Current graph'] 
 
     if exec_time != -1:
-        factor = df['Read times - Voltage  graph'].iloc[-1] / exec_time
+        factor = exec_time / df['Read times - Voltage  graph'].iloc[-1]
         df['Time (S)'] = factor * df['Read times - Voltage  graph']
 
     return df
