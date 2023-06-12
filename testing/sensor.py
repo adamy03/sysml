@@ -53,8 +53,7 @@ def click_button_end(window_title, relative_x, relative_y):
     window_handle = win32gui.FindWindow(None, window_title)
 
     if window_handle == 0:
-        print(f"Window '{window_title}' not found.")
-        return
+        raise RuntimeError(f"Window '{window_title}' not found.")
 
     # Get the window's position
     window_rect = win32gui.GetWindowRect(window_handle)
@@ -109,7 +108,7 @@ def get_energy(exec_time = -1):
 
     if exec_time != -1:
         factor = exec_time / df['Read times - Voltage  graph'].iloc[-1]
-        df['Time (S)'] = factor * df['Read times - Voltage  graph']
+        df['Time (s)'] = factor * df['Read times - Voltage  graph']
 
     return df
 
@@ -144,7 +143,12 @@ def exec_file(command: str) -> pd.DataFrame:
     click_button_start(UM25_WINDOW, CONNECT_X, CONNECT_Y)
 
     print('running file...')
-    subprocess.run(command, shell=True)
+    out = subprocess.run(command, shell=True)
+
+    if out.returncode == 255:
+        raise ConnectionError("Failied to SSH")
+    if out.returncode != 0:
+        raise RuntimeError("Subprocess failed with exit code: {}".format(out.returncode))
 
     print('stopping sensor')
     click_button_end(UM25_WINDOW, CONNECT_X, CONNECT_Y)
