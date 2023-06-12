@@ -153,6 +153,7 @@ def exec_file(command: str) -> pd.DataFrame:
     print('stopping sensor')
     click_button_end(UM25_WINDOW, CONNECT_X, CONNECT_Y)
     end = time.time()
+    print('run time: {}'.format(end - start))
 
     # temps = ???
     energy = get_energy(end-start)
