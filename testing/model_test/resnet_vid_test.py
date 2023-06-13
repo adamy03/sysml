@@ -12,6 +12,8 @@ Note: Can test different model sizes by changing the Resnet model number
       (near the bottom)
       Can test just preprocessing (for running the model) by commenting
       out this line: score = predict(frame_pil)
+The program loops through the video frames. For each frame, it preprocesses the
+frame then runs the model on it.
 """
 
 

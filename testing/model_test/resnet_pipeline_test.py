@@ -8,10 +8,11 @@ from PIL import Image
 """
 This file opens a video and runs the Resnet model (of varying model sizes) on
 each frame for object classification.
-Note: Can test different model sizes by changing the Resnet model number
-      (near the bottom)
-      Can test just preprocessing (for running the model) by commenting
-      out this line: score = predict(frame_pil)
+
+Note: The program separates the preprocessing and inference stages by first
+preprocessing all of the frames in the video, then running the model on all
+frames.
+
 """
 
 
@@ -152,6 +153,7 @@ print("Setting up Resnet model...")
 # Load the object classification model and set mode to eval
 resnet_model = torchvision.models.resnet50(pretrained=True)
 resnet_model.eval()
+
 
 """
 Run the video through the model and get results
