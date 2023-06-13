@@ -17,6 +17,7 @@ from utils.general import (LOGGER, Profile, check_file, check_img_size, check_im
 from utils.plots import Annotator, colors, save_one_box
 from utils.torch_utils import select_device, smart_inference_mode
 
+
 """
 This is where we execute our code, write all of the function logic/pipeline connection code here!
 """
@@ -34,6 +35,7 @@ def run(compress,
         print(True)
     else:
         print(False)
+
 
 """
 Parses the arguments into variables, for new logic simply add a new arugment
@@ -54,10 +56,11 @@ def parse_opt():
     return opt
 
 
-
 def main(opt):
     run(**vars(opt))
+
 
 if __name__ == '__main__':
     opt = parse_opt() #Calls the parsing of arguments
     main(opt)         #Feeds argument variables into run
+    
