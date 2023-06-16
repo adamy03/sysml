@@ -61,7 +61,7 @@ def process_video(video_path, model):
     comparison = {}
 
     # Set up video capture
-    cap = cv2.VideoCapture4(video_path)
+    cap = cv2.VideoCapture(video_path)
     frame_count = int(cv2.VideoCapture.get(cap, int(
                         cv2.CAP_PROP_FRAME_COUNT)))
     print(f'Frame count: {frame_count}')
