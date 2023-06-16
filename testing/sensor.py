@@ -146,7 +146,7 @@ def exec_file(command: str) -> pd.DataFrame:
     out = subprocess.run(command, shell=True)
 
     if out.returncode == 255:
-        raise ConnectionError("Failied to SSH")
+        raise ConnectionError("Failed to SSH")
     if out.returncode != 0:
         raise RuntimeError("Subprocess failed with exit code: {}".format(out.returncode))
 
@@ -168,5 +168,3 @@ def exec_file(command: str) -> pd.DataFrame:
     #df['Temperature/Sec'] = cpu_temp_data
 
     return get_energy()
-
-
