@@ -1,9 +1,9 @@
 import pandas as pd
 import numpy as np
 
-# Make sure to run from sysml directory
-FILE_PATH = "/testing/test_results.csv"
+# Run from test_results directory
+FILE_PATH = "yolov5n/5sec_1080.csv"
 
 data = pd.read_csv(FILE_PATH)
-area = np.trapz(data['y'], data['x'])
+area = np.trapz(data['Power (W)'], data['Read times - Current graph'])
 print("Energy consumption: ", area)
