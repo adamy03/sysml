@@ -167,4 +167,4 @@ def exec_file(command: str) -> pd.DataFrame:
     # cpu_temp_data = pd.Series(cpu_temp_data) #aligns data based on index, not proper time
     #df['Temperature/Sec'] = cpu_temp_data
 
-    return get_energy()
+    return energy
