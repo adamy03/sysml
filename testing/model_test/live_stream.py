@@ -11,7 +11,6 @@ from picamera2 import Picamera2
 # SETUP #
 ####################################################################
 
-CAM_ID = -1
 XRES = 640
 YRES = 480
 lowres = (XRES, YRES)
@@ -23,7 +22,8 @@ FPS = 15
 
 picam2 = Picamera2()
 
-config = picam2.create_preview_configuration(main={"size": (XRES, YRES), "format": "BGR888"})
+config = picam2.create_preview_configuration(main={'size': (1280, 720), 'format': 'RGB888'})
+lowres_config = picam2.create_preview_configuration(main={'size': (640, 480), 'format':'RGB888'})
 picam2.configure(config)
 picam2.set_controls({"FrameRate": FPS})
 
@@ -33,7 +33,7 @@ picam2.set_controls({"FrameRate": FPS})
 ####################################################################
 
 out_path = './test_video.mp4'
-out_fps = 30
+out_fps = FPS
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
 out = cv2.VideoWriter(
     out_path,
@@ -121,7 +121,6 @@ def yolo_infer(image):
     return image
 
 
-
 ####################################################################
 # PIPELINE START #
 ####################################################################
@@ -140,17 +139,19 @@ while True:
     image = cv2.resize(buffer, (XRES, YRES))
 
     # Inference
-    if frames % 10 == 0:
-        yolo_infer(image)
+    # if frames % 10 == 0:
+    #     yolo_infer(image)
 
     out.write(image)
     frames += 1
     
-    # elapsed_time = time.time() - start
-    # if elapsed_time < frame_delay:
-    #     time.sleep(frame_delay - elapsed_time)
+    elapsed_time = time.time() - start
+    if elapsed_time < frame_delay:
+        time.sleep(frame_delay - elapsed_time)
     
-    if frames > 50:
+    if frames == 100:
+        picam2.switch_mode(lowres_config)
+    if frames > 200:
         break
 
 print(frames)
