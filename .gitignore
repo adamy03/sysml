@@ -74,6 +74,7 @@ venv/
 
 # Model Weights
 *.weights
+*.pt
 
 # Video
 *.mp4
