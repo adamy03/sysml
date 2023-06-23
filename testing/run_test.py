@@ -23,13 +23,8 @@ def calculate_stats(fpath, runtime):
     # Energy consumption
     data = pd.read_csv(fpath)
     area = np.trapz(data['Power (W)'], data['Time (s)'])
-    print("Energy consumption: ", area, " J")
-    
-    # Runtime
-    print("Runtime: ", runtime, " sec")
-    
-    # Average power
-    print("Avg power: ", area / runtime, " W")
+
+    return area, area / runtime
   
 
 if __name__ == '__main__':
@@ -42,7 +37,7 @@ if __name__ == '__main__':
 
     # Change csv's file name/path as needed, assumes run_test is run from sysml directory
     filename = "~/sysml/testing/test_results/german/german_yolov5n.csv"
-    out.to_csv(filename)
     
     # Calculate statistics
     calculate_stats(filename, runtime)
+    
