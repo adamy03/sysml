@@ -1,3 +1,9 @@
+
+#We have a series of frames in a list[[frame 1], [frame 2], [frame 3]]
+
+#current frame = timerCount * fps
+
+
 """
 This file takes the results (labels & bounding boxes) of running a Yolov5 model
 on a video, and compares it to the results of running ground truth
@@ -7,6 +13,7 @@ on a video, and compares it to the results of running ground truth
 from torchmetrics.detection.mean_ap import MeanAveragePrecision
 import torch
 import pandas as pd
+import os
 
 # Assumes file is run from testing directory
 FILE_PATH = "~/sysml/testing/model_test/yolov5-on-rpi4-2020/johnston_yolov5/yolov5/runs/detect"
@@ -49,9 +56,25 @@ bounding box coordinates, labels, and scores of the model prediction.
 """
 def get_predictions_list(file_location, num_files):
     predictions_list = []
-    # Loop through the files containing labels + bboxes for each frame
+    # Loop through the files containing labels + bboxes for each frame and if there is no bounding box data we will use the previous
+
+    # We will then start from frame1, and if 
+
+    # We will loop through, if the file contents are empty then we will compare
+    j=1
+    # Create a set of existing bounding box files
+
     for i in range(1, num_files+1):
+
         fname = file_location + "_" + str(i) + ".txt"
+        
+        # checks whether we have written a bounding box for a given frame
+        if not os.path.exists(fname):
+            print(f"no label for frame {i}: filling with frame {j}" )
+            fname = file_location + "_" + str(j) + ".txt"
+        else:
+            j=i
+
         # Read data
         df = pd.read_csv(fname, sep=' ', header=None)
         cols = ['label', 'x-center', 'y-center', 'width', 'height', 'conf-score']
