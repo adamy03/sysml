@@ -7,6 +7,12 @@ import torchvision.transforms as transforms
 
 from picamera2 import Picamera2
 
+"""
+Live Streaming model for inference using picamera2()
+"""
+
+
+
 ####################################################################
 # SETUP #
 ####################################################################

@@ -1,3 +1,7 @@
+"""
+Example running yolov5s on image
+"""
+
 import numpy as np
 import cv2
 
