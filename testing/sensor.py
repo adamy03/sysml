@@ -153,7 +153,8 @@ def exec_file(command: str) -> pd.DataFrame:
     print('stopping sensor')
     click_button_end(UM25_WINDOW, CONNECT_X, CONNECT_Y)
     end = time.time()
-    print('run time: {}'.format(end - start))
+    runtime = end - start
+    print('run time: {}'.format(runtime))
 
     # temps = ???
     energy = get_energy(end-start)
@@ -167,4 +168,4 @@ def exec_file(command: str) -> pd.DataFrame:
     # cpu_temp_data = pd.Series(cpu_temp_data) #aligns data based on index, not proper time
     #df['Temperature/Sec'] = cpu_temp_data
 
-    return energy
+    return runtime, energy
