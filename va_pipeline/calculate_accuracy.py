@@ -26,10 +26,11 @@ def get_ground_truth_list(file_location, num_files):
         df = pd.read_csv(fname, sep=' ', header=None)
         cols = ['label', 'x-center', 'y-center', 'width', 'height']
         df.columns = cols
+        df = df.sort_values(by=['label', 'x-center'])
         
         # Create FloatTensor containing boxes
         bbox_cols = df[['x-center', 'y-center', 'width', 'height']]
-        boxes = torch.tensor(bbox_cols.values, dtype=torch.float32)
+        boxes = torch.tensor(bbox_cols.values)
         
         # Create IntTensor containing labels
         labels = torch.tensor(df['label'])
@@ -56,10 +57,11 @@ def get_predictions_list(file_location, num_files):
         df = pd.read_csv(fname, sep=' ', header=None)
         cols = ['label', 'x-center', 'y-center', 'width', 'height', 'conf-score']
         df.columns = cols
+        df = df.sort_values(by=['label', 'x-center'])
         
         # Create FloatTensor containing boxes
         bbox_cols = df[['x-center', 'y-center', 'width', 'height']]
-        boxes = torch.tensor(bbox_cols.values, dtype=torch.float32)
+        boxes = torch.tensor(bbox_cols.values)
         
         # Create IntTensor containing labels
         labels = torch.tensor(df['label'])
@@ -90,8 +92,14 @@ def calculate_accuracy(ground_truth, prediction):
 if __name__ == '__main__':
     
     # Get lists for ground truth and predictions
-    ground_truth = get_ground_truth_list(FILE_PATH + "/sparse_yolov5l_gt/labels/sparse", 200)
-    preds = get_predictions_list(FILE_PATH + "/sparse_yolov5l_gt/labels/sparse", 200)
+    ground_truth = get_ground_truth_list(FILE_PATH + "/medium_gt/labels/medium", 200)
+    preds = get_predictions_list(FILE_PATH + "/medium_pred/labels/medium", 200)
+    
+    print(ground_truth[0])
+    print(preds[0])
+    print("\n")
+    print(ground_truth[1])
+    print(preds[1])
     
     # Calculate mAP score
     mAP = calculate_accuracy(ground_truth, preds)
