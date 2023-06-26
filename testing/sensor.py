@@ -143,7 +143,12 @@ def exec_file(command: str) -> pd.DataFrame:
     click_button_start(UM25_WINDOW, CONNECT_X, CONNECT_Y)
 
     print('running file...')
-    out = subprocess.run(command, shell=True)
+    out = subprocess.run(command, 
+
+                         shell=True, 
+                         capture_output = True, 
+                         text = True
+                         )
 
     if out.returncode == 255:
         raise ConnectionError("Failed to SSH")
@@ -156,16 +161,6 @@ def exec_file(command: str) -> pd.DataFrame:
     runtime = end - start
     print('run time: {}'.format(runtime))
 
-    # temps = ???
-    energy = get_energy(end-start)
-    #TODO sort out this section
-    # Wait for the temperature checking process to finish
-    # temperature_process.join()
+    energy_df = get_energy(end-start)
 
-    # Returns a Column of temps every second from the temperature checking process
-    # cpu_temp_data = temperature_process.get()
-    # Appends cpu_temp column
-    # cpu_temp_data = pd.Series(cpu_temp_data) #aligns data based on index, not proper time
-    #df['Temperature/Sec'] = cpu_temp_data
-
-    return runtime, energy
+    return runtime, energy_df, out

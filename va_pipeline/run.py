@@ -1,37 +1,58 @@
 import cv2
 import torch
-import pandas as pd
 import time
+import os
+import pandas as pd
+from PIL import Image
 
 
-# Load model
-model = torch.hub.load('ultralytics/yolov5', 'yolov5l')
+def run_pipeline(
+        model = torch.hub.load('ultralytics/yolov5', 'yolov5n'), 
+        video_path = './sysml/samples/DE_sample.mp4'
+        ):
+    """
+    Runs object detection pipeline given a model and video. 
+    Returns runtime, number of frames, model outputs
 
-# Open video source
-cap = cv2.VideoCapture('../videos/medium.mp4')
-outputs = []
-frame_no = 1
+    """
 
-# Loop through video frames
-start = time.time()
-ret, frame = cap.read()
-while True:
+    # Read video, initialize output array, and being frame counter
+    cap = cv2.VideoCapture(video_path)
+    outputs = []
+    frame_no = 1
+
+    # Test if video was read
+    ret, frame = cap.read()
+    if not ret:
+        raise ValueError('Could not read file')
+    
+    # Start timer
+    start = time.time()
+    while True:
+        # Read frame
         ret, frame = cap.read()
-        if ret and frame_no <= 200:
-                out = model(frame)
-                inf = out.pandas().xywh[0]
-                inf['frame'] = frame_no
-                outputs.append(inf)
-                print(out)
-                print(f'frame: {frame_no}')
+        if ret:
+            out = model(frame)
+            inf = out.pandas().xywh[0]
+            inf['frame'] = frame_no
+            outputs.append(inf)
         else:
-                break
-        frame_no += 1
-end = time.time()
+            break
 
-# Print stats and save results
-print(f'runtime: {end - start}')
-print(f'frames: {frame_no - 1}')
-df = pd.concat(outputs)
-print(df.shape)
-df.to_csv('../testing/test_results/yolov5l_medium.csv')
+        if frame_no > 20:
+            break
+        frame_no += 1
+    end = time.time()
+
+    return end - start, frame_no - 1, pd.concat(outputs)
+
+if __name__ == '__main__':
+    runtime, frames, outputs = run_pipeline()
+
+    outputs.to_csv('./sysml/testing/test_results/temp_df.csv')
+    print(
+        f'frames: {frames}\n' + 
+        f'runtime: {runtime}\n' +
+        f'avg frame rate: {runtime / frames}' 
+    ) 
+    
