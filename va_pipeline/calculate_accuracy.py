@@ -8,38 +8,40 @@ from torchmetrics.detection.mean_ap import MeanAveragePrecision
 import torch
 import pandas as pd
 
-# Assumes file is run from testing directory
-FILE_PATH = "~/sysml/testing/model_test/yolov5-on-rpi4-2020/johnston_yolov5/yolov5/runs/detect"
-ground_truth = []
-
 
 """
 Returns a list of dictionaries, one dictionary per frame that contains the
 bounding box coordinates and labels of the ground truth model output.
 """
-def get_ground_truth_list(file_location, num_files):
+def get_ground_truth_list(fname):
     gt_list = []
-    # Loop through the files containing labels + bboxes for each frame
-    for i in range(1, num_files+1):
-        fname = file_location + "_" + str(i) + ".txt"
-        # Read data
-        df = pd.read_csv(fname, sep=' ', header=None)
-        cols = ['label', 'x-center', 'y-center', 'width', 'height']
-        df.columns = cols
-        df = df.sort_values(by=['label', 'x-center'])
+    df = pd.read_csv(fname, sep=',')
+    
+    # Loop through the frame numbers in df
+    num_frames = df.iloc[-1]['frame']
+    for i in range(1, num_frames+1):
         
+        # Filter df for just the rows corresponding to current frame
+        current_frame_df = df[df['frame'] == i]
+        current_frame_df = current_frame_df.sort_values(by=['class', 'xcenter'], ascending=True)
+        
+        #if not current_frame_df.empty:
         # Create FloatTensor containing boxes
-        bbox_cols = df[['x-center', 'y-center', 'width', 'height']]
+        bbox_cols = current_frame_df[['xcenter', 'ycenter', 'width', 'height']]
         boxes = torch.tensor(bbox_cols.values)
         
         # Create IntTensor containing labels
-        labels = torch.tensor(df['label'])
+        labels = torch.tensor(current_frame_df['class'].tolist())
         
         # Append dict with boxes, labels, and scores to the list
         frame_dict = {'boxes':boxes,
-                      'labels':labels,
-                      }
+                    'labels':labels,
+                    }
         gt_list.append(frame_dict)
+            
+        # If filtered df is empty, then there were no detections; append empty dict
+        #else:
+        #    gt_list.append({})
         
     return gt_list
 
@@ -48,35 +50,42 @@ def get_ground_truth_list(file_location, num_files):
 Returns a list of dictionaries, one dictionary per frame that contains the
 bounding box coordinates, labels, and scores of the model prediction.
 """
-def get_predictions_list(file_location, num_files):
-    predictions_list = []
-    # Loop through the files containing labels + bboxes for each frame
-    for i in range(1, num_files+1):
-        fname = file_location + "_" + str(i) + ".txt"
-        # Read data
-        df = pd.read_csv(fname, sep=' ', header=None)
-        cols = ['label', 'x-center', 'y-center', 'width', 'height', 'conf-score']
-        df.columns = cols
-        df = df.sort_values(by=['label', 'x-center'])
+def get_predictions_list(fname):
+    preds_list = []
+    df = pd.read_csv(fname, sep=',')
+
+    # Loop through the frame numbers in df
+    num_frames = df.iloc[-1]['frame']
+    for i in range(1, num_frames+1):
         
+        # Filter df for just the rows corresponding to current frame
+        current_frame_df = df[df['frame'] == i]
+        current_frame_df = current_frame_df.sort_values(by=['class', 'xcenter'], ascending=True)
+
+        
+        #if not current_frame_df.empty:
         # Create FloatTensor containing boxes
-        bbox_cols = df[['x-center', 'y-center', 'width', 'height']]
+        bbox_cols = current_frame_df[['xcenter', 'ycenter', 'width', 'height']]
         boxes = torch.tensor(bbox_cols.values)
         
         # Create IntTensor containing labels
-        labels = torch.tensor(df['label'])
+        labels = torch.tensor(current_frame_df['class'].tolist())
         
         # Create FloatTensor containing scores
-        scores = torch.tensor(df['conf-score'])
+        scores = torch.tensor(current_frame_df['confidence'].tolist())
         
         # Append dict with boxes, labels, and scores to the list
         frame_dict = {'boxes':boxes,
-                      'labels':labels,
-                      'scores':scores
-                      }
-        predictions_list.append(frame_dict)
+                    'labels':labels,
+                    'scores':scores
+                    }
+        preds_list.append(frame_dict)
         
-    return predictions_list
+        # If filtered df is empty, then there were no detections; append empty dict
+        #else:
+        #    preds_list.append({})
+        
+    return preds_list
 
      
 """
@@ -92,8 +101,8 @@ def calculate_accuracy(ground_truth, prediction):
 if __name__ == '__main__':
     
     # Get lists for ground truth and predictions
-    ground_truth = get_ground_truth_list(FILE_PATH + "/medium_gt/labels/medium", 200)
-    preds = get_predictions_list(FILE_PATH + "/medium_pred/labels/medium", 200)
+    ground_truth = get_ground_truth_list("~/sysml/testing/test_results/yolov5x_medium.csv")
+    preds = get_predictions_list("~/sysml/testing/test_results/yolov5l_medium.csv")
     
     print(ground_truth[0])
     print(preds[0])
