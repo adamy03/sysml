@@ -19,7 +19,7 @@ def draw_boxes(video_path, df1, df2, out_path):
         blue = (255, 255, 0)
         green = (0, 255, 0)
 
-        for df, color in [(df1, blue), (df2, green)]:  # Blue and Green
+        for df, color in [(df1, blue), (df2, green)]:  # Draws bounding boxes from both models each frame
             currRow = df[df['frame'] == frameCount] # selects all bounding boxes as rows for a given frame
             for _, row in currRow.iterrows():
                 x_center, y_center, width, height = row['xcenter'], row['ycenter'], row['width'], row['height']
