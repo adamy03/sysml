@@ -1,82 +1,48 @@
 import cv2
 import pandas as pd
-import time
-import pdb
 
-videoPath = '../samples/DE_sample1.mp4'
-dfBoxes1 = pd.read_csv('../testing/test_results/yolov5x_DE.csv')   # Blue Bounding Box CSV Path
-dfBoxes2 = pd.read_csv('../testing/test_results/yolov5s_DE.csv')   # Green Bounding Box CSV Path
+def draw_boxes(video_path, df1, df2, out_path):
+    cap = cv2.VideoCapture(video_path)
 
-cap = cv2.VideoCapture(videoPath)
+    # Get video properties
+    resX, resY, fps = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)), cap.get(cv2.CAP_PROP_FPS)
 
-# Get video properties
-resX = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-resY = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-fps = cap.get(cv2.CAP_PROP_FPS)
+    # Define the codec and output video file
+    output_video = cv2.VideoWriter(out_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (resX, resY))
 
-print(resX, resY, fps)
+    frameCount = 1
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret or cv2.waitKey(1) & 0xFF == ord('q'): break
 
-# Define the codec and output video file
-fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-output_video = cv2.VideoWriter('../samples/output_video.mp4', fourcc, fps, (resX, resY))
+        # Selected colors
+        blue = (255, 255, 0)
+        green = (0, 255, 0)
 
+        for df, color in [(df1, blue), (df2, green)]:  # Blue and Green
+            currRow = df[df['frame'] == frameCount] # selects all bounding boxes as rows for a given frame
+            for _, row in currRow.iterrows():
+                x_center, y_center, width, height = row['xcenter'], row['ycenter'], row['width'], row['height']
 
-#print(dfBoxes1)
+                # Draws individual bounding box
+                cv2.rectangle(frame, (int(x_center - width/2), int(y_center- height/2)), (int(x_center + width/2), int(y_center + height/2)), color, 2)
 
-frameCount = 1
-while cap.isOpened():
-    #print(frameCount)
-    ret, frame = cap.read()
+        output_video.write(frame)
+        cv2.imshow('Current Frame', frame) 
+        frameCount += 1
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-    
-    if not ret:
-        # If there are no frames you break the loop
-        break
-    
-    print(f"Frame: {frameCount}")
-    
-    #pdb.set_trace()
-    currRow1 = dfBoxes1[dfBoxes1['frame'] == frameCount]
-    # x_center = currRow1.iloc[1]['xcenter']
-    # print(f'This is the x_center: {x_center}')
-    # print(currRow1)
-    # print(currRow1.shape[0])
-
-    # Iteratively draws out all bounding boxes for each frame as they come
-    for index in range(currRow1.shape[0]):
-        x_center = currRow1.iloc[index]['xcenter']
-        y_center = currRow1.iloc[index]['ycenter']
-        width = currRow1.iloc[index]['width']
-        height = currRow1.iloc[index]['height']
-        #print(x_center, y_center, width, height)
-
-        cv2.rectangle(frame, (int(x_center - width/2), int(y_center- height/2)), (int(x_center + width/2), int(y_center + height/2)), (255, 255, 0), 2)
+    cap.release()
+    output_video.release()
+    cv2.destroyAllWindows()
 
 
-    #pdb.set_trace()
-    currRow2 = dfBoxes2[dfBoxes2['frame'] == frameCount]
-    #print(currRow2)
-    #print(frameCount)
+# Data Selection/ Output
 
-    for index in range(currRow2.shape[0]):
-        x_center = currRow2.iloc[index]['xcenter']
-        y_center = currRow2.iloc[index]['ycenter']
-        width = currRow2.iloc[index]['width']
-        height = currRow2.iloc[index]['height']
-
-        cv2.rectangle(frame, (int(x_center - width/2), int(y_center - height/2)), (int(x_center + width/2), int(y_center + height/2)), (0, 255, 0), 2)
-
-    output_video.write(frame)
-
-    cv2.imshow('Current Frame', frame) 
-    
-    #time.sleep(1)
-
-    frameCount += 1
+video_path = '../samples/DE_sample1.mp4'
+df_boxes1 = pd.read_csv('../testing/test_results/yolov5x_DE.csv')   # Blue Bounding Box CSV Path
+df_boxes2 = pd.read_csv('../testing/test_results/yolov5s_DE.csv')   # Green Bounding Box CSV Path
+output_path = '../samples/output_video.mp4'
 
 
-cap.release()
-output_video.release()
-cv2.destroyAllWindows()
+# Run the file
+draw_boxes(video_path, df_boxes1, df_boxes2, output_path)
