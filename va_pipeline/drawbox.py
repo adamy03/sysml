@@ -4,8 +4,8 @@ import time
 import pdb
 
 videoPath = '../samples/DE_sample1.mp4'
-dfBoxes1 = pd.read_csv('../testing/test_results/yolov5x_DE.csv')
-dfBoxes2 = pd.read_csv('../testing/test_results/yolov5s_DE.csv')
+dfBoxes1 = pd.read_csv('../testing/test_results/yolov5x_DE.csv')   # Blue Bounding Box CSV Path
+dfBoxes2 = pd.read_csv('../testing/test_results/yolov5s_DE.csv')   # Green Bounding Box CSV Path
 
 cap = cv2.VideoCapture(videoPath)
 
@@ -34,8 +34,8 @@ while cap.isOpened():
     if not ret:
         # If there are no frames you break the loop
         break
-
-    print(frameCount)
+    
+    print(f"Frame: {frameCount}")
     
     #pdb.set_trace()
     currRow1 = dfBoxes1[dfBoxes1['frame'] == frameCount]
@@ -44,8 +44,8 @@ while cap.isOpened():
     # print(currRow1)
     # print(currRow1.shape[0])
 
+    # Iteratively draws out all bounding boxes for each frame as they come
     for index in range(currRow1.shape[0]):
-        print(index)
         x_center = currRow1.iloc[index]['xcenter']
         y_center = currRow1.iloc[index]['ycenter']
         width = currRow1.iloc[index]['width']
@@ -55,20 +55,6 @@ while cap.isOpened():
         cv2.rectangle(frame, (int(x_center - width/2), int(y_center- height/2)), (int(x_center + width/2), int(y_center + height/2)), (255, 255, 0), 2)
 
 
-    # for index, row in currRow1.iteritems():
-    #     x_center = currRow1.loc[row, 'xcenter']
-    #     print(x_center)
-    #     y_center = currRow1.loc[row, 'ycenter']
-    #     print(y_center)
-    #     width = currRow1.loc[row, 'width']
-    #     print(width)
-    #     height = currRow1.loc[row, 'height']
-    #     print(height)
-
-    #     cv2.rectangle(frame, (int(x_center), int(y_center)), (int(x_center + width), int(y_center + height)), (255, 255, 0), 2)
-
-    # Verify if the box is within the frame
-    
     #pdb.set_trace()
     currRow2 = dfBoxes2[dfBoxes2['frame'] == frameCount]
     #print(currRow2)
@@ -80,7 +66,7 @@ while cap.isOpened():
         width = currRow2.iloc[index]['width']
         height = currRow2.iloc[index]['height']
 
-        cv2.rectangle(frame, (int(x_center), int(y_center)), (int(x_center + width), int(y_center + height)), (0, 255, 0), 2)
+        cv2.rectangle(frame, (int(x_center - width/2), int(y_center - height/2)), (int(x_center + width/2), int(y_center + height/2)), (0, 255, 0), 2)
 
     output_video.write(frame)
 
