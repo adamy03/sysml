@@ -12,11 +12,11 @@ OUT_HEIGHT = 1080
 IN_WIDTH = 1920
 IN_HEIGHT = 1080
 WRITE_OUT = False
-FRAME_CAP = 5
+FRAME_CAP = 251
 
 def run_pipeline(
         model = torch.hub.load('ultralytics/yolov5', 'yolov5n'), 
-        video_path = './sysml/samples/medium.mp4'
+        video_path = './sysml/samples/sparse.mp4'
         ):
     """
     Runs object detection pipeline given a model and video. 
@@ -61,7 +61,7 @@ if __name__ == '__main__':
     outputs.to_csv('./sysml/testing/test_results/temp.csv')
     print(
         f'frames: {frames}\n' + 
-        f'runtime: {runtime}\n' +
+        f'runtime (inference): {runtime}\n' +
         f'average time per frame: {runtime / frames}'
     ) 
     

@@ -46,7 +46,7 @@ if __name__ == '__main__':
     # Calculate statistics
     energy, avg_power = calculate_stats('testing/test_results/' + test_path + '_energy.csv', runtime)
     with open('testing/test_results/' + test_path + '.txt', 'w') as file:
-        file.write(out.stderr + 
+        file.write(out.stdout + 
                    f'runtime (total): {runtime}\n'
                    f'energy: {energy}\n' +
                    f'avg power: {avg_power}'

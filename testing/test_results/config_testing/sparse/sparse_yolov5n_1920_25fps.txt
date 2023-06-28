@@ -1,12 +1,6 @@
-Using cache found in /home/pi/.cache/torch/hub/ultralytics_yolov5_master
-YOLOv5 🚀 2023-6-23 Python-3.9.2 torch-1.13.0a0+git7c98e70 CPU
-
-Fusing layers... 
-YOLOv5n summary: 213 layers, 1867405 parameters, 0 gradients
-Adding AutoShape... 
 frames: 4
-runtime: 16.86366581916809
-average time per frame: 4.215916454792023
-runtime (total): 39.75344896316528
-energy: 150.8475566206668
-avg power: 3.794577843055555
+runtime: 21.628682613372803
+average time per frame: 5.407170653343201
+runtime (total): 45.69208216667175
+energy: 234.71193916242729
+avg power: 5.136818635365854
