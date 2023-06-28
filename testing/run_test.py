@@ -35,28 +35,33 @@ def calculate_stats(fpath, runtime):
 
 if __name__ == '__main__':
     # Change to name and path of output files
-    TEST_DIR = './testing/test_results/config_testing/noisy/'
-    TEST_NAME = 'noisy_yolov5n_1280_720_25fps'
-    TEST_PATH = TEST_DIR + TEST_NAME
+    res_width = 1280
+    res_height = 720
+    test_dir = './testing/test_results/config_testing/noisy/'
+    test_name = f'noisy_yolov5n_{res_width}_{res_height}_25fps'
+    test_path = test_dir + test_name
 
     # Check for existing files:
-    matching_files = [filename for filename in os.listdir(TEST_DIR) if filename.startswith(TEST_NAME)]
+    matching_files = [filename for filename in os.listdir(test_dir) if filename.startswith(test_name)]
     print(matching_files)
     assert len(matching_files) == 0, 'Test files already in directory.' 
 
     # Run test
-    runtime, energy, out = exec_file(SSH_PI4 + ' ' + "'python ~/sysml/va_pipeline/run.py")
+    runtime, energy, out = exec_file(SSH_PI4 + ' ' + 'python ~/sysml/va_pipeline/run.py '
+                                     + '--yolov5-model yolov5n '
+                                     + '--video-source ~/sysml/samples/sparse.mp4 '
+                                     + '--img-size 1280 720')
     subprocess.run('scp pi@172.28.81.58:' +
                    '~/sysml/testing/test_results/temp.csv' + ' ' +
-                   TEST_PATH + 
+                   test_path + 
                    '_inference.csv'
                    ) #get model outputs
 
     # Calculate statistics and save data
-    energy.to_csv(TEST_PATH + '_energy.csv')
-    energy, avg_power = calculate_stats(TEST_PATH + '_energy.csv', runtime)
+    energy.to_csv(test_path + '_energy.csv')
+    energy, avg_power = calculate_stats(test_path + '_energy.csv', runtime)
 
-    with open(TEST_PATH + '.txt', 'w') as file:
+    with open(test_path + '.txt', 'w') as file:
         file.write(out.stdout + 
                    f'runtime (total): {runtime}\n'
                    f'energy: {energy}\n' +
