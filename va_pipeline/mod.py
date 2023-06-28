@@ -19,7 +19,6 @@ ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 OUT_WIDTH = 1920
 OUT_HEIGHT = 1080
 WRITE_OUT = False
-FRAME_CAP = 251
 
 
 """
@@ -31,6 +30,7 @@ def run(
         video_source,
         img_size,
         fps,          # no implementation yet
+        frame_cap
         ):
     
     # Setup for inference ----------------------------------------------------
@@ -54,7 +54,7 @@ def run(
     
     # Start timer
     start = time.time()
-    while frame_no < FRAME_CAP:
+    while frame_no < frame_cap:
 
         # Read frame
         ret, frame = cap.read()
@@ -95,6 +95,7 @@ def parse_opt():
     parser.add_argument('--video-source', type=str, default=ROOT / 'data/images', help='file/dir/URL/glob/screen/0(webcam)')
     parser.add_argument('--img-size', nargs='+', default=[1920, 1080], help='inference size [w,h]')
     parser.add_argument('--fps', type=int, default=25, help='frames to process per second of the video')
+    parser.add_argument('--frame-cap', type=int, default=25, help='max number of frames to process')
     opt = parser.parse_args()
     return opt
 
