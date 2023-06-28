@@ -35,7 +35,7 @@ def calculate_stats(fpath, runtime):
 
 if __name__ == '__main__':
     # Change to name and path of output files
-    test_path = 'config_testing/sparse/' + 'sparse_yolov5n_1920_25fps'
+    test_path = 'config_testing/sparse/' + 'sparse_yolov5n_1280_25fps'
 
     # Run test
     runtime, energy, out = exec_file(SSH_PI4 + ' ' + "'python ~/sysml/va_pipeline/run.py")
@@ -57,6 +57,6 @@ if __name__ == '__main__':
                    f'avg power: {avg_power}'
                    )
     
-    print(energy, avg_power, out.stdout)
+    # print(energy, avg_power, out.stdout)
 
     
