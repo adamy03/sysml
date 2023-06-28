@@ -94,7 +94,7 @@ def parse_opt():
     parser.add_argument('--yolov5-model', type=str, default='yolov5n.pt', help='yolov5 model name')
     parser.add_argument('--video-source', type=str, default=ROOT / 'data/images', help='file/dir/URL/glob/screen/0(webcam)')
     parser.add_argument('--img-size', nargs='+', default=[1920, 1080], help='inference size [w,h]')
-    parser.add_argument('--fps', type=int, default=25, help='frames to process per second of video')
+    parser.add_argument('--fps', type=int, default=25, help='frames to process per second of the video')
     opt = parser.parse_args()
     return opt
 
