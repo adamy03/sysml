@@ -151,8 +151,10 @@ def exec_file(command: str) -> pd.DataFrame:
                          )
 
     if out.returncode == 255:
+        click_button_end(UM25_WINDOW, CONNECT_X, CONNECT_Y)
         raise ConnectionError("Failed to SSH")
     if out.returncode != 0:
+        click_button_end(UM25_WINDOW, CONNECT_X, CONNECT_Y)
         raise RuntimeError("Subprocess failed with exit code: {}".format(out.returncode))
 
     print('stopping sensor')

@@ -34,18 +34,21 @@ def calculate_stats(fpath, runtime):
   
 
 if __name__ == '__main__':
+    test_path = 'config_testing/sparse/' + 'sparse_yolov5n_1920_25fps'
+
     runtime, energy, out = exec_file(SSH_PI4 + ' ' + "'python ~/sysml/va_pipeline/run.py")
-    energy.to_csv('testing/test_results/temp1.csv')
-    subprocess.run('scp pi@172.28.81.58:~/sysml/testing/test_results/temp_df.csv ./testing/test_results/temp.csv')
-    # Change csv's file name/path as needed, assumes run_test is run from sysml directory
-    # filename = "~/sysml/testing/test_results/german/german_yolov5n.csv"
+
+    energy.to_csv('testing/test_results/' + test_path + '_energy.csv')
+
+    subprocess.run('scp pi@172.28.81.58:~/sysml/testing/test_results/temp.csv ./testing/test_results/' + test_path + '_inference.csv')
+    # subprocess.run(SSH_PI4 + ' ' + "'rm ~/sysml/testing/test_results/temp.csv'")
     
     # Calculate statistics
-    power, avg_power = calculate_stats('testing/test_results/temp1.csv', runtime)
-    with open('testing/test_results/temp.txt', 'w') as file:
-        file.write(out.stdout + 
+    energy, avg_power = calculate_stats('testing/test_results/' + test_path + '_energy.csv', runtime)
+    with open('testing/test_results/' + test_path + '.txt', 'w') as file:
+        file.write(out.stderr + 
                    f'runtime (total): {runtime}\n'
-                   f'power: {power}\n' +
+                   f'energy: {energy}\n' +
                    f'avg power: {avg_power}'
                    )
         

@@ -2,13 +2,20 @@ import cv2
 import torch
 import time
 import os
+import sys
 import pandas as pd
 from PIL import Image
 
+OUT_WIDTH = 1920
+OUT_HEIGHT = 1080
+IN_WIDTH = 1920
+IN_HEIGHT = 1080
+WRITE_OUT = False
+FRAME_CAP = 5
 
 def run_pipeline(
         model = torch.hub.load('ultralytics/yolov5', 'yolov5n'), 
-        video_path = './sysml/samples/DE_sample.mp4'
+        video_path = './sysml/samples/medium.mp4'
         ):
     """
     Runs object detection pipeline given a model and video. 
@@ -28,20 +35,21 @@ def run_pipeline(
     
     # Start timer
     start = time.time()
-    while True:
+    while frame_no < FRAME_CAP:
+
         # Read frame
         ret, frame = cap.read()
         if ret:
-            out = model(frame)
+            out = model(frame, size=[IN_WIDTH, IN_HEIGHT])
             inf = out.pandas().xywh[0]
             inf['frame'] = frame_no
             outputs.append(inf)
-        else:
-            break
+        
+        if frame_no % 50 == 0:
+            print(frame_no)
 
-        if frame_no > 20:
-            break
         frame_no += 1
+
     end = time.time()
 
     return end - start, frame_no - 1, pd.concat(outputs)
@@ -49,10 +57,10 @@ def run_pipeline(
 if __name__ == '__main__':
     runtime, frames, outputs = run_pipeline()
 
-    outputs.to_csv('./sysml/testing/test_results/temp_df.csv')
+    outputs.to_csv('./sysml/testing/test_results/temp.csv')
     print(
         f'frames: {frames}\n' + 
         f'runtime: {runtime}\n' +
-        f'avg frame rate: {runtime / frames}' 
+        f'average time per frame: {runtime / frames}'
     ) 
     
