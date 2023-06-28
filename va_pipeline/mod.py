@@ -34,6 +34,7 @@ def run(
         ):
     
     # Setup for inference ----------------------------------------------------
+
     width = img_size[0]
     height = img_size[1]
 

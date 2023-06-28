@@ -38,11 +38,14 @@ if __name__ == '__main__':
     test_path = 'config_testing/sparse/' + 'sparse_yolov5n_1920_25fps'
 
     # Run test
-    runtime, energy, out = exec_file(SSH_PI4 + ' ' + "'python ~/sysml/va_pipeline/run.py")
+    runtime, energy, out = exec_file(SSH_PI4 + ' ' + 'python ~/sysml/va_pipeline/run.py '
+                                     + '--yolov5-model yolov5n '
+                                     + '--video-source ~/sysml/samples/sparse.mp4 '
+                                     + '--img-size 1280 720')
     subprocess.run('scp pi@172.28.81.58:' +
                    '~/sysml/testing/test_results/temp.csv ./testing/test_results/' + 
                    test_path + 
-                   '_inference.csv') #get model outputs
+                   '_inference.csv') # get model outputs
     
     
     # Calculate statistics and save data
@@ -58,5 +61,3 @@ if __name__ == '__main__':
                    )
     
     print(energy, avg_power, out.stdout)
-
-    
