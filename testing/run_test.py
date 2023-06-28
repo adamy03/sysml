@@ -37,8 +37,14 @@ if __name__ == '__main__':
     # Change to name and path of output files
     res_width = 1280
     res_height = 720
+    model = 'yolov5n'
+    source = 'noisy'
+    framerate = 25
+
+    frame_cap = 251
+
     test_dir = './testing/test_results/config_testing/noisy/'
-    test_name = f'noisy_yolov5n_{res_width}_{res_height}_25fps'
+    test_name = f'{source}_{model}_{res_width}_{res_height}_{framerate}fps'
     test_path = test_dir + test_name
 
     # Check for existing files:
@@ -47,14 +53,17 @@ if __name__ == '__main__':
     assert len(matching_files) == 0, 'Test files already in directory.' 
 
     # Run test
-    runtime, energy, out = exec_file(SSH_PI4 + ' ' + 'python ~/sysml/va_pipeline/run.py '
-                                     + '--yolov5-model yolov5n '
-                                     + '--video-source ~/sysml/samples/sparse.mp4 '
-                                     + '--img-size 1280 720')
-    subprocess.run('scp pi@172.28.81.58:' +
-                   '~/sysml/testing/test_results/temp.csv' + ' ' +
-                   test_path + 
-                   '_inference.csv'
+    runtime, energy, out = exec_file(SSH_PI4 + ' ' 
+                                     + 'python ~/sysml/va_pipeline/run.py '
+                                     + f'--yolov5-model yolov5n '
+                                     + f'--video-source ~/sysml/samples/{source}.mp4 '
+                                     + f'--img-size {res_width} {res_height}'
+                                     )
+    
+    subprocess.run('scp pi@172.28.81.58:' 
+                   + '~/sysml/testing/test_results/temp.csv' + ' ' 
+                   + test_path 
+                   + '_inference.csv'
                    ) #get model outputs
 
     # Calculate statistics and save data
@@ -62,8 +71,8 @@ if __name__ == '__main__':
     energy, avg_power = calculate_stats(test_path + '_energy.csv', runtime)
 
     with open(test_path + '.txt', 'w') as file:
-        file.write(out.stdout + 
-                   f'runtime (total): {runtime}\n'
-                   f'energy: {energy}\n' +
-                   f'avg power: {avg_power}'
+        file.write(out.stdout 
+                   + f'runtime (total): {runtime}\n'
+                   + f'energy: {energy}\n' 
+                   + f'avg power: {avg_power}'
                    )
