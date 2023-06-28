@@ -50,7 +50,8 @@ if __name__ == '__main__':
     runtime, energy, out = exec_file(SSH_PI4 + ' ' + 'python ~/sysml/va_pipeline/run.py '
                                      + '--yolov5-model yolov5n '
                                      + '--video-source ~/sysml/samples/sparse.mp4 '
-                                     + '--img-size 1280 720')
+                                     + '--img-size 1280 720 '
+                                     + '--frame-cap 100')
     subprocess.run('scp pi@172.28.81.58:' +
                    '~/sysml/testing/test_results/temp.csv' + ' ' +
                    test_path + 
