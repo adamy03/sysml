@@ -16,7 +16,7 @@ FRAME_CAP = 251
 
 def run_pipeline(
         model = torch.hub.load('ultralytics/yolov5', 'yolov5n'), 
-        video_path = './sysml/samples/sparse.mp4'
+        video_path = './sysml/samples/noisy.mp4'
         ):
     """
     Runs object detection pipeline given a model and video. 
