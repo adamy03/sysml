@@ -41,7 +41,6 @@ if __name__ == '__main__':
     source = 'noisy'
     dest = source
     framerate = 25
-
     frame_cap = 251
 
     test_dir = f'./testing/test_results/config_testing/{dest}/'
