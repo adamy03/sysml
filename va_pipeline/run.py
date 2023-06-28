@@ -12,7 +12,7 @@ OUT_HEIGHT = 1080
 IN_WIDTH = 1280
 IN_HEIGHT = 720
 WRITE_OUT = False
-FRAME_CAP = 251
+FRAME_CAP = 6
 
 def run_pipeline(
         model = torch.hub.load('ultralytics/yolov5', 'yolov5n'), 

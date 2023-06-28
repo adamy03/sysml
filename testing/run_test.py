@@ -38,12 +38,13 @@ if __name__ == '__main__':
     res_width = 1280
     res_height = 720
     model = 'yolov5n'
-    source = 'noisy'
+    source = 'medium'
+    dest = 'temp'
     framerate = 25
 
-    frame_cap = 251
+    frame_cap = 6
 
-    test_dir = './testing/test_results/config_testing/noisy/'
+    test_dir = f'./testing/test_results/config_testing/{dest}/'
     test_name = f'{source}_{model}_{res_width}_{res_height}_{framerate}fps'
     test_path = test_dir + test_name
 
@@ -54,10 +55,11 @@ if __name__ == '__main__':
 
     # Run test
     runtime, energy, out = exec_file(SSH_PI4 + ' ' 
-                                     + 'python ~/sysml/va_pipeline/run.py '
+                                     + 'python ./sysml/va_pipeline/mod.py '
                                      + f'--yolov5-model yolov5n '
-                                     + f'--video-source ~/sysml/samples/{source}.mp4 '
-                                     + f'--img-size {res_width} {res_height}'
+                                     + f'--video-source ./sysml/samples/{source}.mp4 '
+                                     + f'--img-width {res_width} '
+                                     + f'--img-height {res_height} '  
                                      + f'--frame-cap {frame_cap}'
                                      )
 

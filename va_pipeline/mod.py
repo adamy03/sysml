@@ -28,16 +28,13 @@ Returns runtime, number of frames, model outputs
 def run(
         yolov5_model,
         video_source,
-        img_size,
-        fps,          # no implementation yet
+        img_width,
+        img_height,
+        fps,          # TODO:no implementation yet
         frame_cap
         ):
     
     # Setup for inference ----------------------------------------------------
-
-    width = img_size[0]
-    height = img_size[1]
-
     model = torch.hub.load('ultralytics/yolov5', yolov5_model)
 
 
@@ -59,13 +56,13 @@ def run(
         # Read frame
         ret, frame = cap.read()
         if ret:
-            out = model(frame, size=[width, height])
+            out = model(frame, size=[img_width, img_height])
             inf = out.pandas().xywh[0]
             inf['frame'] = frame_no
             outputs.append(inf)
         
-        if frame_no % 50 == 0:
-            print(frame_no)
+        # if frame_no % 50 == 0:
+        #     print(frame_no)
 
         frame_no += 1
 
@@ -86,14 +83,15 @@ def run(
 
 
 """
-Parses the arguments into variables, for new logic simply add a new arugment
+Parses the arguments into variables, for new logic simply add a new argument
 Look through yolov5/detect.py for guidance on adding new arguments
 """
 def parse_opt(): 
     parser = argparse.ArgumentParser()
     parser.add_argument('--yolov5-model', type=str, default='yolov5n.pt', help='yolov5 model size')
-    parser.add_argument('--video-source', type=str, default=ROOT / 'data/images', help='file/dir/URL/glob/screen/0(webcam)')
-    parser.add_argument('--img-size', nargs='+', default=[1920, 1080], help='inference size [w,h]')
+    parser.add_argument('--video-source', type=str, default=ROOT / 'data/images', help='input video path')
+    parser.add_argument('--img-width', type=int, default=1920, help='inference size width')
+    parser.add_argument('--img-height', type=int, default=1080, help='inference size height')
     parser.add_argument('--fps', type=int, default=25, help='frames to process per second of the video')
     parser.add_argument('--frame-cap', type=int, default=100, help='max number of frames to process')
     opt = parser.parse_args()
