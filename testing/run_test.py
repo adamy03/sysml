@@ -58,18 +58,21 @@ if __name__ == '__main__':
                                      + f'--yolov5-model yolov5n '
                                      + f'--video-source ~/sysml/samples/{source}.mp4 '
                                      + f'--img-size {res_width} {res_height}'
+                                     + f'--frame-cap {frame_cap}'
                                      )
-    
+
+    # Get model outputs
     subprocess.run('scp pi@172.28.81.58:' 
                    + '~/sysml/testing/test_results/temp.csv' + ' ' 
                    + test_path 
                    + '_inference.csv'
-                   ) #get model outputs
+                   )
 
     # Calculate statistics and save data
     energy.to_csv(test_path + '_energy.csv')
     energy, avg_power = calculate_stats(test_path + '_energy.csv', runtime)
 
+    # Write inference times to file
     with open(test_path + '.txt', 'w') as file:
         file.write(out.stdout 
                    + f'runtime (total): {runtime}\n'
