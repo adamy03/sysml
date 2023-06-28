@@ -5,6 +5,7 @@ import os
 import sys
 import pandas as pd
 from PIL import Image
+import time
 
 OUT_WIDTH = 1920
 OUT_HEIGHT = 1080
