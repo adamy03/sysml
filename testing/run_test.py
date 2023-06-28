@@ -35,14 +35,14 @@ def calculate_stats(fpath, runtime):
 
 if __name__ == '__main__':
     # Change to name and path of output files
-    res_width = 1280
-    res_height = 720
+    res_width = 640
+    res_height = 480
     model = 'yolov5n'
-    source = 'medium'
-    dest = 'temp'
+    source = 'noisy'
+    dest = source
     framerate = 25
 
-    frame_cap = 6
+    frame_cap = 251
 
     test_dir = f'./testing/test_results/config_testing/{dest}/'
     test_name = f'{source}_{model}_{res_width}_{res_height}_{framerate}fps'
