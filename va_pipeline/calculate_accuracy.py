@@ -100,16 +100,21 @@ def calculate_accuracy(ground_truth, prediction):
 
 if __name__ == '__main__':
     
-    # Get lists for ground truth and predictions
-    ground_truth = get_ground_truth_list("~/sysml/testing/test_results/yolov5x_medium.csv")
-    preds = get_predictions_list("~/sysml/testing/test_results/yolov5l_medium.csv")
+    # SPARSE: get lists for ground truth and predictions
+    ground_truth = get_ground_truth_list("~/sysml/testing/test_results/config_testing/sparse/sparse_yolov5l_ground_truth_inference.csv")
+    preds1280 = get_predictions_list("~/sysml/testing/test_results/config_testing/sparse/sparse_yolov5n_1280_720_25fps_inference.csv")
+    #preds1536 = get_predictions_list("~/sysml/testing/test_results/config_testing/sparse/sparse_yolov5n_1536_864_25fps_inference.csv")
+
+    # Calculate mAP scores
+    print("mAP 1280: ", calculate_accuracy(ground_truth, preds1280))
+    #print("mAP 1536: ", calculate_accuracy(ground_truth, preds1536))
     
-    print(ground_truth[0])
-    print(preds[0])
-    print("\n")
-    print(ground_truth[1])
-    print(preds[1])
+    # MEDIUM: get lists for ground truth and predictions
+    #ground_truth = get_ground_truth_list("~/sysml/testing/test_results/config_testing/medium/medium_yolov5l_ground_truth_inference.csv")
+    #preds1280 = get_predictions_list("~/sysml/testing/test_results/config_testing/medium/medium_yolov5n_1280_720_25fps_inference.csv")
+    #preds1536 = get_predictions_list("~/sysml/testing/test_results/config_testing/medium/medium_yolov5n_1536_864_25fps_inference.csv")
     
-    # Calculate mAP score
-    mAP = calculate_accuracy(ground_truth, preds)
-    print("mAP: ", mAP)
+    # NOISY: get lists for ground truth and predictions
+    #ground_truth = get_ground_truth_list("~/sysml/testing/test_results/config_testing/noisy/noisy_yolov5l_ground_truth_inference.csv")
+    #preds1280 = get_predictions_list("~/sysml/testing/test_results/config_testing/noisy/noisy_yolov5n_1280_720_25fps_inference.csv")
+    #preds1536 = get_predictions_list("~/sysml/testing/test_results/config_testing/noisy/noisy_yolov5n_1536_864_25fps_inference.csv")
