@@ -1,7 +1,7 @@
 import cv2
 import pandas as pd
 
-def draw_boxes(video_path, df1, df2, out_path):
+def draw_boxes(video_path, df_box1, df_box2, out_path):
     cap = cv2.VideoCapture(video_path)
 
     # Get video properties
@@ -19,7 +19,7 @@ def draw_boxes(video_path, df1, df2, out_path):
         blue = (255, 255, 0)
         green = (0, 255, 0)
 
-        for df, color in [(df1, blue), (df2, green)]:  # Draws bounding boxes from both models each frame
+        for df, color in [(df_box1, blue), (df_box2, green)]:  # Draws bounding boxes from both models each frame
             currRow = df[df['frame'] == frameCount] # selects all bounding boxes as rows for a given frame
             for _, row in currRow.iterrows():
                 x_center, y_center, width, height = row['xcenter'], row['ycenter'], row['width'], row['height']
