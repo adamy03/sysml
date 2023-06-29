@@ -51,7 +51,7 @@ def run(
     
     # Start timer
     start = time.time()
-    while frame_no < frame_cap:
+    while frame_no <= frame_cap:
 
         # Read frame
         ret, frame = cap.read()

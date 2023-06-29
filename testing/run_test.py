@@ -41,7 +41,7 @@ if __name__ == '__main__':
     source = 'noisy'
     dest = source
     framerate = 25
-    frame_cap = 251
+    frame_cap = 250
 
     test_dir = f'./testing/test_results/config_testing/{dest}/'
     test_name = f'{source}_{model}_{res_width}_{res_height}_{framerate}fps'
@@ -74,7 +74,7 @@ if __name__ == '__main__':
     energy, avg_power = calculate_stats(test_path + '_energy.csv', runtime)
 
     # Write inference times to file
-    with open(test_path + '.txt', 'w') as file:
+    with open(test_path + '_stats.txt', 'w') as file:
         file.write(out.stdout 
                    + f'runtime (total): {runtime}\n'
                    + f'energy: {energy}\n' 
