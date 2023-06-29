@@ -56,4 +56,5 @@ output_path = '../samples/output_video.mp4'
 
 
 # Run the function
-draw_boxes(video_path, df_boxes1, df_boxes2, output_path)
+draw_boxes(video_path=video_path, df_box1=df_boxes1, df_box2=df_boxes2, out_path=output_path)
+#draw_boxes(video_path=video_path, df_box1=df_boxes1, df_box2=None, out_path=output_path)
