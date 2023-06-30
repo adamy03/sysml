@@ -38,7 +38,7 @@ if __name__ == '__main__':
     res_width = 1536
     res_height = 864
     model = 'yolov5n'
-    source = 'noisy'
+    source = 'medium'
     dest = source
     framerate = 25
     frame_cap = 250
