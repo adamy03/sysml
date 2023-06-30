@@ -107,22 +107,35 @@ def calculate_accuracy(ground_truth, prediction):
 
 
 if __name__ == '__main__':
+
+    # Change to name and path of files
+    res_width = 1792
+    res_height = 1008
+    model = 'yolov5n'
+    source = 'noisy'
+    framerate = 25
+    frame_cap = 250
+    save_results = True
     
-    # SPARSE: get lists for ground truth and predictions
-    ground_truth = get_ground_truth_list(1920, 1080, "~/sysml/testing/test_results/config_testing/sparse/sparse_yolov5l_ground_truth_inference.csv")
-    preds1280 = get_predictions_list(1280, 720, "~/sysml/testing/test_results/config_testing/sparse/sparse_yolov5n_1280_720_25fps_inference.csv")
-    #preds1536 = get_predictions_list("~/sysml/testing/test_results/config_testing/sparse/sparse_yolov5n_1536_864_25fps_inference.csv")
+    # Get ground truth list
+    gt_path = f'~/sysml/testing/test_results/config_testing/{source}/{source}_yolov5l_ground_truth_inference.csv'
+    gt = get_ground_truth_list(1920, 1080, gt_path)
+
+    # Get preds list
+    pred_dir = f'~/sysml/testing/test_results/config_testing/{source}/'
+    pred_name = f'{source}_{model}_{res_width}_{res_height}_{framerate}fps'
+    pred_path = pred_dir + pred_name + '_inference.csv'
+    preds = get_predictions_list(res_width, res_height, pred_path)
 
     # Calculate mAP scores
-    print("mAP 1280: ", calculate_accuracy(ground_truth, preds1280))
-    #print("mAP 1536: ", calculate_accuracy(ground_truth, preds1536))
-    
-    # MEDIUM: get lists for ground truth and predictions
-    #ground_truth = get_ground_truth_list("~/sysml/testing/test_results/config_testing/medium/medium_yolov5l_ground_truth_inference.csv")
-    #preds1280 = get_predictions_list("~/sysml/testing/test_results/config_testing/medium/medium_yolov5n_1280_720_25fps_inference.csv")
-    #preds1536 = get_predictions_list("~/sysml/testing/test_results/config_testing/medium/medium_yolov5n_1536_864_25fps_inference.csv")
-    
-    # NOISY: get lists for ground truth and predictions
-    #ground_truth = get_ground_truth_list("~/sysml/testing/test_results/config_testing/noisy/noisy_yolov5l_ground_truth_inference.csv")
-    #preds1280 = get_predictions_list("~/sysml/testing/test_results/config_testing/noisy/noisy_yolov5n_1280_720_25fps_inference.csv")
-    #preds1536 = get_predictions_list("~/sysml/testing/test_results/config_testing/noisy/noisy_yolov5n_1536_864_25fps_inference.csv")
+    mAP = calculate_accuracy(gt, preds)
+    print("mAP: ", res_width, " ", mAP)
+
+    # Write mAP score to file
+    file_dir = f'C:/Users/shiva/sysml/testing/test_results/config_testing/{source}/'
+    file_path = file_dir + pred_name + '_stats.txt'
+
+    # Open the file
+    with open(file_path, 'a') as f:
+        f.write(f'\nmAP: {mAP}\n')
+        # Write more content as needed
