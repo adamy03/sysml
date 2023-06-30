@@ -13,9 +13,13 @@ import pandas as pd
 Returns a list of dictionaries, one dictionary per frame that contains the
 bounding box coordinates and labels of the ground truth model output.
 """
-def get_ground_truth_list(fname):
+def get_ground_truth_list(width, height, fname):
     gt_list = []
     df = pd.read_csv(fname, sep=',')
+    
+    # Normalize values
+    df['xcenter'] /= width
+    df['ycenter'] /= height
     
     # Loop through the frame numbers in df
     num_frames = df.iloc[-1]['frame']
@@ -50,9 +54,13 @@ def get_ground_truth_list(fname):
 Returns a list of dictionaries, one dictionary per frame that contains the
 bounding box coordinates, labels, and scores of the model prediction.
 """
-def get_predictions_list(fname):
+def get_predictions_list(width, height, fname):
     preds_list = []
     df = pd.read_csv(fname, sep=',')
+    
+    # Normalize values
+    df['xcenter'] /= width
+    df['ycenter'] /= height
 
     # Loop through the frame numbers in df
     num_frames = df.iloc[-1]['frame']
@@ -101,8 +109,8 @@ def calculate_accuracy(ground_truth, prediction):
 if __name__ == '__main__':
     
     # SPARSE: get lists for ground truth and predictions
-    ground_truth = get_ground_truth_list("~/sysml/testing/test_results/config_testing/sparse/sparse_yolov5l_ground_truth_inference.csv")
-    preds1280 = get_predictions_list("~/sysml/testing/test_results/config_testing/sparse/sparse_yolov5n_1280_720_25fps_inference.csv")
+    ground_truth = get_ground_truth_list(1920, 1080, "~/sysml/testing/test_results/config_testing/sparse/sparse_yolov5l_ground_truth_inference.csv")
+    preds1280 = get_predictions_list(1280, 720, "~/sysml/testing/test_results/config_testing/sparse/sparse_yolov5n_1280_720_25fps_inference.csv")
     #preds1536 = get_predictions_list("~/sysml/testing/test_results/config_testing/sparse/sparse_yolov5n_1536_864_25fps_inference.csv")
 
     # Calculate mAP scores
