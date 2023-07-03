@@ -38,8 +38,8 @@ def calculate_stats(fpath, runtime):
 
 if __name__ == '__main__':
     # Change to name and path of output files
-    res_width = 1792
-    res_height = 1008
+    res_width = 1280
+    res_height = 720
     model = 'yolov5n'
     source = 'medium'
     dest = source
