@@ -100,13 +100,18 @@ def run(
     frames = frame_no - 1
     outputs = pd.concat(outputs)
 
-    outputs.to_csv(INFERENCE_PATH)
+    try:
+        outputs.to_csv(INFERENCE_PATH)
+    except:
+        outputs.to_csv('temp.csv')
+        pass
+
     print(
         f'frames: {frames}\n' + 
         f'runtime (inference): {runtime}\n' +
         f'average time per frame: {runtime / frames}'
     )
-
+    
 
 """
 Parses the arguments into variables, for new logic simply add a new argument
@@ -114,10 +119,10 @@ Look through yolov5/detect.py for guidance on adding new arguments
 """
 def parse_opt(): 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--yolov5-model', type=str, default='yolov5n.pt', help='yolov5 model size')
-    parser.add_argument('--video-source', type=str, default=ROOT / 'data/images', help='input video path')
-    parser.add_argument('--img-width', type=int, default=1920, help='inference size width')
-    parser.add_argument('--img-height', type=int, default=1080, help='inference size height')
+    parser.add_argument('--yolov5-model', type=str, default='yolov5n', help='yolov5 model size')
+    parser.add_argument('--video-source', type=str, default='../samples/sparse.mp4', help='input video path')
+    parser.add_argument('--img-width', type=int, default=1280, help='inference size width')
+    parser.add_argument('--img-height', type=int, default=720, help='inference size height')
     parser.add_argument('--fps', type=int, default=25, help='frames to process per second of the video')
     parser.add_argument('--frame-cap', type=int, default=100, help='max number of frames to process')
     opt = parser.parse_args()
