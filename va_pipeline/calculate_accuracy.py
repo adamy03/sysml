@@ -135,7 +135,5 @@ if __name__ == '__main__':
     file_dir = f'C:/Users/shiva/sysml/testing/test_results/config_testing/{source}/'
     file_path = file_dir + pred_name + '_stats.txt'
 
-    # Open the file
     with open(file_path, 'a') as f:
         f.write(f'\nmAP: {mAP}\n')
-        # Write more content as needed
