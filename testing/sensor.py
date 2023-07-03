@@ -15,7 +15,10 @@ CONNECT_X = 225
 CONNECT_Y = 75
 GRAPH_X = 500
 GRAPH_Y = 75
-
+COPY_OFFSET_X = 20
+COPY_OFFSET_Y = 30
+CLEAR_OFFSET_X = 20
+CLEAR_OFFSET_Y = 110
 # Example for running image classification in pi3
 # command = "ssh pi@172.28.69.200 'python /home/pi/sysml/ModelClassification/testModel/image_classification_test.py'"
 
@@ -94,8 +97,8 @@ def get_energy(exec_time = -1):
     pyautogui.rightClick()
 
     # Move to copy
-    x = x + 20
-    y = y + 30
+    x = x + COPY_OFFSET_X
+    y = y + COPY_OFFSET_Y
     pyautogui.moveTo(x, y)
 
     # Copy to clipboard
@@ -111,6 +114,35 @@ def get_energy(exec_time = -1):
         df['Time (s)'] = factor * df['Read times - Voltage  graph']
 
     return df
+
+
+"""
+Clears data on chart. Assumes data is saved and is currently disconnected from logger.
+"""
+def clear_chart():
+    window_handle = win32gui.FindWindow(None, UM25_WINDOW)
+    
+    window_rect = win32gui.GetWindowRect(window_handle)
+    window_x = window_rect[0]
+    window_y = window_rect[1]
+
+    # Calculate the absolute coordinates inside the window
+    x = window_x + GRAPH_X
+    y = window_y + GRAPH_Y
+
+    # Move the mouse to the specified coordinates and click
+    pyautogui.moveTo(x, y)
+    pyautogui.click()
+    pyautogui.rightClick()
+
+    # Move to copy
+    x = x + CLEAR_OFFSET_X
+    y = y + CLEAR_OFFSET_Y
+    pyautogui.moveTo(x, y)
+
+    # Copy to clipboard
+    pyautogui.click()
+
 
 """
 Returns a Dataframe Column of CPU Temp Readings
