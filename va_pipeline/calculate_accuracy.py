@@ -109,8 +109,8 @@ def calculate_accuracy(ground_truth, prediction):
 if __name__ == '__main__':
 
     # Change to name and path of files
-    res_width = 1792
-    res_height = 1008
+    res_width = 1280
+    res_height = 720
     model = 'yolov5n'
     source = 'noisy'
     framerate = 25
@@ -118,7 +118,7 @@ if __name__ == '__main__':
     save_results = True
     
     # Get ground truth list
-    gt_path = f'~/sysml/testing/test_results/config_testing/{source}/{source}_yolov5l_ground_truth_inference.csv'
+    gt_path = f'~/sysml/testing/test_results/config_testing/{source}/{source}_yolov5l_ground_truth.csv'
     gt = get_ground_truth_list(1920, 1080, gt_path)
 
     # Get preds list
@@ -132,7 +132,7 @@ if __name__ == '__main__':
     print("mAP: ", res_width, " ", mAP)
 
     # Write mAP score to file
-    file_dir = f'C:/Users/shiva/sysml/testing/test_results/config_testing/{source}/'
+    file_dir = f'C:/Users/Chelsey/sysml/testing/test_results/config_testing/{source}/'
     file_path = file_dir + pred_name + '_stats.txt'
 
     # Open the file

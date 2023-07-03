@@ -50,8 +50,8 @@ def draw_boxes(video_path, df_box1, df_box2, out_path):
 # Data Selection/ Output
 
 video_path = '../samples/noisy.mp4'
-ground = pd.read_csv('../testing/test_results/config_testing/noisy/noisy_yolov5n_640_360_25fps_inference.csv')   # Blue Bounding Box CSV Path
-inference = pd.read_csv('../samples/noisy_yolov5l_ground_truth.csv')   # Green Bounding Box CSV Path
+ground = pd.read_csv('../testing/test_results/config_testing/noisy/noisy_yolov5n_1280_720_25fps_inference.csv')   # Blue Bounding Box CSV Path
+inference = pd.read_csv('../testing/test_results/config_testing/noisy/noisy_yolov5l_ground_truth.csv')   # Green Bounding Box CSV Path
 output_path = '../samples/output_video.mp4'
 
 
