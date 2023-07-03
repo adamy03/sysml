@@ -48,7 +48,7 @@ if __name__ == '__main__':
     test_name = f'{source}_{model}_{res_width}_{res_height}_{framerate}fps'
     test_path = test_dir + test_name
 
-    # Check for existing files:
+    # Check for existing files
     matching_files = [filename for filename in os.listdir(test_dir) if filename.startswith(test_name)]
     print(matching_files)
     assert len(matching_files) == 0, 'Test files already in directory.' 
