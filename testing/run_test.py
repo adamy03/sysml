@@ -8,7 +8,7 @@ import subprocess
 import pandas as pd
 import numpy as np
 
-sys.path.append('../va_pipeline/')
+sys.path.append('va_pipeline/')
 from calculate_accuracy import *
 from sensor import exec_file
 
@@ -78,7 +78,7 @@ if __name__ == '__main__':
         energy, avg_power = calculate_stats(test_path + '_energy.csv', runtime)
 
         # Calculate mAP
-        mAp = 0
+        mAP = 0
         try: 
             gt_path = f'./test_results/config_testing/{source}_yolov5l_ground_truth.csv'
             gt = get_ground_truth_list(res_width, res_height, gt_path)

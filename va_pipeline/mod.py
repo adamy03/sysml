@@ -21,8 +21,7 @@ ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 OUT_WIDTH = 1920
 OUT_HEIGHT = 1080
 WRITE_OUT = False
-# INFERENCE_PATH = './sysml/testing/test_results/temp.csv'
-INFERENCE_PATH = './samples/noisy_yolov5l_ground_truth.csv'
+INFERENCE_PATH = './sysml/testing/test_results/temp.csv'
 
 def process_frame(frame, prev) -> bool:
     frame_var = np.var(frame)
@@ -120,7 +119,7 @@ Look through yolov5/detect.py for guidance on adding new arguments
 def parse_opt(): 
     parser = argparse.ArgumentParser()
     parser.add_argument('--yolov5-model', type=str, default='yolov5n', help='yolov5 model size')
-    parser.add_argument('--video-source', type=str, default='../samples/sparse.mp4', help='input video path')
+    parser.add_argument('--video-source', type=str, default='./sysml/samples/sparse.mp4', help='input video path')
     parser.add_argument('--img-width', type=int, default=1280, help='inference size width')
     parser.add_argument('--img-height', type=int, default=720, help='inference size height')
     parser.add_argument('--fps', type=int, default=25, help='frames to process per second of the video')
