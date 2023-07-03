@@ -35,10 +35,10 @@ def calculate_stats(fpath, runtime):
 
 if __name__ == '__main__':
     # Change to name and path of output files
-    res_width = 640
-    res_height = 480
+    res_width = 1536
+    res_height = 864
     model = 'yolov5n'
-    source = 'noisy'
+    source = 'medium'
     dest = source
     framerate = 25
     frame_cap = 250
@@ -50,7 +50,6 @@ if __name__ == '__main__':
 
     # Check for existing files
     matching_files = [filename for filename in os.listdir(test_dir) if filename.startswith(test_name)]
-    print(matching_files)
     assert len(matching_files) == 0, 'Test files already in directory.' 
 
     # Run test
