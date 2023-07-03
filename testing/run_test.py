@@ -38,17 +38,17 @@ def calculate_stats(fpath, runtime):
 
 if __name__ == '__main__':
     # Change to name and path of output files
-    res_width = 1280
-    res_height = 720
+    res_width = 640
+    res_height = 360
     model = 'yolov5n'
-    source = 'medium'
-    dest = source
+    source = 'sparse'
+    dest = f'frame_diff/{source}'
     framerate = 25
     frame_cap = 250
     save_results = True
 
     test_dir = f'./testing/test_results/config_testing/{dest}/'
-    test_name = f'{source}_{model}_{res_width}_{res_height}_{framerate}fps'
+    test_name = f'diff_{source}_{model}_{res_width}_{res_height}_{framerate}fps'
     test_path = test_dir + test_name
 
     # Check for existing files
@@ -84,9 +84,7 @@ if __name__ == '__main__':
             gt = get_ground_truth_list(res_width, res_height, gt_path)
 
             # Get preds list
-            pred_dir = f'./test_results/config_testing/resolution/{source}/'
-            pred_name = f'{source}_{model}_{res_width}_{res_height}_{framerate}fps'
-            pred_path = pred_dir + pred_name + '_inference.csv'
+            pred_path = f'{test_path}_inference.csv'
             preds = get_predictions_list(res_width, res_height, pred_path)
 
             # Calculate mAP scores
