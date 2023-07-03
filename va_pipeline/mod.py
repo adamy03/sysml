@@ -60,18 +60,18 @@ def run(
     
     # Get inital readings
     prev_frame = frame
-    prev_inf = model(frame, size=[img_width, img_height]).pandas().xywh[0]
+    out = model(prev_frame, size=[img_width, img_height])
+    prev_inf = out.pandas().xywh[0]
+    prev_inf['frame'] = frame_no
+    frame_no += 1
     outputs.append(prev_inf)
-
-    ret, frame = cap.read()
+    
 
     # Start timer
     start = time.time()
     while frame_no <= frame_cap:
 
-        # Read frame
         ret, frame = cap.read()
-
         if not ret:
             print('No frame returned')
             break
@@ -84,13 +84,12 @@ def run(
             inf['frame'] = frame_no
             outputs.append(inf)
         else:
+            prev_inf['frame'] = frame_no
             outputs.append(prev_inf)
-        
-        # if frame_no % 50 == 0:
-        #     print(frame_no)
 
         frame_no += 1
-
+    
+    cap.release()
     end = time.time()
     
     
@@ -102,8 +101,8 @@ def run(
     try:
         outputs.to_csv(INFERENCE_PATH)
     except:
+        print('save failed')
         outputs.to_csv('temp.csv')
-        pass
 
     print(
         f'frames: {frames}\n' + 
@@ -123,7 +122,7 @@ def parse_opt():
     parser.add_argument('--img-width', type=int, default=1280, help='inference size width')
     parser.add_argument('--img-height', type=int, default=720, help='inference size height')
     parser.add_argument('--fps', type=int, default=25, help='frames to process per second of the video')
-    parser.add_argument('--frame-cap', type=int, default=100, help='max number of frames to process')
+    parser.add_argument('--frame-cap', type=int, default=5, help='max number of frames to process')
     opt = parser.parse_args()
     return opt
 

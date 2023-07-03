@@ -106,23 +106,23 @@ def calculate_accuracy(ground_truth, prediction):
     return result['map'].item()
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
     # Change to name and path of files
-    res_width = 1536
-    res_height = 864
+    res_width = 1280
+    res_height = 720
     model = 'yolov5n'
-    source = 'medium'
+    source = 'noisy'
     framerate = 25
     frame_cap = 250
     save_results = True
     
     # Get ground truth list
-    gt_path = f'~/sysml/testing/test_results/config_testing/{source}_yolov5l_ground_truth.csv'
+    gt_path = f'~/sysml/testing/test_results/config_testing/{source}/{source}_yolov5l_ground_truth.csv'
     gt = get_ground_truth_list(1920, 1080, gt_path)
 
     # Get preds list
-    pred_dir = f'~/sysml/testing/test_results/config_testing/resolution/{source}/'
+    pred_dir = f'~/sysml/testing/test_results/config_testing/{source}/'
     pred_name = f'{source}_{model}_{res_width}_{res_height}_{framerate}fps'
     pred_path = pred_dir + pred_name + '_inference.csv'
     preds = get_predictions_list(res_width, res_height, pred_path)
@@ -132,8 +132,10 @@ if __name__ == '__main__':
     print("mAP: ", res_width, " ", mAP)
 
     # Write mAP score to file
-    file_dir = f'C:/Users/Chelsey/sysml/testing/test_results/config_testing/resolution/{source}/'
+    file_dir = f'C:/Users/Chelsey/sysml/testing/test_results/config_testing/{source}/'
     file_path = file_dir + pred_name + '_stats.txt'
 
+    # Open the file
     with open(file_path, 'a') as f:
         f.write(f'\nmAP: {mAP}\n')
+        # Write more content as needed

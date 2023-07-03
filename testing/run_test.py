@@ -84,7 +84,7 @@ if __name__ == '__main__':
             gt = get_ground_truth_list(res_width, res_height, gt_path)
 
             # Get preds list
-            pred_path = f'{test_path}_inference.csv'
+            pred_path = f'{test_path}' + '_inference.csv'
             preds = get_predictions_list(res_width, res_height, pred_path)
 
             # Calculate mAP scores
