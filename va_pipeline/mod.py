@@ -63,14 +63,12 @@ def run(
     out = model(prev_frame, size=[img_width, img_height])
     prev_inf = out.pandas().xywh[0]
     prev_inf['frame'] = frame_no
-    frame_no += 1
     outputs.append(prev_inf)
-    
+    frame_no += 1
 
     # Start timer
     start = time.time()
     while frame_no <= frame_cap:
-
         ret, frame = cap.read()
         if not ret:
             print('No frame returned')
@@ -79,16 +77,17 @@ def run(
         if process_frame(frame, prev_frame):
             out = model(frame, size=[img_width, img_height])
             inf = out.pandas().xywh[0]
-            prev_inf = inf
 
             inf['frame'] = frame_no
             outputs.append(inf)
+            prev_inf = inf
         else:
             prev_inf['frame'] = frame_no
             outputs.append(prev_inf)
 
         frame_no += 1
-    
+        prev_frame = frame
+        
     cap.release()
     end = time.time()
     
