@@ -1,7 +1,7 @@
 import cv2
 import pandas as pd
 
-def draw_boxes(video_path, df_box1, df_box2, out_path):
+def draw_boxes(video_path, ground_box, inference_box, out_path):
     cap = cv2.VideoCapture(video_path)
 
     # Get video properties
@@ -14,9 +14,9 @@ def draw_boxes(video_path, df_box1, df_box2, out_path):
     blue = (255, 0, 0)
     green = (0, 255, 0)
     
-    dataframes = [(df_box1, blue)]
-    if df_box2 is not None:
-        dataframes.append((df_box2, green))
+    dataframes = [(ground_box, green)]
+    if inference_box is not None:
+        dataframes.append((inference_box, blue))
 
     frameCount = 1
     while cap.isOpened():
@@ -49,12 +49,13 @@ def draw_boxes(video_path, df_box1, df_box2, out_path):
 
 # Data Selection/ Output
 
-video_path = '../samples/noisy.mp4'
-ground = pd.read_csv('../testing/test_results/config_testing/noisy/noisy_yolov5n_1280_720_25fps_inference.csv')   # Blue Bounding Box CSV Path
-inference = pd.read_csv('../testing/test_results/config_testing/noisy/noisy_yolov5l_ground_truth.csv')   # Green Bounding Box CSV Path
+video_path = '../samples/sparse.mp4'
+ground = pd.read_csv('../testing/test_results/config_testing/sparse_yolov5l_ground_truth.csv')   # Green Bounding Box CSV Path
+inference = pd.read_csv('../testing/test_results/config_testing/resolution/sparse/sparse_yolov5n_960_540_25fps_inference.csv')   # Blue Bounding Box CSV Path
+
 output_path = '../samples/output_video.mp4'
 
 
 # Run the function
-draw_boxes(video_path=video_path, df_box1=ground, df_box2=inference, out_path=output_path)
-#draw_boxes(video_path=video_path, df_box1=ground, df_box2=None, out_path=output_path)
+draw_boxes(video_path=video_path, ground_box=ground, inference_box=inference, out_path=output_path)
+#draw_boxes(video_path=video_path, ground_box=ground, inference_box=None, out_path=output_path)
