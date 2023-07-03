@@ -1,11 +1,13 @@
+import os
+import sys
 import argparse
 import cv2
 import torch
-import pandas as pd
-import os
-import sys
-from pathlib import Path
 import time
+import pandas as pd
+
+from pathlib import Path
+from process import *
 
 # Set up path
 FILE = Path(__file__).resolve()
@@ -22,10 +24,14 @@ WRITE_OUT = False
 # INFERENCE_PATH = './sysml/testing/test_results/temp.csv'
 INFERENCE_PATH = './samples/noisy_yolov5l_ground_truth.csv'
 
-"""
-Runs object detection pipeline given a model and video. 
-Returns runtime, number of frames, model outputs
-"""
+def process_frame(frame, prev) -> bool:
+    frame_var = np.var(frame)
+    if get_diff(frame, prev, frame_var) > 0.01:
+        return True
+    else: 
+        return False
+
+
 def run(
         yolov5_model,
         video_source,
@@ -34,10 +40,13 @@ def run(
         fps,          # TODO:no implementation yet
         frame_cap
         ):
-    
+    """
+    Runs object detection pipeline given a model and video. 
+    Returns runtime, number of frames, model outputs
+    """
+
     # Setup for inference ----------------------------------------------------
     model = torch.hub.load('ultralytics/yolov5', yolov5_model)
-
 
     # VIDEO ANALYSIS  --------------------------------------------------------
     # Read video, initialize output array, and being frame counter
@@ -50,17 +59,33 @@ def run(
     if not ret:
         raise ValueError('Could not read file')
     
+    # Get inital readings
+    prev_frame = frame
+    prev_inf = model(frame, size=[img_width, img_height]).pandas().xywh[0]
+    outputs.append(prev_inf)
+
+    ret, frame = cap.read()
+
     # Start timer
     start = time.time()
     while frame_no <= frame_cap:
 
         # Read frame
         ret, frame = cap.read()
-        if ret:
+
+        if not ret:
+            print('No frame returned')
+            break
+
+        if process_frame(frame, prev_frame):
             out = model(frame, size=[img_width, img_height])
             inf = out.pandas().xywh[0]
+            prev_inf = inf
+
             inf['frame'] = frame_no
             outputs.append(inf)
+        else:
+            outputs.append(prev_inf)
         
         # if frame_no % 50 == 0:
         #     print(frame_no)
