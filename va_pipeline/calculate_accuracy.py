@@ -83,9 +83,9 @@ def get_predictions_list(width, height, fname):
         scores = torch.tensor(current_frame_df['confidence'].tolist())
         
         # Append dict with boxes, labels, and scores to the list
-        frame_dict = {'boxes':boxes,
-                    'labels':labels,
-                    'scores':scores
+        frame_dict = {'boxes': boxes,
+                    'labels': labels,
+                    'scores': scores
                     }
         preds_list.append(frame_dict)
         
