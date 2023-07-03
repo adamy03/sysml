@@ -19,7 +19,8 @@ ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 OUT_WIDTH = 1920
 OUT_HEIGHT = 1080
 WRITE_OUT = False
-
+# INFERENCE_PATH = './sysml/testing/test_results/temp.csv'
+INFERENCE_PATH = './samples/noisy_yolov5l_ground_truth.csv'
 
 """
 Runs object detection pipeline given a model and video. 
@@ -74,7 +75,7 @@ def run(
     frames = frame_no - 1
     outputs = pd.concat(outputs)
 
-    outputs.to_csv('./sysml/testing/test_results/temp.csv')
+    outputs.to_csv(INFERENCE_PATH)
     print(
         f'frames: {frames}\n' + 
         f'runtime (inference): {runtime}\n' +
