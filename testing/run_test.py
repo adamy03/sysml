@@ -3,14 +3,18 @@ File for executing tests. Files within each test folder should be placed in
 Pi, then run from this file using exec_file().
 """
 import os
+import sys
 import subprocess
 import pandas as pd
 import numpy as np
 
+sys.path.append('../va_pipeline/')
+from calculate_accuracy import *
 from sensor import exec_file
 
 SSH_PI3 = "ssh pi@172.28.69.200"
 SSH_PI4 = "ssh pi@172.28.81.58"
+ROOT = '~/sysml/testing/'
 
 """
 Just runs python file, nothing else
@@ -31,7 +35,6 @@ def calculate_stats(fpath, runtime):
     area = np.trapz(data['Power (W)'], data['Time (s)'])
 
     return area, area / runtime
-  
 
 if __name__ == '__main__':
     # Change to name and path of output files
@@ -74,10 +77,29 @@ if __name__ == '__main__':
         energy.to_csv(test_path + '_energy.csv')
         energy, avg_power = calculate_stats(test_path + '_energy.csv', runtime)
 
+        # Calculate mAP
+        mAp = 0
+        try: 
+            gt_path = f'./test_results/config_testing/{source}_yolov5l_ground_truth.csv'
+            gt = get_ground_truth_list(res_width, res_height, gt_path)
+
+            # Get preds list
+            pred_dir = f'./test_results/config_testing/resolution/{source}/'
+            pred_name = f'{source}_{model}_{res_width}_{res_height}_{framerate}fps'
+            pred_path = pred_dir + pred_name + '_inference.csv'
+            preds = get_predictions_list(res_width, res_height, pred_path)
+
+            # Calculate mAP scores
+            mAP = calculate_accuracy(gt, preds)
+        except:
+            print('mAP failed')
+            pass
+
         # Write inference times to file
         with open(test_path + '_stats.txt', 'w') as file:
             file.write(out.stdout 
                     + f'runtime (total): {runtime}\n'
                     + f'energy: {energy}\n' 
-                    + f'avg power: {avg_power}'
+                    + f'avg power: {avg_power}\n'
+                    + f'mAP: {mAP}'
                     )
