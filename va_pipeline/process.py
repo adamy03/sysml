@@ -5,6 +5,11 @@ import numpy as np
 
 from PIL import Image
 
+CANNY_DEFAULT = 5
+CANNY_LOW = 100
+CANNY_HIGH = 200
+
+
 def compress(
         img: np.array,
         scaleX: float, 
@@ -29,7 +34,11 @@ def crop_region(
     return box[box[0]:box[1], box[2]:box[3]]
 
 
-def get_frame_feature(frame, edge_blur_rad, edge_blur_var, edge_canny_low, edge_canny_high):
+def get_frame_feature(frame, 
+                      edge_blur_rad, 
+                      edge_blur_var, 
+                      edge_canny_low, 
+                      edge_canny_high):
     """
     Gets edge detections in image using CV2. Taken from Reducto
     """
@@ -39,7 +48,9 @@ def get_frame_feature(frame, edge_blur_rad, edge_blur_var, edge_canny_low, edge_
     return edge
 
 
-def cal_frame_diff(edge, prev_edge, edge_thresh_low_bound):
+def cal_frame_diff(edge, 
+                   prev_edge, 
+                   edge_thresh_low_bound):
     """
     Gets edge detections in image using CV2. Taken from Reducto
     """
@@ -50,6 +61,14 @@ def cal_frame_diff(edge, prev_edge, edge_thresh_low_bound):
     fraction_changed = changed_pixels / total_pixels
     return fraction_changed
 
+
+def get_diff(curr, prev, var):
+    edge_prev = get_frame_feature(prev, CANNY_DEFAULT, var, CANNY_LOW, CANNY_HIGH)
+    edge_curr = get_frame_feature(curr, CANNY_DEFAULT, var, CANNY_LOW, CANNY_HIGH)
+
+    diff = cal_frame_diff(edge_curr, edge_prev, 100)
+    
+    return diff
 
 
 
