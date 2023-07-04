@@ -25,11 +25,11 @@ INFERENCE_PATH = './sysml/testing/test_results/temp.csv'
 
 def process_frame(frame, prev) -> bool:
     frame_var = np.var(frame)
-    if get_diff(frame, prev, frame_var) > 0.01:
+    if get_diff(frame, prev, frame_var) > 0.005:
         return True
     else: 
         return False
-
+    
 
 def run(
         yolov5_model,
@@ -51,7 +51,6 @@ def run(
     # Read video, initialize output array, and being frame counter
     cap = cv2.VideoCapture(video_source)
     outputs = []
-    frame_no = 1
 
     # Test if video was read
     ret, frame = cap.read()
@@ -62,9 +61,9 @@ def run(
     prev_frame = frame
     out = model(prev_frame, size=[img_width, img_height])
     prev_inf = out.pandas().xywh[0]
-    prev_inf['frame'] = frame_no
-    outputs.append(prev_inf)
-    frame_no += 1
+    prev_inf['frame'] = 1
+    outputs.append(prev_inf.copy())
+    frame_no = 2
 
     # Start timer
     start = time.time()
@@ -80,7 +79,7 @@ def run(
 
             inf['frame'] = frame_no
             outputs.append(inf)
-            prev_inf = inf
+            prev_inf = inf.copy()
         else:
             prev_inf['frame'] = frame_no
             outputs.append(prev_inf)
@@ -121,7 +120,7 @@ def parse_opt():
     parser.add_argument('--img-width', type=int, default=1280, help='inference size width')
     parser.add_argument('--img-height', type=int, default=720, help='inference size height')
     parser.add_argument('--fps', type=int, default=25, help='frames to process per second of the video')
-    parser.add_argument('--frame-cap', type=int, default=5, help='max number of frames to process')
+    parser.add_argument('--frame-cap', type=int, default=100, help='max number of frames to process')
     opt = parser.parse_args()
     return opt
 

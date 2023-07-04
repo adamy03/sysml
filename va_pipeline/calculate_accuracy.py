@@ -64,7 +64,7 @@ def get_predictions_list(width, height, fname):
 
     # Loop through the frame numbers in df
     num_frames = df.iloc[-1]['frame']
-    for i in range(1, num_frames+1):
+    for i in range(1, int(num_frames+1)):
         
         # Filter df for just the rows corresponding to current frame
         current_frame_df = df[df['frame'] == i]
