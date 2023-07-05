@@ -36,6 +36,18 @@ def calculate_stats(fpath, runtime):
 
     return area, area / runtime
 
+def parse_mod(out_str):
+    split = out_str.split('\n')
+    frames = split[0].split(': ')
+    runtime = split[1].split(': ')
+    avg = split[2].split(': ')
+    return {
+        frames[0]: int(frames[1]),
+        runtime[0]: float(runtime[1]),
+        avg[0]: float(avg[1])
+    }
+
+
 if __name__ == '__main__':
     # Change to name and path of output files
     res_width = 640
@@ -94,10 +106,16 @@ if __name__ == '__main__':
             pass
 
         # Write inference times to file
+        parsed_out = parse_mod(out.stdout)
+        
         with open(test_path + '_stats.txt', 'w') as file:
-            file.write(out.stdout 
+            file.write(
+                    + f'frames: {parsed_out["frames"]}\n'
+                    + f'runtime (inference): {parsed_out["runtime (inference)"]}\n'
+                    + f'average time per frame: {parsed_out["average time per frame"]}\n'  
                     + f'runtime (total): {runtime}\n'
                     + f'energy: {energy}\n' 
                     + f'avg power: {avg_power}\n'
+                    + f'energy per frame: {energy / parsed_out["frames"]}\n'
                     + f'mAP: {mAP}'
                     )
