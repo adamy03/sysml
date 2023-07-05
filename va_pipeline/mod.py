@@ -74,6 +74,7 @@ def run(
         if process_frame(frame, prev_frame):
             out = model(frame, size=[img_width, img_height])
             inf = out.pandas().xywh[0]
+            print(inf)
 
             inf['frame'] = frame_no
             outputs.append(inf)

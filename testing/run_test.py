@@ -48,17 +48,29 @@ def parse_mod(out_str):
     }
 
 
-if __name__ == '__main__':
-    # Change to name and path of output files
-    res_width = 640
-    res_height = 360
-    model = 'yolov5n'
-    source = 'sparse'
-    dest = f'frame_diff/{source}'
-    framerate = 25
-    frame_cap = 250
-    save_results = True
+def run_mod(
+    res_width: int,
+    res_height: int,
+    model: str,
+    source: str,
+    dest: str,
+    framerate: int,
+    frame_cap: int,
+    save_results: bool
+    ):
+    """Runs mod.py given parameters
 
+    Args:
+        res_width (int): input x resolution
+        res_height (int): input y resolution
+        model (str): desired yolo model
+        source (str): sample video (sparse, medium, noisy)
+        dest (str): folder destination for inference (root is assumed to be git repo)
+        framerate (int): input framerate
+        frame_cap (int): max number of frames to process (inclusive)
+        save_results (bool): bool to save or discard model outputs
+    """
+    
     test_dir = f'./testing/test_results/config_testing/{dest}/'
     test_name = f'diff_{source}_{model}_{res_width}_{res_height}_{framerate}fps'
     test_path = test_dir + test_name
@@ -119,3 +131,15 @@ if __name__ == '__main__':
                     + f'energy per frame: {energy / parsed_out["frames"]}\n'
                     + f'mAP: {mAP}'
                     )
+    return 
+
+if __name__ == '__main__':
+    run_mod(
+        640,
+        360,
+        'yolov5n',
+        'sparse',
+        'frame_diff/sparse',
+        25,
+        5
+    )
