@@ -38,8 +38,8 @@ def calculate_stats(fpath, runtime):
 
 if __name__ == '__main__':
     # Change to name and path of output files
-    res_width = 1280
-    res_height = 720
+    res_width = 640
+    res_height = 360
     model = 'yolov5n'
     source = 'sparse'
     dest = f'frame_diff/{source}'
@@ -79,8 +79,8 @@ if __name__ == '__main__':
 
         # Calculate mAP
         mAP = 0
-        try: 
-            gt_path = f'./test_results/config_testing/{source}_yolov5l_ground_truth.csv'
+        try:
+            gt_path = f'./testing/test_results/config_testing/{source}_yolov5l_ground_truth.csv'
             gt = get_ground_truth_list(res_width, res_height, gt_path)
 
             # Get preds list
@@ -89,8 +89,8 @@ if __name__ == '__main__':
 
             # Calculate mAP scores
             mAP = calculate_accuracy(gt, preds)
-        except:
-            print('mAP failed')
+        except Exception as e:
+            print('mAP failed' + str(e))
             pass
 
         # Write inference times to file
