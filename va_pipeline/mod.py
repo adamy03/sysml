@@ -21,8 +21,8 @@ ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 OUT_WIDTH = 1920
 OUT_HEIGHT = 1080
 WRITE_OUT = False
-INFERENCE_PATH = './sysml/testing/test_results/temp.csv'
-# INFERENCE_PATH = '~/sysml/testing/test_results/mAP_experiments/noisy_yolov5n_ground_truth_0.5conf.csv'
+#INFERENCE_PATH = './sysml/testing/test_results/temp.csv'
+INFERENCE_PATH = '~/sysml/testing/test_results/mAP_experiments/0.5_conf/noisy_yolov5n_640_360_0.5conf.csv'
 
 def process_frame(frame, prev) -> bool:
     frame_var = np.var(frame)
@@ -125,7 +125,7 @@ def parse_opt():
     parser.add_argument('--img-height', type=int, default=720, help='inference size height')
     parser.add_argument('--fps', type=int, default=25, help='frames to process per second of the video')
     parser.add_argument('--frame-cap', type=int, default=250, help='max number of frames to process')
-    parser.add_argument('--conf', type=int, default=0.4, help='model confidence threshold')
+    parser.add_argument('--conf', type=float, default=0.4, help='model confidence threshold')
     opt = parser.parse_args()
     return opt
 
