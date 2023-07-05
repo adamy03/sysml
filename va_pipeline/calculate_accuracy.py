@@ -93,25 +93,22 @@ def calculate_accuracy(ground_truth, prediction):
     return result['map'].item()
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
 
     # Change to name and path of files
-    res_width = 1280
-    res_height = 720
     res_width = 1280
     res_height = 720
     model = 'yolov5n'
     source = 'sparse'
     framerate = 25
     frame_cap = 250
-    save_results = True
     
     # Get ground truth list
     gt_path = f'~/sysml/testing/test_results/config_testing/{source}_yolov5l_ground_truth.csv'
     #gt = get_ground_truth_list(1920, 1080, gt_path, frame_cap)
     
-    gt = get_ground_truth_list(1920, 1080, '~/sysml/testing/test_results/mAP_experiments/noisy_yolov5l_0.4conf_ground_truth.csv',
-                               frame_cap)
+    gt = get_ground_truth_list(1920, 1080, '~/sysml/testing/test_results/mAP_experiments/0.4_conf/sparse_yolov5l_0.4conf_ground_truth.csv',
+                               5)
 
     # Get preds list
     pred_dir = f'~/sysml/testing/test_results/config_testing/{source}/'
@@ -119,8 +116,8 @@ def calculate_accuracy(ground_truth, prediction):
     pred_path = pred_dir + pred_name + '_inference.csv'
     #preds = get_predictions_list(res_width, res_height, pred_path)
     
-    preds = get_predictions_list(res_width, res_height, '~/sysml/testing/test_results/mAP_experiments/noisy_yolov5n_640_360_0.4conf.csv',
-                                 frame_cap)
+    preds = get_predictions_list(1280, 720, '~/sysml/testing/test_results/mAP_experiments/0.4_conf/sparse_yolov5n_640_360_0.4conf.csv',
+                                 5)
 
 
     # Calculate mAP scores
