@@ -22,6 +22,7 @@ OUT_WIDTH = 1920
 OUT_HEIGHT = 1080
 WRITE_OUT = False
 INFERENCE_PATH = './sysml/testing/test_results/temp.csv'
+# INFERENCE_PATH = '~/sysml/testing/test_results/mAP_experiments/noisy_yolov5n_ground_truth_0.5conf.csv'
 
 def process_frame(frame, prev) -> bool:
     frame_var = np.var(frame)
@@ -37,7 +38,8 @@ def run(
         img_width,
         img_height,
         fps,          # TODO:no implementation yet
-        frame_cap
+        frame_cap,
+        conf
         ):
     """
     Runs object detection pipeline given a model and video. 
@@ -46,6 +48,8 @@ def run(
 
     # Setup for inference ----------------------------------------------------
     model = torch.hub.load('ultralytics/yolov5', yolov5_model)
+    model.conf = conf  # NMS confidence threshold
+    model.max_det = 100  # maximum number of detections per image
 
     # VIDEO ANALYSIS  --------------------------------------------------------
     # Read video, initialize output array, and being frame counter
@@ -120,7 +124,8 @@ def parse_opt():
     parser.add_argument('--img-width', type=int, default=1280, help='inference size width')
     parser.add_argument('--img-height', type=int, default=720, help='inference size height')
     parser.add_argument('--fps', type=int, default=25, help='frames to process per second of the video')
-    parser.add_argument('--frame-cap', type=int, default=100, help='max number of frames to process')
+    parser.add_argument('--frame-cap', type=int, default=250, help='max number of frames to process')
+    parser.add_argument('--conf', type=int, default=0.4, help='model confidence threshold')
     opt = parser.parse_args()
     return opt
 
