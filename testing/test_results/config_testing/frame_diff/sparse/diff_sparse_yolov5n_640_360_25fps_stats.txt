@@ -1,8 +1,0 @@
-No frame returned
-frames: 249
-runtime (inference): 212.54433488845825
-average time per frame: 0.8535917063793504
-runtime (total): 231.70895385742188
-energy: 1164.8096889487952
-avg power: 5.027037883333334
-mAP: 0

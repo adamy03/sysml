@@ -38,8 +38,8 @@ def calculate_stats(fpath, runtime):
 
 if __name__ == '__main__':
     # Change to name and path of output files
-    res_width = 640
-    res_height = 360
+    res_width = 1280
+    res_height = 720
     model = 'yolov5n'
     source = 'sparse'
     dest = f'frame_diff/{source}'
