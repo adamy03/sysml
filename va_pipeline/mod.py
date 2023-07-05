@@ -82,7 +82,7 @@ def run(
             prev_inf = inf.copy()
         else:
             prev_inf['frame'] = frame_no
-            outputs.append(prev_inf)
+            outputs.append(prev_inf.copy())
 
         frame_no += 1
         prev_frame = frame
