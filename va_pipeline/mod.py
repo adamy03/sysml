@@ -21,8 +21,8 @@ ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 OUT_WIDTH = 1920
 OUT_HEIGHT = 1080
 WRITE_OUT = False
-# INFERENCE_PATH = './sysml/testing/test_results/temp.csv'
-INFERENCE_PATH = '~/sysml/testing/test_results/mAP_experiments/noisy_yolov5n_ground_truth_0.5conf.csv'
+INFERENCE_PATH = './sysml/testing/test_results/temp.csv'
+# INFERENCE_PATH = '~/sysml/testing/test_results/mAP_experiments/noisy_yolov5n_ground_truth_0.5conf.csv'
 
 def process_frame(frame, prev) -> bool:
     frame_var = np.var(frame)
