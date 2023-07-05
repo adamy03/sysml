@@ -52,6 +52,9 @@ def get_predictions_list(width, height, fname, num_frames):
     preds_list = []
     df = pd.read_csv(fname, sep=',')
     
+    if df.empty:
+        df = df.astype('float64')
+    
     # Normalize values
     df['xcenter'] /= width
     df['ycenter'] /= height
@@ -92,7 +95,7 @@ def calculate_accuracy(ground_truth, prediction):
     result = metric.compute()
     return result['map'].item()
 
-
+"""
 if __name__ == '__main__':
 
     # Change to name and path of files
@@ -130,3 +133,5 @@ if __name__ == '__main__':
 
     #with open(file_path, 'a') as f:
     #    f.write(f'\nmAP: {mAP}\n')
+
+"""
