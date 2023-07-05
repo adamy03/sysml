@@ -26,11 +26,11 @@ INFERENCE_PATH = '~/sysml/testing/test_results/mAP_experiments/noisy_yolov5n_gro
 
 def process_frame(frame, prev) -> bool:
     frame_var = np.var(frame)
-    if get_diff(frame, prev, frame_var) > 0.01:
+    if get_diff(frame, prev, frame_var) > 0.005:
         return True
     else: 
         return False
-
+    
 
 def run(
         yolov5_model,
@@ -55,7 +55,6 @@ def run(
     # Read video, initialize output array, and being frame counter
     cap = cv2.VideoCapture(video_source)
     outputs = []
-    frame_no = 1
 
     # Test if video was read
     ret, frame = cap.read()
@@ -64,18 +63,16 @@ def run(
     
     # Get inital readings
     prev_frame = frame
-    prev_inf = model(frame, size=[img_width, img_height]).pandas().xywh[0]
-    outputs.append(prev_inf)
-
-    ret, frame = cap.read()
+    out = model(prev_frame, size=[img_width, img_height])
+    prev_inf = out.pandas().xywh[0]
+    prev_inf['frame'] = 1
+    outputs.append(prev_inf.copy())
+    frame_no = 2
 
     # Start timer
     start = time.time()
     while frame_no <= frame_cap:
-        print(frame_no)
-        # Read frame
         ret, frame = cap.read()
-
         if not ret:
             print('No frame returned')
             break
@@ -83,18 +80,18 @@ def run(
         if process_frame(frame, prev_frame):
             out = model(frame, size=[img_width, img_height])
             inf = out.pandas().xywh[0]
-            prev_inf = inf
 
             inf['frame'] = frame_no
             outputs.append(inf)
+            prev_inf = inf.copy()
         else:
+            prev_inf['frame'] = frame_no
             outputs.append(prev_inf)
-        
-        # if frame_no % 50 == 0:
-        #     print(frame_no)
 
         frame_no += 1
-
+        prev_frame = frame
+        
+    cap.release()
     end = time.time()
     
     
@@ -103,13 +100,18 @@ def run(
     frames = frame_no - 1
     outputs = pd.concat(outputs)
 
-    outputs.to_csv(INFERENCE_PATH)
+    try:
+        outputs.to_csv(INFERENCE_PATH)
+    except:
+        print('save failed')
+        outputs.to_csv('temp.csv')
+
     print(
         f'frames: {frames}\n' + 
         f'runtime (inference): {runtime}\n' +
         f'average time per frame: {runtime / frames}'
     )
-
+    
 
 """
 Parses the arguments into variables, for new logic simply add a new argument
@@ -117,10 +119,10 @@ Look through yolov5/detect.py for guidance on adding new arguments
 """
 def parse_opt(): 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--yolov5-model', type=str, default='yolov5n.pt', help='yolov5 model size')
-    parser.add_argument('--video-source', type=str, default=ROOT / 'data/images', help='input video path')
-    parser.add_argument('--img-width', type=int, default=1920, help='inference size width')
-    parser.add_argument('--img-height', type=int, default=1080, help='inference size height')
+    parser.add_argument('--yolov5-model', type=str, default='yolov5n', help='yolov5 model size')
+    parser.add_argument('--video-source', type=str, default='./sysml/samples/sparse.mp4', help='input video path')
+    parser.add_argument('--img-width', type=int, default=1280, help='inference size width')
+    parser.add_argument('--img-height', type=int, default=720, help='inference size height')
     parser.add_argument('--fps', type=int, default=25, help='frames to process per second of the video')
     parser.add_argument('--frame-cap', type=int, default=250, help='max number of frames to process')
     parser.add_argument('--conf', type=int, default=0.4, help='model confidence threshold')

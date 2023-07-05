@@ -93,9 +93,11 @@ def calculate_accuracy(ground_truth, prediction):
     return result['map'].item()
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
     # Change to name and path of files
+    res_width = 1280
+    res_height = 720
     res_width = 1280
     res_height = 720
     model = 'yolov5n'
@@ -112,7 +114,7 @@ if __name__ == '__main__':
                                frame_cap)
 
     # Get preds list
-    pred_dir = f'~/sysml/testing/test_results/config_testing/resolution/{source}/'
+    pred_dir = f'~/sysml/testing/test_results/config_testing/{source}/'
     pred_name = f'{source}_{model}_{res_width}_{res_height}_{framerate}fps'
     pred_path = pred_dir + pred_name + '_inference.csv'
     #preds = get_predictions_list(res_width, res_height, pred_path)
