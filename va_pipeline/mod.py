@@ -16,14 +16,6 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
-
-# Define constants
-OUT_WIDTH = 1920
-OUT_HEIGHT = 1080
-WRITE_OUT = False
-INFERENCE_PATH = './sysml/testing/test_results/temp.csv'
-# INFERENCE_PATH = '~/sysml/testing/test_results/mAP_experiments/noisy_yolov5n_ground_truth_0.5conf.csv'
-
 def process_frame(frame, prev) -> bool:
     frame_var = np.var(frame)
     if get_diff(frame, prev, frame_var) > 0.005:
@@ -31,7 +23,6 @@ def process_frame(frame, prev) -> bool:
     else: 
         return False
     
-
 def run(
         yolov5_model,
         video_source,
@@ -45,7 +36,10 @@ def run(
     Runs object detection pipeline given a model and video. 
     Returns runtime, number of frames, model outputs
     """
-
+    # Regular Inf Path
+    #INFERENCE_PATH = f'~/sysml/testing/test_results/mAP_experiments/{conf}_conf/{VIDEO}_{yolov5_model}_{img_width}_{img_height}_{conf}conf.csv'
+    # Ground Truth Inf Path
+    INFERENCE_PATH = f'~/sysml/testing/test_results/mAP_experiments/{conf}_conf/{video_source}_{yolov5_model}_ground_truth_{conf}conf.csv'
     # Setup for inference ----------------------------------------------------
     model = torch.hub.load('ultralytics/yolov5', yolov5_model)
     model.conf = conf  # NMS confidence threshold
@@ -53,7 +47,7 @@ def run(
 
     # VIDEO ANALYSIS  --------------------------------------------------------
     # Read video, initialize output array, and being frame counter
-    cap = cv2.VideoCapture(video_source)
+    cap = cv2.VideoCapture(f'../../sysml/samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     outputs = []
 
     # Test if video was read
@@ -120,12 +114,12 @@ Look through yolov5/detect.py for guidance on adding new arguments
 def parse_opt(): 
     parser = argparse.ArgumentParser()
     parser.add_argument('--yolov5-model', type=str, default='yolov5n', help='yolov5 model size')
-    parser.add_argument('--video-source', type=str, default='./sysml/samples/sparse.mp4', help='input video path')
+    parser.add_argument('--video-source', type=str, default=f'medium', help='input video path') 
     parser.add_argument('--img-width', type=int, default=1280, help='inference size width')
     parser.add_argument('--img-height', type=int, default=720, help='inference size height')
     parser.add_argument('--fps', type=int, default=25, help='frames to process per second of the video')
     parser.add_argument('--frame-cap', type=int, default=250, help='max number of frames to process')
-    parser.add_argument('--conf', type=int, default=0.4, help='model confidence threshold')
+    parser.add_argument('--conf', type=int, default=0.5, help='model confidence threshold')
     opt = parser.parse_args()
     return opt
 
