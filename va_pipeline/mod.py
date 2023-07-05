@@ -37,9 +37,11 @@ def run(
     Returns runtime, number of frames, model outputs
     """
     # Regular Inf Path
-    #INFERENCE_PATH = f'~/sysml/testing/test_results/mAP_experiments/{conf}_conf/{VIDEO}_{yolov5_model}_{img_width}_{img_height}_{conf}conf.csv'
+    INFERENCE_PATH = f'~/sysml/testing/test_results/mAP_experiments/{conf}_conf/{video_source}_{yolov5_model}_{img_width}_{img_height}_{conf}conf.csv'
+    
     # Ground Truth Inf Path
-    INFERENCE_PATH = f'~/sysml/testing/test_results/mAP_experiments/{conf}_conf/{video_source}_{yolov5_model}_ground_truth_{conf}conf.csv'
+    #INFERENCE_PATH = f'~/sysml/testing/test_results/mAP_experiments/{conf}_conf/{video_source}_{yolov5_model}_ground_truth_{conf}conf.csv'
+    
     # Setup for inference ----------------------------------------------------
     model = torch.hub.load('ultralytics/yolov5', yolov5_model)
     model.conf = conf  # NMS confidence threshold
