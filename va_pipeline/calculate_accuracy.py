@@ -95,7 +95,7 @@ def calculate_accuracy(ground_truth, prediction):
     result = metric.compute()
     return result['map'].item()
 
-"""
+
 if __name__ == '__main__':
 
     # Change to name and path of files
@@ -110,7 +110,7 @@ if __name__ == '__main__':
     gt_path = f'~/sysml/testing/test_results/config_testing/{source}_yolov5l_ground_truth.csv'
     #gt = get_ground_truth_list(1920, 1080, gt_path, frame_cap)
     
-    gt = get_ground_truth_list(1920, 1080, '~/sysml/testing/test_results/mAP_experiments/0.5_conf/noisy_yolov5x_ground_truth_0.5conf.csv',
+    gt = get_ground_truth_list(1920, 1080, '~/sysml/testing/test_results/mAP_experiments/0.5_conf/noisy_yolov5l_1920_1080_0.5conf.csv',
                                250)
 
     # Get preds list
@@ -119,7 +119,7 @@ if __name__ == '__main__':
     pred_path = pred_dir + pred_name + '_inference.csv'
     #preds = get_predictions_list(res_width, res_height, pred_path)
     
-    preds = get_predictions_list(960, 540, '~/sysml/testing/test_results/mAP_experiments/0.5_conf/noisy_yolov5n_960_540_0.5conf.csv',
+    preds = get_predictions_list(1280, 720, '~/sysml/testing/test_results/mAP_experiments/0.5_conf/noisy_yolov5n_1280_720_0.5conf.csv',
                                  250)
 
 
@@ -133,5 +133,3 @@ if __name__ == '__main__':
 
     #with open(file_path, 'a') as f:
     #    f.write(f'\nmAP: {mAP}\n')
-
-"""
