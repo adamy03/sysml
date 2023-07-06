@@ -104,7 +104,7 @@ def run(
     print(
         f'frames: {frames}\n' + 
         f'runtime (inference): {runtime}\n' +
-        f'average time per frame: {runtime / frames}' +
+        f'average time per frame: {runtime / frames}\n' +
         f'confidence: {conf}'
     )
     
@@ -121,7 +121,7 @@ def parse_opt():
     parser.add_argument('--img-height', type=int, default=720, help='inference size height')
     parser.add_argument('--fps', type=int, default=25, help='frames to process per second of the video')
     parser.add_argument('--frame-cap', type=int, default=250, help='max number of frames to process')
-    parser.add_argument('--conf', type=float, default=0.4, help='model confidence threshold')
+    parser.add_argument('--conf', type=float, default=0.25, help='model confidence threshold')
     opt = parser.parse_args()
     return opt
 
