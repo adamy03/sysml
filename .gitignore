@@ -1,7 +1,7 @@
 
 #Testing Files
 va_pipeline/mod.py
-va_pipeline/calculate_accuracy.py
+calculate_accuracy.py
 #IGNORE ALL IMAGES
 #______________________
 
