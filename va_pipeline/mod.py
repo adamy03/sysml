@@ -15,6 +15,7 @@ ROOT = FILE.parents[0]  # YOLOv5 root directory
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
+INFERENCE_PATH = './sysml/testing/test_results/temp.csv'
 
 def process_frame(frame, prev) -> bool:
     frame_var = np.var(frame)
@@ -36,9 +37,6 @@ def run(
     Runs object detection pipeline given a model and video. 
     Returns runtime, number of frames, model outputs
     """
-    # Regular Inf Path
-    INFERENCE_PATH = f'~/sysml/testing/test_results/mAP_experiments/{conf}_conf/{video_source}_{yolov5_model}_{img_width}_{img_height}_{conf}conf.csv'
-    
 
     # Setup for inference ----------------------------------------------------
     model = torch.hub.load('ultralytics/yolov5', yolov5_model)
@@ -46,8 +44,8 @@ def run(
     model.max_det = 100  # maximum number of detections per image
 
     # VIDEO ANALYSIS  --------------------------------------------------------
-    # Read video, initialize output array, and being frame counter
-    cap = cv2.VideoCapture(f'../../sysml/samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
+    # Read video, initialize output array, and being frame counte
+    cap = cv2.VideoCapture(f'./sysml/samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     outputs = []
 
     # Test if video was read
@@ -77,7 +75,7 @@ def run(
 
             inf['frame'] = frame_no
             outputs.append(inf)
-            prev_inf = inf.copy()
+            prev_inf = inf.copy()  
         else:
             prev_inf['frame'] = frame_no
             outputs.append(prev_inf.copy())
@@ -104,7 +102,7 @@ def run(
         f'frames: {frames}\n' + 
         f'runtime (inference): {runtime}\n' +
         f'average time per frame: {runtime / frames}'
-    )
+    , file=sys.stdout)
     
 
 """
@@ -114,11 +112,11 @@ Look through yolov5/detect.py for guidance on adding new arguments
 def parse_opt(): 
     parser = argparse.ArgumentParser()
     parser.add_argument('--yolov5-model', type=str, default='yolov5n', help='yolov5 model size')
-    parser.add_argument('--video-source', type=str, default=f'medium', help='input video path') 
+    parser.add_argument('--video-source', type=str, default='sparse', help='input video path') 
     parser.add_argument('--img-width', type=int, default=1280, help='inference size width')
     parser.add_argument('--img-height', type=int, default=720, help='inference size height')
     parser.add_argument('--fps', type=int, default=25, help='frames to process per second of the video')
-    parser.add_argument('--frame-cap', type=int, default=250, help='max number of frames to process')
+    parser.add_argument('--frame-cap', type=int, default=5, help='max number of frames to process')
     parser.add_argument('--conf', type=float, default=0.6, help='model confidence threshold')
     opt = parser.parse_args()
     return opt
