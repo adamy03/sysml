@@ -74,7 +74,7 @@ def run(
         if process_frame(frame, prev_frame):
             out = model(frame, size=[img_width, img_height])
             inf = out.pandas().xywh[0]
-            print(inf)
+            #print(inf)
 
             inf['frame'] = frame_no
             outputs.append(inf)
@@ -104,7 +104,8 @@ def run(
     print(
         f'frames: {frames}\n' + 
         f'runtime (inference): {runtime}\n' +
-        f'average time per frame: {runtime / frames}'
+        f'average time per frame: {runtime / frames}' +
+        f'confidence: {conf}'
     )
     
 
@@ -120,7 +121,7 @@ def parse_opt():
     parser.add_argument('--img-height', type=int, default=720, help='inference size height')
     parser.add_argument('--fps', type=int, default=25, help='frames to process per second of the video')
     parser.add_argument('--frame-cap', type=int, default=250, help='max number of frames to process')
-    parser.add_argument('--conf', type=float, default=0.6, help='model confidence threshold')
+    parser.add_argument('--conf', type=float, default=0.4, help='model confidence threshold')
     opt = parser.parse_args()
     return opt
 
