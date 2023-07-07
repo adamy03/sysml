@@ -18,7 +18,7 @@ GRAPH_Y = 75
 COPY_OFFSET_X = 20
 COPY_OFFSET_Y = 30
 CLEAR_OFFSET_X = 20
-CLEAR_OFFSET_Y = 110
+CLEAR_OFFSET_Y = 90
 # Example for running image classification in pi3
 # command = "ssh pi@172.28.69.200 'python /home/pi/sysml/ModelClassification/testModel/image_classification_test.py'"
 
@@ -47,8 +47,13 @@ def click_button_start(window_title, relative_x, relative_y):
 
     # Move the mouse to the specified coordinates and click
     pyautogui.moveTo(x, y)
-    pyautogui.click()
-    pyautogui.click()
+
+    # Check if window is already selected
+    if win32gui.GetWindowText(win32gui.GetForegroundWindow()) == 'UM25C PC Software V1.3':
+        pyautogui.click()
+    else:
+        pyautogui.click()
+        pyautogui.click()
 
 
 def click_button_end(window_title, relative_x, relative_y):
@@ -187,7 +192,9 @@ def exec_file(command: str) -> pd.DataFrame:
         raise ConnectionError("Failed to SSH")
     if out.returncode != 0:
         click_button_end(UM25_WINDOW, CONNECT_X, CONNECT_Y)
-        raise RuntimeError("Subprocess failed with exit code: {}".format(out.returncode))
+        print(out.stdout)
+        print(out.stderr)
+        raise RuntimeError(f"Subprocess failed with exit code: {out.returncode}")
 
     print('stopping sensor')
     click_button_end(UM25_WINDOW, CONNECT_X, CONNECT_Y)

@@ -20,6 +20,7 @@ def get_ground_truth_list(width, height, fname, num_frames):
     # Normalize values
     df['xcenter'] /= width
     df['ycenter'] /= height
+        
     
     # Loop through the frame numbers in df
     for i in range(1, num_frames+1):

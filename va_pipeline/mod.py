@@ -16,6 +16,7 @@ ROOT = FILE.parents[0]  # YOLOv5 root directory
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
+INFERENCE_PATH = './sysml/testing/test_results/temp.csv'
 
 def process_frame(frame, prev) -> bool:
     frame_var = np.var(frame)
@@ -48,10 +49,10 @@ def run(
     model.max_det = 100  # maximum number of detections per image
 
     # VIDEO ANALYSIS  --------------------------------------------------------
-    # Read video, initialize output array, and being frame counter
+    # Read video, initialize output array, and being frame counte
     cap = cv2.VideoCapture(f'../samples/other1/{video_source}') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
-    subprocess.run("cd", shell=True)
-    # cap = cv2.VideoCapture(f'../../sysml/samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
+    #subprocess.run("cd", shell=True)
+    # cap = cv2.VideoCapture(f'./sysml/samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     outputs = []
 
     # Test if video was read
@@ -82,7 +83,7 @@ def run(
 
             inf['frame'] = frame_no
             outputs.append(inf)
-            prev_inf = inf.copy()
+            prev_inf = inf.copy()  
         else:
             prev_inf['frame'] = frame_no
             outputs.append(prev_inf.copy())
@@ -110,7 +111,7 @@ def run(
         f'runtime (inference): {runtime}\n' +
         f'average time per frame: {runtime / frames}\n' +
         f'confidence: {conf}'
-    )
+    , file=sys.stdout)
     
 
 """
@@ -120,7 +121,7 @@ Look through yolov5/detect.py for guidance on adding new arguments
 def parse_opt(): 
     parser = argparse.ArgumentParser()
     parser.add_argument('--yolov5-model', type=str, default='yolov5n', help='yolov5 model size')
-    parser.add_argument('--video-source', type=str, default=f'medium', help='input video path') 
+    parser.add_argument('--video-source', type=str, default='sparse', help='input video path') 
     parser.add_argument('--img-width', type=int, default=1280, help='inference size width')
     parser.add_argument('--img-height', type=int, default=720, help='inference size height')
     parser.add_argument('--fps', type=int, default=25, help='frames to process per second of the video')
