@@ -1,27 +1,25 @@
 import os
-import sys
-import argparse
-import cv2
-import torch
-import time
-import pandas as pd
-
-from pathlib import Path
-from process import *
 import subprocess
 
-# Set up path
-FILE = Path(__file__).resolve()
-ROOT = FILE.parents[0]  # YOLOv5 root directory
-if str(ROOT) not in sys.path:
-    sys.path.append(str(ROOT))  # add ROOT to PATH
-ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
+# Get all file names from the directory
+folder_path = '../samples/other1'
+file_names = os.listdir(folder_path)
 
-# Function to run the mod.py command
-def run_mod(res, video_source):
-    command = f"python C:/Users/holli/sysml/va_pipeline/mod.py --img-width {res[0]} --img-height {res[1]} --video-source '{video_source}'"
+# Add complete path to the file names if required
+#file_names = [os.path.join(folder_path, file_name) for file_name in file_names]
+
+# Initialize an empty list to store the commands
+commands = []
+
+# Loop through all file names
+for conf in [0.3, 0.4, 0.5, 0.6, 0.7]:
+    for file_name in file_names:
+        # Form the command and add to the list
+        print(file_name)
+        command = f"python C:/Users/holli/sysml/va_pipeline/mod.py --img-width 1920 --img-height 1080 --yolov5-model yolov5x --conf {conf} --video-source \"{file_name}\""
+        commands.append(command)
+
+# Run each command using subprocess
+for command in commands:
+    print(command)
     subprocess.run(command, shell=True)
-
-for video in ['sparse', 'medium', 'noisy']:
-    for res in [(1280, 720),(960, 540), (640, 360)]:
-        run_mod(res, "../../sysml/samples/sparse.mp4") 

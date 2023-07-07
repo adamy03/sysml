@@ -5,6 +5,7 @@ import cv2
 import torch
 import time
 import pandas as pd
+import subprocess
 
 from pathlib import Path
 from process import *
@@ -37,8 +38,9 @@ def run(
     Returns runtime, number of frames, model outputs
     """
     # Regular Inf Path
-    INFERENCE_PATH = f'~/sysml/testing/test_results/mAP_experiments/{conf}_conf/{video_source}_{yolov5_model}_{img_width}_{img_height}_{conf}conf.csv'
-    
+    #INFERENCE_PATH = f'~/sysml/testing/test_results/mAP_experiments/{conf}_conf/{video_source}_{yolov5_model}_{img_width}_{img_height}_{conf}conf.csv'
+    INFERENCE_PATH = f'~/sysml/testing/test_results/mAP_experiments/newTesting/{conf}/{video_source}_{yolov5_model}_{img_width}_{img_height}_{conf}conf.csv'
+
 
     # Setup for inference ----------------------------------------------------
     model = torch.hub.load('ultralytics/yolov5', yolov5_model)
@@ -47,7 +49,9 @@ def run(
 
     # VIDEO ANALYSIS  --------------------------------------------------------
     # Read video, initialize output array, and being frame counter
-    cap = cv2.VideoCapture(f'../../sysml/samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
+    cap = cv2.VideoCapture(f'../samples/other1/{video_source}') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
+    subprocess.run("cd", shell=True)
+    # cap = cv2.VideoCapture(f'../../sysml/samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     outputs = []
 
     # Test if video was read
@@ -121,7 +125,7 @@ def parse_opt():
     parser.add_argument('--img-height', type=int, default=720, help='inference size height')
     parser.add_argument('--fps', type=int, default=25, help='frames to process per second of the video')
     parser.add_argument('--frame-cap', type=int, default=250, help='max number of frames to process')
-    parser.add_argument('--conf', type=float, default=0.25, help='model confidence threshold')
+    parser.add_argument('--conf', type=float, default=0.6, help='model confidence threshold')
     opt = parser.parse_args()
     return opt
 
