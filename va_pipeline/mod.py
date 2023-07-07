@@ -50,7 +50,7 @@ def run(
 
     # VIDEO ANALYSIS  --------------------------------------------------------
     # Read video, initialize output array, and being frame counte
-    cap = cv2.VideoCapture(f'../samples/other1/{video_source}') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
+    cap = cv2.VideoCapture(f'../samples/{video_source}') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     #subprocess.run("cd", shell=True)
     # cap = cv2.VideoCapture(f'./sysml/samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     outputs = []
