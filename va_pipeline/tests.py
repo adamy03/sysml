@@ -2,7 +2,7 @@ import os
 import subprocess
 
 # Get all file names from the directory
-folder_path = '../samples/other1'
+folder_path = '../samples'
 file_names = os.listdir(folder_path)
 
 # Add complete path to the file names if required

@@ -98,21 +98,21 @@ def calculate_accuracy(ground_truth, prediction):
 
 
 if __name__ == '__main__':
-    for source in ['sparse', 'medium', 'noisy']:
+    for conf in [0.4]:
         # Change to name and path of files
+        source = 'bird'
         res_width = 1280
         res_height = 720
         model = 'yolov5n'
         framerate = 25
         frame_cap = 250
-        conf = 0.7
         
         # Get ground truth list
         #gt_path = f'~/sysml/testing/test_results/config_testing/{source}_yolov5l_ground_truth.csv'
         #gt = get_ground_truth_list(1920, 1080, gt_path, frame_cap)
         
         #####
-        gt = get_ground_truth_list(1920, 1080, f'~/sysml/testing/test_results/mAP_experiments/{conf}_conf/{source}_yolov5l_1920_1080_{conf}conf.csv',
+        gt = get_ground_truth_list(1920, 1080, f'~/sysml/testing/test_results/mAP_experiments/newTesting/{conf}/{source}.mp4_yolov5x_1920_1080_{conf}conf.csv',
                                 250)
 
         # Get preds list
@@ -122,14 +122,14 @@ if __name__ == '__main__':
         #preds = get_predictions_list(res_width, res_height, pred_path)
         
         ####
-        preds = get_predictions_list(res_width, res_height, f'~/sysml/testing/test_results/mAP_experiments/{conf}_conf/{source}_{model}_{res_width}_{res_height}_{conf}conf.csv',
+        preds = get_predictions_list(res_width, res_height, f'~/sysml/testing/test_results/mAP_experiments/newTesting/{conf}/{source}.mp4_{model}_{res_width}_{res_height}_{conf}conf.csv',
                                     250)
 
 
         # Calculate mAP scores
         mAP = calculate_accuracy(gt, preds)
-        print("mAP: ", " ", mAP)
         print(f"{source}, {model}, {conf}, {res_width}, {res_height}")
+        print("mAP: ", " ", mAP)
 
         # Write mAP score to file
         #file_dir = f'C:/Users/shiva/sysml/testing/test_results/config_testing/resolution/{source}/'
