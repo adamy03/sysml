@@ -50,7 +50,7 @@ def run(
 
     # VIDEO ANALYSIS  --------------------------------------------------------
     # Read video, initialize output array, and being frame counte
-    cap = cv2.VideoCapture(f'../samples/other1/{video_source}') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
+    cap = cv2.VideoCapture(f'../samples/other1/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     #subprocess.run("cd", shell=True)
     # cap = cv2.VideoCapture(f'./sysml/samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     outputs = []
@@ -124,9 +124,9 @@ def parse_opt():
     parser.add_argument('--video-source', type=str, default='sparse', help='input video path') 
     parser.add_argument('--img-width', type=int, default=1280, help='inference size width')
     parser.add_argument('--img-height', type=int, default=720, help='inference size height')
-    parser.add_argument('--fps', type=int, default=25, help='frames to process per second of the video')
+    parser.add_argument('--fps', type=int, default=250, help='frames to process per second of the video')
     parser.add_argument('--frame-cap', type=int, default=250, help='max number of frames to process')
-    parser.add_argument('--conf', type=float, default=0.6, help='model confidence threshold')
+    parser.add_argument('--conf', type=float, default=0.4, help='model confidence threshold')
     opt = parser.parse_args()
     return opt
 
