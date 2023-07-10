@@ -146,26 +146,39 @@ def run_mod(
 
 if __name__ == '__main__':
     run_mod(
-        res_width=640,
-        res_height=360,
+        res_width=1280,
+        res_height=720,
         model='yolov5n',
         source='sparse',
         dest='frame_diff/sparse',
         framerate=25,
-        frame_cap=1,
+        frame_cap=250,
         conf=0.4,
         save_results=True
     )
     clear_chart()
     time.sleep(5)
     run_mod(
-        res_width=100,
-        res_height=100,
+        res_width=1280,
+        res_height=720,
         model='yolov5n',
-        source='sparse',
-        dest='frame_diff/sparse',
+        source='medium',
+        dest='frame_diff/medium',
         framerate=25,
-        frame_cap=1,
+        frame_cap=250,
+        conf=0.4,
+        save_results=True
+    )
+    clear_chart()
+    time.sleep(5)
+    run_mod(
+        res_width=1280,
+        res_height=720,
+        model='yolov5n',
+        source='noisy',
+        dest='frame_diff/noisy',
+        framerate=25,
+        frame_cap=250,
         conf=0.4,
         save_results=True
     )

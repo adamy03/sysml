@@ -72,7 +72,6 @@ def run(
     cap.release()
     end = time.time()
     
-    
     # Process outputs --------------------------------------------------------
     runtime = end - start
     frames = frame_no - 1
@@ -82,7 +81,7 @@ def run(
         outputs.to_csv(INFERENCE_PATH)
     except:
         print('save failed')
-        outputs.to_csv('temp.csv')
+        return -1
 
     print(
         f'frames: {frames}\n' + 
@@ -90,6 +89,8 @@ def run(
         f'average time per frame: {runtime / frames}\n' +
         f'confidence: {conf}'
     , file=sys.stdout)
+
+    return 1
     
 
 """
