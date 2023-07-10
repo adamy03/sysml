@@ -51,8 +51,8 @@ def run(
     # Test if video was read
     ret, frame = cap.read()
     if not ret:
-        raise ValueError('Could not read file')
-    
+        return -1
+
     # Get inital readings
     prev_frame = frame
     out = model(prev_frame, size=[img_width, img_height])
@@ -72,7 +72,6 @@ def run(
         if process_frame(frame, prev_frame):
             out = model(frame, size=[img_width, img_height])
             inf = out.pandas().xywh[0]
-            #print(inf)
 
             inf['frame'] = frame_no
             outputs.append(inf)
@@ -87,7 +86,6 @@ def run(
     cap.release()
     end = time.time()
     
-    
     # Process outputs --------------------------------------------------------
     runtime = end - start
     frames = frame_no - 1
@@ -97,7 +95,7 @@ def run(
         outputs.to_csv(INFERENCE_PATH)
     except:
         print('save failed')
-        outputs.to_csv('temp.csv')
+        return -1
 
     print(
         f'frames: {frames}\n' + 
@@ -105,6 +103,8 @@ def run(
         f'average time per frame: {runtime / frames}\n' +
         f'confidence: {conf}'
     , file=sys.stdout)
+
+    return 1
     
 
 """
