@@ -16,7 +16,7 @@ ROOT = FILE.parents[0]  # YOLOv5 root directory
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
-INFERENCE_PATH = './sysml/testing/test_results/temp.csv'
+INFERENCE_PATH = '~/sysml/testing/test_results/temp.csv'
 
     
 def run(
@@ -43,7 +43,7 @@ def run(
 
     # VIDEO ANALYSIS  --------------------------------------------------------
     # Read video, initialize output array, and being frame counte
-    cap = cv2.VideoCapture(f'../samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
+    cap = cv2.VideoCapture(f'./sysml/samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     outputs = []
 
     frame_no = 1

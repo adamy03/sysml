@@ -75,7 +75,7 @@ def run_mod(
     """
     
     test_dir = f'./testing/test_results/config_testing/{dest}/'
-    test_name = f'diff_{source}_{model}_{res_width}_{res_height}_{framerate}fps'
+    test_name = f'crop_{source}_{model}_{res_width}_{res_height}_{framerate}fps'
     test_path = test_dir + test_name
 
     # Check for existing files
@@ -150,7 +150,7 @@ if __name__ == '__main__':
         res_height=720,
         model='yolov5n',
         source='sparse',
-        dest='frame_diff/sparse',
+        dest='frame_crop/sparse',
         framerate=25,
         frame_cap=250,
         conf=0.4,
@@ -163,7 +163,7 @@ if __name__ == '__main__':
         res_height=720,
         model='yolov5n',
         source='medium',
-        dest='frame_diff/medium',
+        dest='frame_crop/sparse',
         framerate=25,
         frame_cap=250,
         conf=0.4,
@@ -176,9 +176,12 @@ if __name__ == '__main__':
         res_height=720,
         model='yolov5n',
         source='noisy',
-        dest='frame_diff/noisy',
+        dest='frame_crop/sparse',
         framerate=25,
         frame_cap=250,
         conf=0.4,
         save_results=True
     )
+    clear_chart()
+    time.sleep(5)
+    
