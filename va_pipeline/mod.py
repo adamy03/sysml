@@ -26,7 +26,8 @@ def run(
         img_height,
         fps,          # TODO:no implementation yet
         frame_cap,
-        conf
+        conf,
+        video_path
         ):
     """
     Runs object detection pipeline given a model and video. 
@@ -45,11 +46,14 @@ def run(
     model.max_det = 100  # maximum number of detections per image
 
     # VIDEO ANALYSIS  --------------------------------------------------------
-    # Read video, initialize output array, and being frame counte
-    cap = cv2.VideoCapture(f'../samples/YouTube/Road_traffic_15/segments/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
+    # Read video, initialize output array, and being frame counter
+    if video_path == None:
+        cap = cv2.VideoCapture(f'../samples/YouTube/testing_samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
+    else:
+        cap = cv2.VideoCapture(f'{video_path}/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     #subprocess.run("cd", shell=True)
     # cap = cv2.VideoCapture(f'./sysml/samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
-    cap = cv2.VideoCapture(f'./sysml/samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
+    #cap = cv2.VideoCapture(f'./sysml/samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     outputs = []
 
     frame_no = 1
@@ -107,11 +111,12 @@ def parse_opt():
     parser = argparse.ArgumentParser()
     parser.add_argument('--yolov5-model', type=str, default='yolov5n', help='yolov5 model size')
     parser.add_argument('--video-source', type=str, default='sparse', help='input video path') 
-    parser.add_argument('--img-width', type=int, default=1920, help='inference size width')
-    parser.add_argument('--img-height', type=int, default=1080, help='inference size height')
+    parser.add_argument('--img-width', type=int, default=1280, help='inference size width')
+    parser.add_argument('--img-height', type=int, default=720, help='inference size height')
     parser.add_argument('--fps', type=int, default=250, help='frames to process per second of the video')
     parser.add_argument('--frame-cap', type=int, default=250, help='max number of frames to process')
     parser.add_argument('--conf', type=float, default=0.6, help='model confidence threshold')
+    parser.add_argument('--video-path', type=str, default=None, help='video folder path')
     opt = parser.parse_args()
     return opt
 
