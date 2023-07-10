@@ -38,9 +38,10 @@ def run(
     Runs object detection pipeline given a model and video. 
     Returns runtime, number of frames, model outputs
     """
+
     # Regular Inf Path
     #INFERENCE_PATH = f'~/sysml/testing/test_results/mAP_experiments/{conf}_conf/{video_source}_{yolov5_model}_{img_width}_{img_height}_{conf}conf.csv'
-    INFERENCE_PATH = f'~/sysml/testing/test_results/mAP_experiments/newTesting/{conf}/{video_source}_{yolov5_model}_{img_width}_{img_height}_{conf}conf.csv'
+    INFERENCE_PATH = f'../testing/test_results/new_video_results/{video_source}_{yolov5_model}_{img_width}_{img_height}_{conf}conf.csv'
 
 
     # Setup for inference ----------------------------------------------------
@@ -50,7 +51,7 @@ def run(
 
     # VIDEO ANALYSIS  --------------------------------------------------------
     # Read video, initialize output array, and being frame counte
-    cap = cv2.VideoCapture(f'../samples/other1/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
+    cap = cv2.VideoCapture(f'../samples/YouTube/Road_traffic_15/segments/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     #subprocess.run("cd", shell=True)
     # cap = cv2.VideoCapture(f'./sysml/samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     outputs = []
@@ -122,11 +123,11 @@ def parse_opt():
     parser = argparse.ArgumentParser()
     parser.add_argument('--yolov5-model', type=str, default='yolov5n', help='yolov5 model size')
     parser.add_argument('--video-source', type=str, default='sparse', help='input video path') 
-    parser.add_argument('--img-width', type=int, default=1280, help='inference size width')
-    parser.add_argument('--img-height', type=int, default=720, help='inference size height')
+    parser.add_argument('--img-width', type=int, default=1920, help='inference size width')
+    parser.add_argument('--img-height', type=int, default=1080, help='inference size height')
     parser.add_argument('--fps', type=int, default=250, help='frames to process per second of the video')
     parser.add_argument('--frame-cap', type=int, default=250, help='max number of frames to process')
-    parser.add_argument('--conf', type=float, default=0.4, help='model confidence threshold')
+    parser.add_argument('--conf', type=float, default=0.6, help='model confidence threshold')
     opt = parser.parse_args()
     return opt
 
