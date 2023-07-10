@@ -18,12 +18,6 @@ if str(ROOT) not in sys.path:
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 INFERENCE_PATH = './sysml/testing/test_results/temp.csv'
 
-def process_frame(frame, prev) -> bool:
-    frame_var = np.var(frame)
-    if get_diff(frame, prev, frame_var) > 0.005:
-        return True
-    else: 
-        return False
     
 def run(
         yolov5_model,
@@ -39,8 +33,7 @@ def run(
     Returns runtime, number of frames, model outputs
     """
     # Regular Inf Path
-    #INFERENCE_PATH = f'~/sysml/testing/test_results/mAP_experiments/{conf}_conf/{video_source}_{yolov5_model}_{img_width}_{img_height}_{conf}conf.csv'
-    INFERENCE_PATH = f'~/sysml/testing/test_results/mAP_experiments/newTesting/{conf}/{video_source}_{yolov5_model}_{img_width}_{img_height}_{conf}conf.csv'
+    # INFERENCE_PATH = f'~/sysml/testing/test_results/frame_crop/{video_source}_{yolov5_model}_{img_width}_{img_height}.csv'
 
 
     # Setup for inference ----------------------------------------------------
@@ -50,36 +43,22 @@ def run(
 
     # VIDEO ANALYSIS  --------------------------------------------------------
     # Read video, initialize output array, and being frame counte
-    cap = cv2.VideoCapture(f'../samples/other1/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
-    #subprocess.run("cd", shell=True)
-    # cap = cv2.VideoCapture(f'./sysml/samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
+    cap = cv2.VideoCapture(f'../samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     outputs = []
 
-    # Test if video was read
-    ret, frame = cap.read()
-    if not ret:
-        raise ValueError('Could not read file')
-    
-    # Get inital readings
-    prev_frame = frame
-    out = model(prev_frame, size=[img_width, img_height])
-    prev_inf = out.pandas().xywh[0]
-    prev_inf['frame'] = 1
-    outputs.append(prev_inf.copy())
-    frame_no = 2
+    frame_no = 1
 
     # Start timer
     start = time.time()
     while frame_no <= frame_cap:
         ret, frame = cap.read()
+
         if not ret:
             print('No frame returned')
             break
 
-        if process_frame(frame, prev_frame):
-            out = model(frame, size=[img_width, img_height])
-            inf = out.pandas().xywh[0]
-            #print(inf)
+        if True:
+            inf = cropped_detection(model, frame)
 
             inf['frame'] = frame_no
             outputs.append(inf)
@@ -89,7 +68,6 @@ def run(
             outputs.append(prev_inf.copy())
 
         frame_no += 1
-        prev_frame = frame
         
     cap.release()
     end = time.time()
@@ -124,8 +102,8 @@ def parse_opt():
     parser.add_argument('--video-source', type=str, default='sparse', help='input video path') 
     parser.add_argument('--img-width', type=int, default=1280, help='inference size width')
     parser.add_argument('--img-height', type=int, default=720, help='inference size height')
-    parser.add_argument('--fps', type=int, default=250, help='frames to process per second of the video')
-    parser.add_argument('--frame-cap', type=int, default=250, help='max number of frames to process')
+    parser.add_argument('--fps', type=int, default=25, help='frames to process per second of the video')
+    parser.add_argument('--frame-cap', type=int, default=5, help='max number of frames to process')
     parser.add_argument('--conf', type=float, default=0.4, help='model confidence threshold')
     opt = parser.parse_args()
     return opt
