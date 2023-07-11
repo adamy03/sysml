@@ -1,0 +1,8 @@
+{
+    "medium_small_mixed_faster.mp4": "medium_small_mixed_faster_yolov5x_1280_720_0.6conf.csv",
+    "medium_small_mixed_slower.mp4": "medium_small_mixed_slower_yolov5x_1280_720_0.6conf.csv",
+    "noisy_large_slow.mp4": "noisy_large_slow_yolov5x_1280_720_0.6conf.csv",
+    "noisy_small_mixed_merge.mp4": "noisy_small_mixed_merge_yolov5x_1280_720_0.6conf.csv",
+    "sparse_large_slow_sideroad.mp4": "sparse_large_slow_sideroad_yolov5x_1280_720_0.6conf.csv",
+    "sparse_large_slow_sideview.mp4": "sparse_large_slow_sideview_yolov5x_1280_720_0.6conf.csv"
+}
