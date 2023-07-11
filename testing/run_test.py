@@ -87,7 +87,7 @@ def run_mod(
         no_frames = parsed_out['frames']
 
         # Calculate mAP
-        mAP = 0
+        mAP = -1
         if get_map:
             try:
                 gt = get_ground_truth_list(res_width, res_height, ground_truth, no_frames)
@@ -120,7 +120,7 @@ def run_mod(
 if __name__ == '__main__':
     dir_to_vid = './sysml/samples/testing/videos/'
     dir_to_gt = './sysml/samples/testing/ground_truth/'
-    test_dir = './testing/test_results/config_testing/resolution'
+    test_dir = './testing/test_results/config_testing/resolution/'
     
     with open('./samples/testing/test_pairs.json') as file:
         pairs = json.load(file)
@@ -128,15 +128,35 @@ if __name__ == '__main__':
     for vid, gt in pairs.items():
         print(os.path.join(dir_to_vid, vid))
         run_mod(
-            res_width=1280,
-            res_height=720,
+            res_width=960,
+            res_height=540,
             model='yolov5n',
             source=os.path.join(dir_to_vid, vid),
             ground_truth=os.path.join(dir_to_gt, gt),
             test_dir=test_dir,
             framerate=25,
-            frame_cap=5,
+            frame_cap=250,
             conf=0.6,
             save_results=True,
             get_map=False
         )
+        time.sleep(2)
+        clear_chart()
+    
+    for vid, gt in pairs.items():
+        print(os.path.join(dir_to_vid, vid))
+        run_mod(
+            res_width=640,
+            res_height=360,
+            model='yolov5n',
+            source=os.path.join(dir_to_vid, vid),
+            ground_truth=os.path.join(dir_to_gt, gt),
+            test_dir=test_dir,
+            framerate=25,
+            frame_cap=250,
+            conf=0.6,
+            save_results=True,
+            get_map=False
+        )
+        time.sleep(2)
+        clear_chart()

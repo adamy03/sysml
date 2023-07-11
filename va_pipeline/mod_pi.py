@@ -26,8 +26,7 @@ def run(
         img_height,
         fps,          # TODO:no implementation yet
         frame_cap,
-        conf,
-        video_path
+        conf
         ):
     """
     Runs object detection pipeline given a model and video. 
@@ -41,7 +40,7 @@ def run(
 
     # VIDEO ANALYSIS  --------------------------------------------------------
     # Read video, initialize output array, and being frame counter
-    cap = cv2.VideoCapture(video_path)
+    cap = cv2.VideoCapture(video_source)
     outputs = []
 
     frame_no = 1
