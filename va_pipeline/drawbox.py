@@ -49,11 +49,12 @@ def draw_boxes(video_path, ground_box, inference_box, out_path):
 
 # # Data Selection/ Output
 
-video_path = '../samples/YouTube/Road_traffic_15/segments/medium_large_slow.mp4'
-ground = pd.read_csv('../testing/test_results/new_video_results/medium_large_slow_yolov5x_1920_1080_0.6conf.csv')   # Green Bounding Box CSV Path
+video_path = '../testing/new_videos/videos/small_fast.mp4'
+ground = pd.read_csv('../samples/testing/new_videos/ground_truth/small_fast_yolov5x_1280_720_0.6.csv')   # Green Bounding Box CSV Path
 # inference = pd.read_csv('../testing/test_results/config_testing/resolution/sparse/sparse_yolov5n_960_540_25fps_inference.csv')   # Blue Bounding Box CSV Path
-
-output_path = '../samples/output_video.mp4'
+ground = pd.read_csv("C:/Users/holli/sysml/samples/testing/new_videos/ground_truth/small_slow_yolov5x_1280_720_0.6.csv")
+video_path = "C:/Users/holli/sysml/samples/testing/new_videos/videos/small_slow.mp4"
+output_path = '../testing/output_video.mp4'
 
 
 # Run the function
