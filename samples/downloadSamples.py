@@ -1,6 +1,6 @@
 import subprocess
 
-directory = "C:/Users/shiva/sysml/samples/YouTube"
+directory = "."
 file_path = "downloadLinks.txt"  
 
 with open(file_path, "r") as file:
