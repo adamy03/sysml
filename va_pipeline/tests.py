@@ -2,7 +2,7 @@ import os
 import subprocess
 
 # Get all file names from the directory
-folder_path = '../samples'
+folder_path = '../samples/YouTube/testing_samples/'
 file_names = os.listdir(folder_path)
 
 # Add complete path to the file names if required
@@ -10,15 +10,19 @@ file_names = os.listdir(folder_path)
 
 # Initialize an empty list to store the commands
 commands = []
+#(1280, 720), (960, 540), (640, 360)
+#0.3, 0.4, 0.5, 0.6, 0.7
 
 # Loop through all file names
-for res in [(1280, 720), (960, 540), (640, 360)]:
-    for conf in [0.3, 0.4, 0.5, 0.6, 0.7]:
-        for file_name in file_names:
-            # Form the command and add to the list
-            print(file_name)
-            command = f"python C:/Users/holli/sysml/va_pipeline/mod.py --img-width {res[0]} --img-height {res[1]} --yolov5-model yolov5n --conf {conf} --video-source \"{file_name}\""
-            commands.append(command)
+for model in ['yolov5n', 'yolov5s']:
+    for res in [(1280, 720), (960, 540), (640, 360)]:
+        for conf in [0.6]:
+            for file_name in file_names:
+                # Form the command and add to the list
+                print(file_name)
+                file_name = file_name[0:-4]
+                command = f"python C:/Users/holli/sysml/va_pipeline/mod.py --img-width {res[0]} --img-height {res[1]} --yolov5-model {model} --conf {conf} --video-source \"{file_name}\""
+                commands.append(command)
 
 # Run each command using subprocess
 for command in commands:
