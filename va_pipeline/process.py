@@ -26,10 +26,10 @@ def compress(
 
 
 def get_frame_feature(frame, 
-                      edge_blur_rad, 
-                      edge_blur_var, 
-                      edge_canny_low, 
-                      edge_canny_high):
+                      edge_blur_rad=CANNY_DEFAULT, 
+                      edge_blur_var=1, 
+                      edge_canny_low=CANNY_LOW, 
+                      edge_canny_high=CANNY_HIGH):
     """Gets edge detections in image using CV2. Taken from Reducto
     """
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -70,17 +70,17 @@ def get_diff(curr, prev, var):
     return diff
 
 
-def cropped_detection(model, frame):
+def cropped_detection(model, frame_in, frame_out):
     """Returns transformed output of cropped region from yolov5 model
 
     Args:
         model (_type_): _description_
         frame (_type_): _description_
     """
-    edge = get_frame_feature(frame, CANNY_DEFAULT, 1, CANNY_LOW, CANNY_HIGH)
+    edge = get_frame_feature(frame_in, CANNY_DEFAULT, 1, CANNY_LOW, CANNY_HIGH)
     x,y,w,h = cv2.boundingRect(edge)
     
-    cropped = frame[y:(y + h), x:(x + w)]
+    cropped = frame_out[y:(y + h), x:(x + w)]
 
     output = model(cropped).pandas().xywh[0]
     output['xcenter'] += x
@@ -89,7 +89,7 @@ def cropped_detection(model, frame):
     return output
 
 
-def process_frame(frame, prev) -> bool:
+def process_frame_diff(frame, prev) -> bool:
     """Determines whether or not to process a given frame
 
     Args:
@@ -101,6 +101,18 @@ def process_frame(frame, prev) -> bool:
     """
     frame_var = np.var(frame)
     if get_diff(frame, prev, frame_var) > 0.005:
+        return True
+    else: 
+        return False
+    
+    
+def process_frame_diff_alternate(frame, frame_no, queue):
+    if len(queue) == 3:
+        return False
+        
+    if frame_no % 3 == 0:
+        queue.append(frame)
+        queue.pop(0)
         return True
     else: 
         return False

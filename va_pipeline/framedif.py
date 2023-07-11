@@ -23,27 +23,42 @@ def get_frame(cap):
     # Return the grayscale image
     return cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
 
-if __name__=='__main__':
-    cap = cv2.VideoCapture(0)
-    scaling_factor = 0.5
 
-    prev_frame = get_frame(cap)
-    cur_frame = get_frame(cap)
-    next_frame = get_frame(cap)
 
-    # Iterate until the user presses the ESC key
-    while True:
-        # Display the result of frame differencing
-        cv2.imshow("Object Movement", frame_diff(prev_frame, cur_frame, next_frame))
 
-        # Update the variables
-        prev_frame = cur_frame
-        cur_frame = next_frame
-        next_frame = get_frame(cap)
 
-        # Check if the user pressed ESC
-        key = cv2.waitKey(10)
-        if key == 27:
-            break
 
-    cv2.destroyAllWindows()
+
+
+
+
+
+
+
+
+
+
+# if __name__=='__main__':
+#     cap = cv2.VideoCapture(0)
+#     scaling_factor = 0.5
+
+#     prev_frame = get_frame(cap)
+#     cur_frame = get_frame(cap)
+#     next_frame = get_frame(cap)
+
+#     # Iterate until the user presses the ESC key
+#     while True:
+#         # Display the result of frame differencing
+#         cv2.imshow("Object Movement", frame_diff(prev_frame, cur_frame, next_frame))
+
+#         # Update the variables
+#         prev_frame = cur_frame
+#         cur_frame = next_frame
+#         next_frame = get_frame(cap)
+
+#         # Check if the user pressed ESC
+#         key = cv2.waitKey(10)
+#         if key == 27:
+#             break
+
+#     cv2.destroyAllWindows()
