@@ -57,6 +57,6 @@ video_path = "C:/Users/holli/sysml/samples/testing/new_videos/videos/small_slow.
 output_path = '../testing/output_video.mp4'
 
 
-# Run the function
-# draw_boxes(video_path=video_path, ground_box=ground, inference_box=inference, out_path=output_path)
-draw_boxes(video_path=video_path, ground_box=ground, inference_box=None, out_path=output_path)
+# # Run the function
+# # draw_boxes(video_path=video_path, ground_box=ground, inference_box=inference, out_path=output_path)
+# draw_boxes(video_path=video_path, ground_box=ground, inference_box=None, out_path=output_path)

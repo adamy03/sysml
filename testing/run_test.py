@@ -7,47 +7,17 @@ import sys
 import subprocess
 import pandas as pd
 import numpy as np
+import json
 
 sys.path.append('va_pipeline/')
 from calculate_accuracy import *
 from sensor import *
+from test_utils import *
 
 SSH_PI3 = "ssh pi@172.28.69.200"
 SSH_PI4 = "ssh pi@172.28.81.58"
 ROOT = '~/sysml/testing/'
-REPLACE = True
-
-"""
-Just runs python file, nothing else
-"""
-
-def run_file(command):
-    out = subprocess.run(command, 
-                         shell=True, 
-                         capture_output = True, 
-                         text = True
-                         )
-    return out
-
-
-def calculate_stats(fpath, runtime):
-    # Energy consumption
-    data = pd.read_csv(fpath)
-    area = np.trapz(data['Power (W)'], data['Time (s)'])
-
-    return area, area / runtime
-
-
-def parse_mod(out_str):
-    split = out_str.split('\n')
-    frames = split[0].split(': ')
-    runtime = split[1].split(': ')
-    avg = split[2].split(': ')
-    return {
-        frames[0]: int(frames[1]),
-        runtime[0]: float(runtime[1]),
-        avg[0]: float(avg[1])
-    }
+REPLACE = False
 
 
 def run_mod(
@@ -55,11 +25,13 @@ def run_mod(
     res_height: int,
     model: str,
     source: str,
-    dest: str,
+    ground_truth: str,
+    test_dir: str,
     framerate: int,
     frame_cap: int,
     conf: float,
     save_results: bool,
+    get_map:bool
     ):
     """Runs mod.py given parameters
 
@@ -74,8 +46,9 @@ def run_mod(
         save_results (bool): bool to save or discard model outputs
     """
     
-    test_dir = f'./testing/test_results/config_testing/{dest}/'
-    test_name = f'crop_{source}_{model}_{res_width}_{res_height}_{framerate}fps'
+    # Output paths of results
+    file_name = os.path.splitext(os.path.basename(source))[0]
+    test_name = f'{file_name}_{res_width}_{res_height}fps'
     test_path = test_dir + test_name
 
     # Check for existing files
@@ -85,7 +58,7 @@ def run_mod(
 
     # Run test
     runtime, energy, out = exec_file(SSH_PI4 + ' ' 
-                                    + 'python ./sysml/va_pipeline/mod.py '
+                                    + 'python ./sysml/va_pipeline/mod_pi.py '
                                     + f'--yolov5-model {model} '
                                     + f'--video-source {source} '
                                     + f'--img-width {res_width} '
@@ -114,21 +87,21 @@ def run_mod(
         no_frames = parsed_out['frames']
 
         # Calculate mAP
-        mAP = 0
-        try:
-            gt_path = f'./testing/test_results/config_testing/{source}_yolov5l_ground_truth.csv'
-            gt = get_ground_truth_list(res_width, res_height, gt_path, no_frames)
+        mAP = -1
+        if get_map:
+            try:
+                gt = get_ground_truth_list(res_width, res_height, ground_truth, no_frames)
 
-            # Get preds list
-            pred_path = f'{test_path}' + '_inference.csv'
-            preds = get_predictions_list(res_width, res_height, pred_path, no_frames)
+                # Get preds list
+                pred_path = f'{test_path}' + '_inference.csv'
+                preds = get_predictions_list(res_width, res_height, pred_path, no_frames)
 
-            # Calculate mAP scores
-            mAP = calculate_accuracy(gt, preds)
+                # Calculate mAP scores
+                mAP = calculate_accuracy(gt, preds)
 
-        except Exception as e:
-            print('mAP failed' + str(e))
-            pass
+            except Exception as e:
+                print('mAP failed' + str(e))
+                pass
 
         # Write inference times to file        
         with open(test_path + '_stats.txt', 'w') as file:
@@ -145,43 +118,45 @@ def run_mod(
     return 
 
 if __name__ == '__main__':
-    run_mod(
-        res_width=1280,
-        res_height=720,
-        model='yolov5n',
-        source='sparse',
-        dest='frame_crop/sparse',
-        framerate=25,
-        frame_cap=250,
-        conf=0.4,
-        save_results=True
-    )
-    clear_chart()
-    time.sleep(5)
-    run_mod(
-        res_width=1280,
-        res_height=720,
-        model='yolov5n',
-        source='medium',
-        dest='frame_crop/sparse',
-        framerate=25,
-        frame_cap=250,
-        conf=0.4,
-        save_results=True
-    )
-    clear_chart()
-    time.sleep(5)
-    run_mod(
-        res_width=1280,
-        res_height=720,
-        model='yolov5n',
-        source='noisy',
-        dest='frame_crop/sparse',
-        framerate=25,
-        frame_cap=250,
-        conf=0.4,
-        save_results=True
-    )
-    clear_chart()
-    time.sleep(5)
+    dir_to_vid = './sysml/samples/testing/videos/'
+    dir_to_gt = './sysml/samples/testing/ground_truth/'
+    test_dir = './testing/test_results/config_testing/resolution/'
     
+    with open('./samples/testing/test_pairs.json') as file:
+        pairs = json.load(file)
+    
+    for vid, gt in pairs.items():
+        print(os.path.join(dir_to_vid, vid))
+        run_mod(
+            res_width=960,
+            res_height=540,
+            model='yolov5n',
+            source=os.path.join(dir_to_vid, vid),
+            ground_truth=os.path.join(dir_to_gt, gt),
+            test_dir=test_dir,
+            framerate=25,
+            frame_cap=250,
+            conf=0.6,
+            save_results=True,
+            get_map=False
+        )
+        time.sleep(2)
+        clear_chart()
+    
+    for vid, gt in pairs.items():
+        print(os.path.join(dir_to_vid, vid))
+        run_mod(
+            res_width=640,
+            res_height=360,
+            model='yolov5n',
+            source=os.path.join(dir_to_vid, vid),
+            ground_truth=os.path.join(dir_to_gt, gt),
+            test_dir=test_dir,
+            framerate=25,
+            frame_cap=250,
+            conf=0.6,
+            save_results=True,
+            get_map=False
+        )
+        time.sleep(2)
+        clear_chart()
