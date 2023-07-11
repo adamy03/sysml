@@ -77,4 +77,4 @@ venv/
 *.pt
 
 # Video
-*.mp4
+#*.mp4
