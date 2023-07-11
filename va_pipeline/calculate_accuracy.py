@@ -112,7 +112,7 @@ if __name__ == '__main__':
         #gt = get_ground_truth_list(1920, 1080, gt_path, frame_cap)
         
         #####
-        gt = get_ground_truth_list(1920, 1080, f'~/sysml/testing/test_results/mAP_experiments/newTesting/{conf}/{source}.mp4_yolov5x_1920_1080_{conf}conf.csv',
+        gt = get_ground_truth_list(1920, 1080, f'~/sysml/samples/testing/test_results/{source}.mp4_yolov5x_1920_1080_{conf}conf.csv',
                                 250)
 
         # Get preds list
