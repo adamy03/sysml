@@ -27,7 +27,8 @@ def run(
         fps,          # TODO:no implementation yet
         frame_cap,
         conf,
-        video_path
+        video_path,
+        out_path
         ):
     """
     Runs object detection pipeline given a model and video. 
@@ -37,7 +38,13 @@ def run(
     # Regular Inf Path
     #INFERENCE_PATH = f'~/sysml/testing/test_results/mAP_experiments/{conf}_conf/{video_source}_{yolov5_model}_{img_width}_{img_height}_{conf}conf.csv'
     # INFERENCE_PATH = f'../testing/test_results/new_video_results/{video_source}_{yolov5_model}_{img_width}_{img_height}_{conf}conf.csv'
-    INFERENCE_PATH = f'~/sysml/testing/test_results/frame_crop/{video_source}_{yolov5_model}_{img_width}_{img_height}.csv'
+    if out_path == None:
+        INFERENCE_PATH = f'~/sysml/samples/testing/new_videos/ground_truth/{video_source}_{yolov5_model}_{img_width}_{img_height}_{conf}.csv'
+        print(INFERENCE_PATH)
+    else:
+        INFERENCE_PATH = f'{out_path}/{video_source}_{yolov5_model}_{img_width}_{img_height}_{conf}.csv'
+
+
 
 
     # Setup for inference ----------------------------------------------------
@@ -48,8 +55,9 @@ def run(
     # VIDEO ANALYSIS  --------------------------------------------------------
     # Read video, initialize output array, and being frame counter
     if video_path == None:
-        cap = cv2.VideoCapture(f'../samples/YouTube/testing_samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
+        cap = cv2.VideoCapture(f'../samples/testing/new_videos/videos/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     else:
+        print('hi')
         cap = cv2.VideoCapture(f'{video_path}/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     #subprocess.run("cd", shell=True)
     # cap = cv2.VideoCapture(f'./sysml/samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
@@ -68,7 +76,7 @@ def run(
             break
 
         if True:
-            inf = cropped_detection(model, frame)
+            inf = cropped_detection(model, frame, frame)
 
             inf['frame'] = frame_no
             outputs.append(inf)
@@ -116,7 +124,8 @@ def parse_opt():
     parser.add_argument('--fps', type=int, default=250, help='frames to process per second of the video')
     parser.add_argument('--frame-cap', type=int, default=250, help='max number of frames to process')
     parser.add_argument('--conf', type=float, default=0.6, help='model confidence threshold')
-    parser.add_argument('--video-path', type=str, default=None, help='video folder path')
+    parser.add_argument('--video-path', type=str, default=None, help='video file path')
+    parser.add_argument('--out-path', type=str, default=None, help='output folder location')
     opt = parser.parse_args()
     return opt
 
