@@ -98,21 +98,22 @@ def calculate_accuracy(ground_truth, prediction):
 
 
 if __name__ == '__main__':
-    for conf in [0.4]:
+    for source in ['large_fast', 'large_slow', 'small_fast', 'small_slow']:
         # Change to name and path of files
-        source = 'bird'
+        # source = 'large_fast'
         res_width = 1280
         res_height = 720
         model = 'yolov5n'
         framerate = 25
         frame_cap = 250
+        conf = 0.6
         
         # Get ground truth list
         #gt_path = f'~/sysml/testing/test_results/config_testing/{source}_yolov5l_ground_truth.csv'
         #gt = get_ground_truth_list(1920, 1080, gt_path, frame_cap)
         
         #####
-        gt = get_ground_truth_list(1920, 1080, f'~/sysml/samples/testing/test_results/{source}.mp4_yolov5x_1920_1080_{conf}conf.csv',
+        gt = get_ground_truth_list(1920, 1080, f'~/sysml/samples/testing/ground_truth/{source}_yolov5x_1280_720_{conf}.csv',
                                 250)
 
         # Get preds list
@@ -122,7 +123,7 @@ if __name__ == '__main__':
         #preds = get_predictions_list(res_width, res_height, pred_path)
         
         ####
-        preds = get_predictions_list(res_width, res_height, f'~/sysml/testing/test_results/mAP_experiments/newTesting/{conf}/{source}.mp4_{model}_{res_width}_{res_height}_{conf}conf.csv',
+        preds = get_predictions_list(res_width, res_height, f'~/sysml/samples/testing/ground_truth/{source}_{model}_{res_width}_{res_height}_{conf}.csv',
                                     250)
 
 
