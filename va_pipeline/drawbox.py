@@ -1,5 +1,11 @@
+import os
+import sys
+import argparse
 import cv2
 import pandas as pd
+
+from pathlib import Path
+from process import *
 
 def draw_boxes(video_path, ground_box, inference_box, out_path):
     cap = cv2.VideoCapture(video_path)
@@ -47,14 +53,26 @@ def draw_boxes(video_path, ground_box, inference_box, out_path):
     cv2.destroyAllWindows()
 
 
-# Data Selection/ Output
-# if __name__ == '__main__':
-#     inference = pd.read_csv('C:/Users/holli/sysml/samples/testing/ground_truth/small_slow_yolov5n_1280_720_0.6.csv')   # Blue Bounding Box CSV Path
-#     ground = pd.read_csv("C:/Users/holli/sysml/samples/testing/ground_truth/small_slow_yolov5x_1280_720_0.6.csv") # Green Bounding Box
-#     video_path = "C:/Users/holli/sysml/samples/testing/videos/small_slow.mp4"
-#     output_path = '../testing/output_video.mp4'
+# # Data Selection/ Output
 
+def run(
+        inference_box,
+        ground_box,
+        video_path,
+        output_path
+        ):
+    inference_box = inference_box.replace('\\','/')
+    ground_box = ground_box.replace('\\','/')
+    video_path = video_path.replace('\\','/')
+    output_path = output_path.replace('\\','/')
 
-#     # # Run the function
-#     draw_boxes(video_path=video_path, ground_box=ground, inference_box=inference, out_path=output_path)
-#     # draw_boxes(video_path=video_path, ground_box=ground, inference_box=None, out_path=output_path)
+    if inference_box == None:
+        draw_boxes(video_path, ground_box, inference_box, output_path)
+    else:
+        draw_boxes(video_path, ground_box, None, output_path)
+
+    
+
+# # Run the function
+draw_boxes(video_path=video_path, ground_box=ground, inference_box=inference, out_path=output_path)
+# draw_boxes(video_path=video_path, ground_box=ground, inference_box=None, out_path=output_path)
