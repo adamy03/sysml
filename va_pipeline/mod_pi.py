@@ -45,12 +45,12 @@ def run(
     outputs = []
     frame_no = 1
 
+    # Get first frame
     ret, frame = cap.read()
     prev = model(frame, size=(img_width, img_height))
     prev = prev.pandas().xywh[0]
     prev['frame'] = frame_no
     outputs.append(prev)
-
     frame_no = 2
     
 
@@ -63,7 +63,7 @@ def run(
             print('No frame returned')
             break
 
-        if frame_no % (int(INPUT_FPS / fps)):
+        if frame_no % (int(INPUT_FPS / fps)) == 0:
             output = model(frame, size=(img_width, img_height))
             output = output.pandas().xywh[0]
             output['frame'] = frame_no
