@@ -15,7 +15,8 @@ def compress(
         scaleX: float, 
         scaleY: float
     ) -> np.array:
-    """Compresses an image given a x and y scale factor
+    """
+    Compresses an image given a x and y scale factor
     """    
     width = img.shape[0]
     height = img.shape[1]
@@ -30,7 +31,8 @@ def get_frame_feature(frame,
                       edge_blur_var=1, 
                       edge_canny_low=CANNY_LOW, 
                       edge_canny_high=CANNY_HIGH):
-    """Gets edge detections in image using CV2. Taken from Reducto
+    """
+    Gets edge detections in image using CV2. Taken from Reducto
     """
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     blur = cv2.GaussianBlur(gray, (edge_blur_rad, edge_blur_rad), edge_blur_var)
@@ -41,7 +43,8 @@ def get_frame_feature(frame,
 def cal_frame_diff(edge, 
                    prev_edge, 
                    edge_thresh_low_bound):
-    """Gets edge detections in image using CV2. Taken from Reducto
+    """
+    Gets edge detections in image using CV2. Taken from Reducto
     """
     total_pixels = edge.shape[0] * edge.shape[1]
     frame_diff = cv2.absdiff(edge, prev_edge)
@@ -52,7 +55,8 @@ def cal_frame_diff(edge,
 
 
 def get_diff(curr, prev, var):
-    """Gets frame difference factor
+    """
+    Gets frame difference factor
 
     Args:
         curr (_type_): _description_
@@ -71,7 +75,8 @@ def get_diff(curr, prev, var):
 
 
 def cropped_detection(model, frame_in, frame_out):
-    """Returns transformed output of cropped region from yolov5 model
+    """
+    Returns transformed output of cropped region from yolov5 model
 
     Args:
         model (_type_): _description_
@@ -90,7 +95,8 @@ def cropped_detection(model, frame_in, frame_out):
 
 
 def process_frame_diff(frame, prev) -> bool:
-    """Determines whether or not to process a given frame
+    """
+    Determines whether or not to process a given frame
 
     Args:
         frame (_type_): _description_
