@@ -47,14 +47,15 @@ def run(
 
     # Get first frame
     ret, frame = cap.read()
-    prev = model(frame, size=(img_width, img_height))
-    prev = prev.pandas().xywh[0]
-    prev['frame'] = frame_no
-    outputs.append(prev)
+    prev_out = model(frame, size=(img_width, img_height))
+    prev_out = prev_out.pandas().xywh[0]
+    prev_out['frame'] = frame_no
+    prev_frame = frame
+    
+    outputs.append(prev_out)
     frames_processed = 1
     frame_no = 2
     
-
     # Start timer
     start = time.time()
     while frame_no <= max_frames:
@@ -64,20 +65,20 @@ def run(
             print('No frame returned')
             break
 
-        # if frame_no % (int(INPUT_FPS / fps)) == 0:
-        if True:
+        if process_frame_diff(frame, prev_frame):
             output = model(frame, size=(img_width, img_height))
             output = output.pandas().xywh[0]
             output['frame'] = frame_no
             
-            prev = output
+            prev_out = output
             frames_processed += 1
             outputs.append(output)
         else:
-            prev = prev.copy()
-            prev['frame'] = frame_no
-            outputs.append(prev)
+            prev_out = prev_out.copy()
+            prev_out['frame'] = frame_no
+            outputs.append(prev_out)
 
+        prev_frame = frame
         frame_no += 1
         
     cap.release()
