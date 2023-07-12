@@ -98,44 +98,38 @@ def calculate_accuracy(ground_truth, prediction):
 
 
 if __name__ == '__main__':
+    
+    model = 'yolov5n'
+    framerate = 25
+    frame_cap = 250
+    conf = 0.6
+    
+    # Set up dataframe
+    cols = ['Video', 'Width', 'Height', 'mAP']
+    df = pd.DataFrame(columns=cols)
+    
     for source in ['large_fast', 'large_slow', 'small_fast', 'small_slow']:
-        # Change to name and path of files
-        # source = 'large_fast'
-        res_width = 1280
-        res_height = 720
-        model = 'yolov5n'
-        framerate = 25
-        frame_cap = 250
-        conf = 0.6
-        
-        # Get ground truth list
-        #gt_path = f'~/sysml/testing/test_results/config_testing/{source}_yolov5l_ground_truth.csv'
-        #gt = get_ground_truth_list(1920, 1080, gt_path, frame_cap)
-        
-        #####
-        gt = get_ground_truth_list(1920, 1080, f'~/sysml/samples/testing/ground_truth/{source}_yolov5x_1280_720_{conf}.csv',
-                                250)
+        for size in [[1280, 720], [960, 540], [640, 360]]:
+            res_width = size[0]
+            res_height = size[1]
+            
+            # Get ground truth list
+            gt = get_ground_truth_list(1920, 1080, f'~/sysml/samples/testing/ground_truth/{source}.csv',
+                                    200)
 
-        # Get preds list
-        pred_dir = f'~/sysml/testing/test_results/config_testing/{source}/'
-        pred_name = f'{source}_{model}_{res_width}_{res_height}_{framerate}fps'
-        pred_path = pred_dir + pred_name + '_inference.csv'
-        #preds = get_predictions_list(res_width, res_height, pred_path)
-        
-        ####
-        preds = get_predictions_list(res_width, res_height, f'~/sysml/samples/testing/ground_truth/{source}_{model}_{res_width}_{res_height}_{conf}.csv',
-                                    250)
+            # Get predictions list
+            preds = get_predictions_list(res_width, res_height, '~/sysml/testing/test_results/config_testing/resolution/' + 
+                                         f'{source}_{res_width}_{res_height}_inference.csv',
+                                        200)
+
+            mAP = calculate_accuracy(gt, preds)
+            
+            # Add new row to dataframe
+            new_row = {'Video': source, 'Width': res_width, 'Height': res_height, 'mAP': mAP}
+            df.loc[len(df)] = new_row
 
 
-        # Calculate mAP scores
-        mAP = calculate_accuracy(gt, preds)
-        print(f"{source}, {model}, {conf}, {res_width}, {res_height}")
-        print("mAP: ", " ", mAP)
-
-        # Write mAP score to file
-        #file_dir = f'C:/Users/shiva/sysml/testing/test_results/config_testing/resolution/{source}/'
-        #file_path = file_dir + pred_name + '_stats.txt'
-
-        #with open(file_path, 'a') as f:
-        #    f.write(f'\nmAP: {mAP}\n')
-
+            # Print mAP scores
+            #mAP = calculate_accuracy(gt, preds)
+            print(f"{source}, {model}, {conf}, {res_width}, {res_height}")
+            print("mAP: ", " ", mAP)
