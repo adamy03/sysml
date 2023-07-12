@@ -94,7 +94,7 @@ def cropped_detection(model, frame_in, frame_out):
     return output
 
 
-def process_frame_diff(frame, prev) -> bool:
+def process_frame_diff(frame, prev, thresh) -> bool:
     """
     Determines whether or not to process a given frame
 
@@ -106,7 +106,7 @@ def process_frame_diff(frame, prev) -> bool:
         bool: _description_
     """
     frame_var = np.var(frame)
-    if get_diff(frame, prev, frame_var) > 0.005:
+    if get_diff(frame, prev, frame_var) > thresh:
         return True
     else: 
         return False
