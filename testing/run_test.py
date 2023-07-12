@@ -48,7 +48,7 @@ def run_mod(
     
     # Output paths of results
     file_name = os.path.splitext(os.path.basename(source))[0]
-    test_name = f'{file_name}_{res_width}_{res_height}'
+    test_name = f'{file_name}_{framerate}fps'
     test_path = test_dir + test_name
 
     # Check for existing files
@@ -62,7 +62,8 @@ def run_mod(
                                     + f'--yolov5-model {model} '
                                     + f'--video-source {source} '
                                     + f'--img-width {res_width} '
-                                    + f'--img-height {res_height} '  
+                                    + f'--img-height {res_height} '
+                                    + f'--fps {framerate} ' 
                                     + f'--frame-cap {frame_cap} '
                                     + f'--conf {conf}'
                                     )
@@ -115,12 +116,12 @@ def run_mod(
                     + f'energy per frame: {energy / parsed_out["frames"]}\n'
                     + f'mAP: {mAP}'
                     )
-    return 
+            
 
 if __name__ == '__main__':
     dir_to_vid = './sysml/samples/testing/videos/'
     dir_to_gt = './sysml/samples/testing/ground_truth/'
-    test_dir = './testing/test_results/config_testing/resolution/'
+    test_dir = './testing/test_results/config_testing/framerate/'
     
     with open('./samples/testing/test_pairs.json') as file:
         pairs = json.load(file)
@@ -134,11 +135,11 @@ if __name__ == '__main__':
             source=os.path.join(dir_to_vid, vid),
             ground_truth=os.path.join(dir_to_gt, gt),
             test_dir=test_dir,
-            framerate=25,
+            framerate=5,
             frame_cap=250,
             conf=0.6,
             save_results=True,
-            get_map=False
+            get_map=True
         )
         time.sleep(2)
         clear_chart()
@@ -146,17 +147,17 @@ if __name__ == '__main__':
     for vid, gt in pairs.items():
         print(os.path.join(dir_to_vid, vid))
         run_mod(
-            res_width=960,
-            res_height=540,
+            res_width=1280,
+            res_height=720,
             model='yolov5n',
             source=os.path.join(dir_to_vid, vid),
             ground_truth=os.path.join(dir_to_gt, gt),
             test_dir=test_dir,
-            framerate=25,
+            framerate=3,
             frame_cap=250,
             conf=0.6,
             save_results=True,
-            get_map=False
+            get_map=True
         )
         time.sleep(2)
         clear_chart()
@@ -164,17 +165,17 @@ if __name__ == '__main__':
     for vid, gt in pairs.items():
         print(os.path.join(dir_to_vid, vid))
         run_mod(
-            res_width=640,
-            res_height=360,
+            res_width=1280,
+            res_height=720,
             model='yolov5n',
             source=os.path.join(dir_to_vid, vid),
             ground_truth=os.path.join(dir_to_gt, gt),
             test_dir=test_dir,
-            framerate=25,
+            framerate=1,
             frame_cap=250,
             conf=0.6,
             save_results=True,
-            get_map=False
+            get_map=True
         )
         time.sleep(2)
         clear_chart()
