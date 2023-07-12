@@ -41,7 +41,7 @@ def run_mod(
         model (str): desired yolo model
         source (str): sample video (sparse, medium, noisy)
         dest (str): folder destination for inference (relative to config_testing/)
-        framerate (int): input framerate
+        framerate (int): frames processed per second
         frame_cap (int): max number of frames to process (inclusive)
         save_results (bool): bool to save or discard model outputs
     """
