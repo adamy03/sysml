@@ -48,13 +48,13 @@ def draw_boxes(video_path, ground_box, inference_box, out_path):
 
 
 # # Data Selection/ Output
+if __name__ == '__main__':
+    inference = pd.read_csv('C:/Users/holli/sysml/samples/testing/ground_truth/small_slow_yolov5n_1280_720_0.6.csv')   # Blue Bounding Box CSV Path
+    ground = pd.read_csv("C:/Users/holli/sysml/samples/testing/ground_truth/small_slow_yolov5x_1280_720_0.6.csv") # Green Bounding Box
+    video_path = "C:/Users/holli/sysml/samples/testing/videos/small_slow.mp4"
+    output_path = '../testing/output_video.mp4'
 
-inference = pd.read_csv('C:/Users/holli/sysml/samples/testing/ground_truth/small_slow_yolov5n_1280_720_0.6.csv')   # Blue Bounding Box CSV Path
-ground = pd.read_csv("C:/Users/holli/sysml/samples/testing/ground_truth/small_slow_yolov5x_1280_720_0.6.csv") # Green Bounding Box
-video_path = "C:/Users/holli/sysml/samples/testing/videos/small_slow.mp4"
-output_path = '../testing/output_video.mp4'
 
-
-# # Run the function
-draw_boxes(video_path=video_path, ground_box=ground, inference_box=inference, out_path=output_path)
-# draw_boxes(video_path=video_path, ground_box=ground, inference_box=None, out_path=output_path)
+    # # Run the function
+    draw_boxes(video_path=video_path, ground_box=ground, inference_box=inference, out_path=output_path)
+    # draw_boxes(video_path=video_path, ground_box=ground, inference_box=None, out_path=output_path)
