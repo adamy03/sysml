@@ -107,12 +107,13 @@ def mAP_resolution(df, vid_names, vid_sizes):
             res_height = size[1]
             
             # Get ground truth list
-            gt = get_ground_truth_list(1280, 720, f'~/sysml/samples/testing/ground_truth/{source}.csv',
+            gt = get_ground_truth_list(1280, 720, '~/sysml/testing/test_results/config_testing/resolution/' + 
+                                       f'{source}_1280_720_25_inference.csv',
                                     200)
 
             # Get predictions list
             preds = get_predictions_list(res_width, res_height, '~/sysml/testing/test_results/config_testing/resolution/' + 
-                                        f'{source}_{res_width}_{res_height}_inference.csv',
+                                        f'{source}_{res_width}_{res_height}_25_inference.csv',
                                         200)
 
             mAP = calculate_accuracy(gt, preds)
@@ -122,7 +123,7 @@ def mAP_resolution(df, vid_names, vid_sizes):
             df.loc[len(df)] = new_row
             
             # Write mAP to file
-            file_dir = f'C:/Users/shiva/sysml/testing/test_results/config_testing/resolution/' + f'{source}_{res_width}_{res_height}_stats.txt'
+            file_dir = f'C:/Users/shiva/sysml/testing/test_results/config_testing/resolution/' + f'{source}_{res_width}_{res_height}_25_stats.txt'
 
             with open(file_dir, 'a') as f:
                 f.write(f'\nmAP: {mAP}\n')
@@ -137,12 +138,13 @@ def mAP_framerate(df, vid_names, frame_rates):
     for source in vid_names:
         for fps in frame_rates:
             # Get ground truth list
-            gt = get_ground_truth_list(1280, 720, f'~/sysml/samples/testing/ground_truth/{source}.csv',
+            gt = get_ground_truth_list(1280, 720, '~/sysml/testing/test_results/config_testing/resolution/' + 
+                                       f'{source}_1280_720_25_inference.csv',
                                     200)
 
             # Get predictions list
             preds = get_predictions_list(1280, 720, '~/sysml/testing/test_results/config_testing/framerate/' + 
-                                        f'{source}_{fps}fps_inference.csv',
+                                        f'{source}_1280_720_{fps}_inference_.csv',
                                         200)
 
             mAP = calculate_accuracy(gt, preds)
@@ -152,7 +154,7 @@ def mAP_framerate(df, vid_names, frame_rates):
             df.loc[len(df)] = new_row
             
             # Write mAP to file
-            file_dir = f'C:/Users/shiva/sysml/testing/test_results/config_testing/framerate/' + f'{source}_{fps}fps_stats.txt'
+            file_dir = f'C:/Users/shiva/sysml/testing/test_results/config_testing/framerate/' + f'{source}_1280_720_{fps}_stats_.txt'
 
             with open(file_dir, 'a') as f:
                 f.write(f'\nmAP: {mAP}\n')
@@ -171,7 +173,7 @@ if __name__ == '__main__':
     df = pd.DataFrame(columns=cols)
     
     # Calculate mAP for diff vids & resolutions
-    vid_names = ['large_fast', 'large_slow', 'small_fast', 'small_slow']
+    vid_names = ['largefast', 'largeslow', 'smallfast', 'smallslow']
     vid_sizes = [[1280, 720], [960, 540], [640, 360]]
     df = mAP_resolution(df, vid_names, vid_sizes)
     
