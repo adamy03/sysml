@@ -73,25 +73,6 @@ def run(
 
     
 
-
-"""
-Parses the arguments into variables, for new logic simply add a new argument
-Look through yolov5/detect.py for guidance on adding new arguments
-"""
-def parse_opt(): 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--inference-box', type=str, default=None, help='input inference_box.csv path')
-    parser.add_argument('--ground_box', type=str, default=None, help='input ground_box.csv path')
-    parser.add_argument('--video-source', type=str, default=None, help='input video path') 
-    parser.add_argument('--out-path', type=str, default='../samples/testing/output_video.mp4', help='output folder location')
-    opt = parser.parse_args()
-    return opt
-
-
-def main(opt):
-    run(**vars(opt))
-
-
-if __name__ == '__main__':
-    opt = parse_opt()
-    main(opt)
+# # Run the function
+draw_boxes(video_path=video_path, ground_box=ground, inference_box=inference, out_path=output_path)
+# draw_boxes(video_path=video_path, ground_box=ground, inference_box=None, out_path=output_path)
