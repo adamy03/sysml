@@ -17,6 +17,7 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 INFERENCE_PATH = '~/sysml/testing/test_results/temp.csv'
+INPUT_FPS = 25
 
     
 def run(
@@ -42,8 +43,16 @@ def run(
     # Read video, initialize output array, and being frame counter
     cap = cv2.VideoCapture(video_source)
     outputs = []
-
     frame_no = 1
+
+    ret, frame = cap.read()
+    prev = model(frame, size=(img_width, img_height))
+    prev = prev.pandas().xywh[0]
+    prev['frame'] = frame_no
+    outputs.append(prev)
+
+    frame_no = 2
+    
 
     # Start timer
     start = time.time()
@@ -54,10 +63,16 @@ def run(
             print('No frame returned')
             break
 
-        if True:
+        if frame_no % (int(INPUT_FPS / fps)):
             output = model(frame, size=(img_width, img_height))
             output = output.pandas().xywh[0]
+            output['frame'] = frame_no
+            prev = output
             outputs.append(output)
+        else:
+            prev = prev.copy()
+            prev['frame'] = frame_no
+            outputs.append(prev)
 
         frame_no += 1
         
