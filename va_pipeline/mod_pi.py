@@ -26,7 +26,7 @@ def run(
         img_width,
         img_height,
         fps,          # TODO:no implementation yet
-        frame_cap,
+        max_frames,
         conf
         ):
     """
@@ -51,23 +51,27 @@ def run(
     prev = prev.pandas().xywh[0]
     prev['frame'] = frame_no
     outputs.append(prev)
+    frames_processed = 1
     frame_no = 2
     
 
     # Start timer
     start = time.time()
-    while frame_no <= frame_cap:
+    while frame_no <= max_frames:
         ret, frame = cap.read()
 
         if not ret:
             print('No frame returned')
             break
 
-        if frame_no % (int(INPUT_FPS / fps)) == 0:
+        # if frame_no % (int(INPUT_FPS / fps)) == 0:
+        if True:
             output = model(frame, size=(img_width, img_height))
             output = output.pandas().xywh[0]
             output['frame'] = frame_no
+            
             prev = output
+            frames_processed += 1
             outputs.append(output)
         else:
             prev = prev.copy()
@@ -91,10 +95,11 @@ def run(
         return -1
 
     print(
-        f'frames: {frames}\n' + 
-        f'runtime (inference): {runtime}\n' +
-        f'average time per frame: {runtime / frames}\n' +
-        f'confidence: {conf}'
+        f'frames: {frames}\n'
+        + f'frames processed: {frames_processed}\n'
+        + f'runtime (inference): {runtime}\n'
+        + f'average time per frame: {runtime / frames}\n'
+        + f'confidence: {conf}'
     , file=sys.stdout)
 
     return 1
@@ -111,7 +116,7 @@ def parse_opt():
     parser.add_argument('--img-width', type=int, default=1280, help='inference size width')
     parser.add_argument('--img-height', type=int, default=720, help='inference size height')
     parser.add_argument('--fps', type=int, default=250, help='frames to process per second of the video')
-    parser.add_argument('--frame-cap', type=int, default=250, help='max number of frames to process')
+    parser.add_argument('--max-frames', type=int, default=250, help='max number of frames to process')
     parser.add_argument('--conf', type=float, default=0.6, help='model confidence threshold')
     opt = parser.parse_args()
     return opt
