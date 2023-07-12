@@ -17,7 +17,7 @@ from test_utils import *
 SSH_PI3 = "ssh pi@172.28.69.200"
 SSH_PI4 = "ssh pi@172.28.81.58"
 ROOT = '~/sysml/testing/'
-REPLACE = False
+REPLACE = True
 
 
 def run_mod(
@@ -28,7 +28,7 @@ def run_mod(
     ground_truth: str,
     test_dir: str,
     framerate: int,
-    frame_cap: int,
+    max_frames: int,
     conf: float,
     save_results: bool,
     get_map:bool
@@ -41,15 +41,15 @@ def run_mod(
         model (str): desired yolo model
         source (str): sample video (sparse, medium, noisy)
         dest (str): folder destination for inference (relative to config_testing/)
-        framerate (int): frames processed per second
-        frame_cap (int): max number of frames to process (inclusive)
+        framerate (int): input framerate
+        max_frames (int): max number of frames to process (inclusive)
         save_results (bool): bool to save or discard model outputs
     """
     
     # Output paths of results
-    file_name = os.path.splitext(os.path.basename(source))[0]
-    test_name = f'{file_name}_{framerate}fps'
-    test_path = test_dir + test_name
+    source_name = os.path.splitext(os.path.basename(source))[0]
+    test_name = f'temp'
+    test_path = os.path.join(test_dir, test_name)
 
     # Check for existing files
     if not REPLACE:
@@ -64,7 +64,7 @@ def run_mod(
                                     + f'--img-width {res_width} '
                                     + f'--img-height {res_height} '
                                     + f'--fps {framerate} ' 
-                                    + f'--frame-cap {frame_cap} '
+                                    + f'--max-frames {max_frames} '
                                     + f'--conf {conf}'
                                     )
     
@@ -108,6 +108,7 @@ def run_mod(
         with open(test_path + '_stats.txt', 'w') as file:
             file.write(
                     f'frames: {no_frames}\n'
+                    + f'frames processed: {str(parsed_out["frames processed"])}'
                     + f'runtime (inference): {str(parsed_out["runtime (inference)"])}\n'
                     + f'average time per frame: {parsed_out["average time per frame"]}\n'  
                     + f'runtime (total): {runtime}\n'
@@ -120,62 +121,19 @@ def run_mod(
 
 if __name__ == '__main__':
     dir_to_vid = './sysml/samples/testing/videos/'
-    dir_to_gt = './sysml/samples/testing/ground_truth/'
+    dir_to_gt = './samples/testing/ground_truth/'
     test_dir = './testing/test_results/config_testing/framerate/'
     
-    with open('./samples/testing/test_pairs.json') as file:
-        pairs = json.load(file)
-    
-    for vid, gt in pairs.items():
-        print(os.path.join(dir_to_vid, vid))
-        run_mod(
-            res_width=1280,
-            res_height=720,
-            model='yolov5n',
-            source=os.path.join(dir_to_vid, vid),
-            ground_truth=os.path.join(dir_to_gt, gt),
-            test_dir=test_dir,
-            framerate=5,
-            frame_cap=250,
-            conf=0.6,
-            save_results=True,
-            get_map=True
-        )
-        time.sleep(2)
-        clear_chart()
-    
-    for vid, gt in pairs.items():
-        print(os.path.join(dir_to_vid, vid))
-        run_mod(
-            res_width=1280,
-            res_height=720,
-            model='yolov5n',
-            source=os.path.join(dir_to_vid, vid),
-            ground_truth=os.path.join(dir_to_gt, gt),
-            test_dir=test_dir,
-            framerate=3,
-            frame_cap=250,
-            conf=0.6,
-            save_results=True,
-            get_map=True
-        )
-        time.sleep(2)
-        clear_chart()
-    
-    for vid, gt in pairs.items():
-        print(os.path.join(dir_to_vid, vid))
-        run_mod(
-            res_width=1280,
-            res_height=720,
-            model='yolov5n',
-            source=os.path.join(dir_to_vid, vid),
-            ground_truth=os.path.join(dir_to_gt, gt),
-            test_dir=test_dir,
-            framerate=1,
-            frame_cap=250,
-            conf=0.6,
-            save_results=True,
-            get_map=True
-        )
-        time.sleep(2)
-        clear_chart()
+    run_mod(
+        res_width=640,
+        res_height=480,
+        model='yolov5n',
+        source='./sysml/samples/testing/videos/large_fast.mp4',
+        ground_truth='./samples/testing/ground_truth/large_fast.csv',
+        test_dir='./',
+        framerate=1,
+        max_frames=250,
+        conf=0.6,
+        save_results=True,
+        get_map=True
+    )

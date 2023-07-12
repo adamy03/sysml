@@ -28,10 +28,12 @@ def calculate_stats(fpath, runtime):
 def parse_mod(out_str):
     split = out_str.split('\n')
     frames = split[0].split(': ')
-    runtime = split[1].split(': ')
-    avg = split[2].split(': ')
+    frames_processed = split[1].split(': ')
+    runtime = split[2].split(': ')
+    avg = split[3].split(': ')
     return {
         frames[0]: int(frames[1]),
+        frames_processed[0]: int(frames[1]),
         runtime[0]: float(runtime[1]),
         avg[0]: float(avg[1])
     }
