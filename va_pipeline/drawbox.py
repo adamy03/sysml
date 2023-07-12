@@ -1,5 +1,11 @@
+import os
+import sys
+import argparse
 import cv2
 import pandas as pd
+
+from pathlib import Path
+from process import *
 
 def draw_boxes(video_path, ground_box, inference_box, out_path):
     cap = cv2.VideoCapture(video_path)
@@ -49,12 +55,43 @@ def draw_boxes(video_path, ground_box, inference_box, out_path):
 
 # # Data Selection/ Output
 
-inference = pd.read_csv('C:/Users/holli/sysml/samples/testing/ground_truth/small_slow_yolov5n_1280_720_0.6.csv')   # Blue Bounding Box CSV Path
-ground = pd.read_csv("C:/Users/holli/sysml/samples/testing/ground_truth/small_slow_yolov5x_1280_720_0.6.csv") # Green Bounding Box
-video_path = "C:/Users/holli/sysml/samples/testing/videos/small_slow.mp4"
-output_path = '../testing/output_video.mp4'
+def run(
+        inference_box,
+        ground_box,
+        video_path,
+        output_path
+        ):
+    inference_box = inference_box.replace('\\','/')
+    ground_box = ground_box.replace('\\','/')
+    video_path = video_path.replace('\\','/')
+    output_path = output_path.replace('\\','/')
+
+    if inference_box == None:
+        draw_boxes(video_path, ground_box, inference_box, output_path)
+    else:
+        draw_boxes(video_path, ground_box, None, output_path)
+
+    
 
 
-# # Run the function
-draw_boxes(video_path=video_path, ground_box=ground, inference_box=inference, out_path=output_path)
-# draw_boxes(video_path=video_path, ground_box=ground, inference_box=None, out_path=output_path)
+"""
+Parses the arguments into variables, for new logic simply add a new argument
+Look through yolov5/detect.py for guidance on adding new arguments
+"""
+def parse_opt(): 
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--inference-box', type=str, default=None, help='input inference_box.csv path')
+    parser.add_argument('--ground_box', type=str, default=None, help='input ground_box.csv path')
+    parser.add_argument('--video-source', type=str, default=None, help='input video path') 
+    parser.add_argument('--out-path', type=str, default='../samples/testing/output_video.mp4', help='output folder location')
+    opt = parser.parse_args()
+    return opt
+
+
+def main(opt):
+    run(**vars(opt))
+
+
+if __name__ == '__main__':
+    opt = parse_opt()
+    main(opt)
