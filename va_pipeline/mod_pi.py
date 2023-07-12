@@ -65,7 +65,7 @@ def run(
             print('No frame returned')
             break
 
-        if process_frame_diff(frame, prev_frame):
+        if process_frame_diff(frame, prev_frame, 0.0025) and frame_no % (int(INPUT_FPS/fps)):
             output = model(frame, size=(img_width, img_height))
             output = output.pandas().xywh[0]
             output['frame'] = frame_no

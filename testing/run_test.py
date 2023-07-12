@@ -48,7 +48,7 @@ def run_mod(
     
     # Output paths of results
     source_name = os.path.splitext(os.path.basename(source))[0]
-    test_name = f'temp'
+    test_name = f'{source_name}_0.0025_{res_width}_{res_height}_{framerate}fps'
     test_path = os.path.join(test_dir, test_name)
 
     # Check for existing files
@@ -122,18 +122,25 @@ def run_mod(
 if __name__ == '__main__':
     dir_to_vid = './sysml/samples/testing/videos/'
     dir_to_gt = './samples/testing/ground_truth/'
-    test_dir = './testing/test_results/config_testing/framerate/'
-    
-    run_mod(
-        res_width=640,
-        res_height=480,
-        model='yolov5n',
-        source='./sysml/samples/testing/videos/large_fast.mp4',
-        ground_truth='./samples/testing/ground_truth/large_fast.csv',
-        test_dir='./',
-        framerate=1,
-        max_frames=250,
-        conf=0.6,
-        save_results=True,
-        get_map=True
-    )
+    test_dir = './testing/test_results/config_testing/differencing/edge/'
+
+    with open('./samples/testing/test_pairs.json') as file:
+            pairs = json.load(file)
+
+    for vid, gt in pairs.items():
+        print(os.path.join(dir_to_vid, vid))
+        run_mod(
+            res_width=1280,
+            res_height=720,
+            model='yolov5n',
+            source=os.path.join(dir_to_vid, vid),
+            ground_truth=os.path.join(dir_to_gt, gt),
+            test_dir=test_dir,
+            framerate=5,
+            max_frames=250,
+            conf=0.6,
+            save_results=True,
+            get_map=False
+        )
+        time.sleep(2)
+        clear_chart()
