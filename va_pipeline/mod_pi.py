@@ -17,6 +17,7 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 INFERENCE_PATH = '~/sysml/testing/test_results/temp.csv'
+INPUT_FRAMERATE = 25
 
     
 def run(
@@ -57,6 +58,7 @@ def run(
         if True:
             output = model(frame, size=(img_width, img_height))
             output = output.pandas().xywh[0]
+            output['frame'] = frame_no
             outputs.append(output)
 
         frame_no += 1
