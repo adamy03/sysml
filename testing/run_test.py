@@ -48,7 +48,7 @@ def run_mod(
     
     # Output paths of results
     file_name = os.path.splitext(os.path.basename(source))[0]
-    test_name = f'{file_name}_{res_width}_{res_height}fps'
+    test_name = f'{file_name}_{res_width}_{res_height}'
     test_path = test_dir + test_name
 
     # Check for existing files
@@ -124,6 +124,24 @@ if __name__ == '__main__':
     
     with open('./samples/testing/test_pairs.json') as file:
         pairs = json.load(file)
+    
+    for vid, gt in pairs.items():
+        print(os.path.join(dir_to_vid, vid))
+        run_mod(
+            res_width=1280,
+            res_height=720,
+            model='yolov5n',
+            source=os.path.join(dir_to_vid, vid),
+            ground_truth=os.path.join(dir_to_gt, gt),
+            test_dir=test_dir,
+            framerate=25,
+            frame_cap=250,
+            conf=0.6,
+            save_results=True,
+            get_map=False
+        )
+        time.sleep(2)
+        clear_chart()
     
     for vid, gt in pairs.items():
         print(os.path.join(dir_to_vid, vid))

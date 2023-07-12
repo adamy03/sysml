@@ -1,8 +1,0 @@
-frames: 250
-runtime (inference): 494.37578320503235
-average time per frame: 1.9775031328201294
-runtime (total): 513.1015634536743
-energy: 2820.593167681648
-avg power: 5.4971439741798935
-energy per frame: 11.282372670726593
-mAP: -1
