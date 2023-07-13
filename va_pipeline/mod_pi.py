@@ -46,15 +46,15 @@ def run(
     frame_no = 1
 
     # Get first 3 frames
-    ret, frame = cap.read()
-    prev_out = model(frame, size=(img_width, img_height))
-    prev_out = prev_out.pandas().xywh[0]
-    prev_out['frame'] = frame_no
-    prev_frame = frame
-    
-    outputs.append(prev_out)
+    # ret, frame = cap.read()
+    # prev_out = model(frame, size=(img_width, img_height))
+    # prev_out = prev_out.pandas().xywh[0]
+    # prev_out['frame'] = frame_no
+    # prev_frame = frame    
+    # outputs.append(prev_out)
+
     frames_processed = 1
-    frame_no = 2
+    # frame_no = 1
     
     # Start timer
     start = time.time()
@@ -65,7 +65,7 @@ def run(
             print('No frame returned')
             break
 
-        if frame_no % (int(INPUT_FPS/fps)):
+        if frame_no % (int(INPUT_FPS/fps)) == 0:
             output = model(frame, size=(img_width, img_height))
             output = output.pandas().xywh[0]
             output['frame'] = frame_no
@@ -78,7 +78,7 @@ def run(
             prev_out['frame'] = frame_no
             outputs.append(prev_out)
 
-        prev_frame = frame
+        # prev_frame = frame
         frame_no += 1
         
     cap.release()
@@ -87,6 +87,7 @@ def run(
     # Process outputs --------------------------------------------------------
     runtime = end - start
     frames = frame_no - 1
+
     outputs = pd.concat(outputs)
 
     try:

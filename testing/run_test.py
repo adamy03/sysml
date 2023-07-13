@@ -48,12 +48,12 @@ def run_mod(
     
     # Output paths of results
     source_name = os.path.splitext(os.path.basename(source))[0]
-    test_name = f'{source_name}_0.0025_{res_width}_{res_height}_{framerate}fps'
-    test_path = os.path.join(test_dir, test_name)
+    test_name = f'{source_name}_{model}_{res_width}_{res_height}_{framerate}fps'
 
     # Check for existing files
     if not REPLACE:
-        matching_files = [filename for filename in os.listdir(test_dir) if filename.startswith(test_name)]
+        matching_files = [filename for filename in os.listdir(test_dir) \
+            if filename.startswith(test_name)]
         assert len(matching_files) == 0, 'Test files already in directory.' 
 
     # Run test
@@ -72,7 +72,7 @@ def run_mod(
         # Get model outputs
         save_out = subprocess.run('scp pi@172.28.81.58:' 
                     + '~/sysml/testing/test_results/temp.csv' + ' ' 
-                    + test_path 
+                    + os.path.join(test_dir, 'inference/', test_name) 
                     + '_inference.csv'
                     )
 
@@ -80,8 +80,10 @@ def run_mod(
             print(f'scp failed: {out.stderr}')
 
         # Calculate statistics and save data
-        energy.to_csv(test_path + '_energy.csv')
-        energy, avg_power = calculate_stats(test_path + '_energy.csv', runtime)
+        energy.to_csv(os.path.join(test_dir, 'energy/', test_name) + '_energy.csv')
+        energy, avg_power = calculate_stats(
+            os.path.join(test_dir, 'energy/', test_name) + '_energy.csv', 
+            runtime)
 
         # Parse output
         parsed_out = parse_mod(out.stdout)
@@ -94,7 +96,7 @@ def run_mod(
                 gt = get_ground_truth_list(res_width, res_height, ground_truth, no_frames)
 
                 # Get preds list
-                pred_path = f'{test_path}' + '_inference.csv'
+                pred_path = f'{os.path.join(test_dir, "inference/", test_name)}' + '_inference.csv'
                 preds = get_predictions_list(res_width, res_height, pred_path, no_frames)
 
                 # Calculate mAP scores
@@ -105,7 +107,7 @@ def run_mod(
                 pass
 
         # Write inference times to file        
-        with open(test_path + '_stats.txt', 'w') as file:
+        with open(os.path.join(test_dir, 'stats/', test_name) + '_stats.txt', 'w') as file:
             file.write(
                     f'frames: {no_frames}\n'
                     + f'frames processed: {str(parsed_out["frames processed"])}'
@@ -122,7 +124,7 @@ def run_mod(
 if __name__ == '__main__':
     dir_to_vid = './sysml/samples/testing/videos/'
     dir_to_gt = './samples/testing/ground_truth/'
-    test_dir = './testing/test_results/config_testing/differencing/edge/'
+    test_dir = './testing/test_results/config_testing/model/'
 
     with open('./samples/testing/test_pairs.json') as file:
             pairs = json.load(file)
@@ -132,7 +134,7 @@ if __name__ == '__main__':
         run_mod(
             res_width=1280,
             res_height=720,
-            model='yolov5n',
+            model='yolov5s',
             source=os.path.join(dir_to_vid, vid),
             ground_truth=os.path.join(dir_to_gt, gt),
             test_dir=test_dir,
@@ -140,7 +142,7 @@ if __name__ == '__main__':
             max_frames=250,
             conf=0.6,
             save_results=True,
-            get_map=False
+            get_map=True
         )
         time.sleep(2)
         clear_chart()
