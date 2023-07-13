@@ -123,4 +123,14 @@ def process_frame_diff_alternate(frame, frame_no, queue):
     else: 
         return False
 
+
+def frame_diff(prev_frame, cur_frame, next_frame):
+    """
+    Generates difference between frames
+    """
+    diff_frames1 = cv2.absdiff(next_frame, cur_frame)
+    diff_frames2 = cv2.absdiff(cur_frame, prev_frame)
+
+    return cv2.bitwise_and(diff_frames1, diff_frames2)
+
     

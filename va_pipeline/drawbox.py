@@ -81,7 +81,7 @@ def run(
                 if vid[0:-4] in csv_name:
                    vid_dir= folder_vid + vid
                    #print(f'../testing/test_results/model_comparison_videos/{csv[0:-4]}.mp4')
-                   draw_boxes(vid_dir, csv, None, f'../testing/test_results/model_comparison_videos/{csv_name}' + '.mp4' )
+                   draw_boxes(vid_dir, csv, None, folder_dest + csv_name + '.mp4')
     else:
         # Formats all directory strings with forward slashes
         for i, item in enumerate([inference_box, ground_box, video_source, out_path]):
