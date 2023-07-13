@@ -1,6 +1,6 @@
 {
-    "largeslow.mp4": "largeslow.csv",
-    "largefast.mp4": "largefast.csv",
-    "smallslow.mp4": "smallslow.csv",
-    "smallfast.mp4": "smallfast.csv"
+    "large_slow.mp4": "largeslow_x.csv",
+    "large_fast.mp4": "largefast_x.csv",
+    "small_slow.mp4": "smallslow_x.csv",
+    "small_fast.mp4": "smallfast_x.csv"
 }

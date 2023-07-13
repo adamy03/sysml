@@ -48,7 +48,7 @@ def run_mod(
     
     # Output paths of results
     source_name = os.path.splitext(os.path.basename(source))[0]
-    test_name = f'{source_name}_0.0025_{res_width}_{res_height}_{framerate}fps'
+    test_name = f'{source_name}_{model}_{res_width}_{res_height}_{framerate}fps'
 
     # Check for existing files
     if not REPLACE:
@@ -124,7 +124,7 @@ def run_mod(
 if __name__ == '__main__':
     dir_to_vid = './sysml/samples/testing/videos/'
     dir_to_gt = './samples/testing/ground_truth/'
-    test_dir = './testing/test_results/config_testing/differencing/edge/'
+    test_dir = './testing/test_results/config_testing/model/'
 
     with open('./samples/testing/test_pairs.json') as file:
             pairs = json.load(file)
@@ -134,7 +134,7 @@ if __name__ == '__main__':
         run_mod(
             res_width=1280,
             res_height=720,
-            model='yolov5n',
+            model='yolov5s',
             source=os.path.join(dir_to_vid, vid),
             ground_truth=os.path.join(dir_to_gt, gt),
             test_dir=test_dir,
@@ -142,7 +142,7 @@ if __name__ == '__main__':
             max_frames=250,
             conf=0.6,
             save_results=True,
-            get_map=False
+            get_map=True
         )
         time.sleep(2)
         clear_chart()
