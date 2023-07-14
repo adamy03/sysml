@@ -43,18 +43,12 @@ def run(
     # Read video, initialize output array, and being frame counter
     cap = cv2.VideoCapture(video_source)
     outputs = []
-    frame_no = 1
 
-    # Get first 3 frames
-    # ret, frame = cap.read()
-    # prev_out = model(frame, size=(img_width, img_height))
-    # prev_out = prev_out.pandas().xywh[0]
-    # prev_out['frame'] = frame_no
-    # prev_frame = frame    
-    # outputs.append(prev_out)
-
+    # Get first
+    ret, frame = cap.read()
+    prev_out = model(frame, size=(img_width, img_height)).pandas().xywh[0]
     frames_processed = 1
-    # frame_no = 1
+    frame_no = 2
     
     # Start timer
     start = time.time()
