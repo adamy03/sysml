@@ -33,7 +33,7 @@ def parse_mod(out_str):
     avg = split[3].split(': ')
     return {
         frames[0]: int(frames[1]),
-        frames_processed[0]: int(frames[1]),
+        frames_processed[0]: int(frames_processed[1]),
         runtime[0]: float(runtime[1]),
         avg[0]: float(avg[1])
     }
