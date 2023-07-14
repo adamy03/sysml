@@ -16,6 +16,7 @@ ROOT = FILE.parents[0]  # YOLOv5 root directory
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
+FPS = 25
 INFERENCE_PATH = '~/sysml/testing/test_results/temp.csv'
 
     
@@ -24,7 +25,7 @@ def run(
         video_source,
         img_width,
         img_height,
-        fps,          # TODO:no implementation yet
+        fps,          
         frame_cap,
         conf,
         video_path,
@@ -45,8 +46,6 @@ def run(
         INFERENCE_PATH = f'{out_path}/{video_source}_{yolov5_model}_{img_width}_{img_height}_{conf}.csv'
 
 
-
-
     # Setup for inference ----------------------------------------------------
     model = torch.hub.load('ultralytics/yolov5', yolov5_model)
     model.conf = conf  # NMS confidence threshold
@@ -57,15 +56,21 @@ def run(
     if video_path == None:
         cap = cv2.VideoCapture(f'../samples/testing/videos/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     else:
-        print('hi')
         cap = cv2.VideoCapture(f'{video_path}/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     #subprocess.run("cd", shell=True)
     # cap = cv2.VideoCapture(f'./sysml/samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     #cap = cv2.VideoCapture(f'./sysml/samples/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
+
+    # Get first
     outputs = []
-
-    frame_no = 1
-
+    ret, frame = cap.read()
+    prev_out = model(frame, size=(img_width, img_height)).pandas().xywh[0]
+    prev_out['frame'] = 1
+    
+    outputs.append(prev_out)
+    frames_processed = 1
+    frame_no = 2
+    
     # Start timer
     start = time.time()
     while frame_no <= frame_cap:
@@ -75,16 +80,20 @@ def run(
             print('No frame returned')
             break
 
-        if True:
-            inf = cropped_detection(model, frame, frame)
-
-            inf['frame'] = frame_no
-            outputs.append(inf)
-            prev_inf = inf.copy()  
+        if frame_no % (int(FPS/fps)) == 0:
+            output = model(frame, size=(img_width, img_height))
+            output = output.pandas().xywh[0]
+            output['frame'] = frame_no
+            
+            prev_out = output
+            frames_processed += 1
+            outputs.append(output)
         else:
-            prev_inf['frame'] = frame_no
-            outputs.append(prev_inf.copy())
+            prev_out = prev_out.copy()
+            prev_out['frame'] = frame_no
+            outputs.append(prev_out)
 
+        # prev_frame = frame
         frame_no += 1
         
     cap.release()
@@ -99,7 +108,7 @@ def run(
         outputs.to_csv(INFERENCE_PATH)
     except:
         print('save failed')
-        return -1
+        pass
 
     print(
         f'frames: {frames}\n' + 
@@ -108,7 +117,7 @@ def run(
         f'confidence: {conf}'
     , file=sys.stdout)
 
-    return 1
+    return outputs
     
 
 """
@@ -124,7 +133,7 @@ def parse_opt():
     parser.add_argument('--fps', type=int, default=250, help='frames to process per second of the video')
     parser.add_argument('--frame-cap', type=int, default=250, help='max number of frames to process')
     parser.add_argument('--conf', type=float, default=0.6, help='model confidence threshold')
-    parser.add_argument('--video-path', type=str, default=None, help='video file path')
+    parser.add_argument('--video-path', type=str, default=None, help='directory path for test videos')
     parser.add_argument('--out-path', type=str, default=None, help='output folder location')
     opt = parser.parse_args()
     return opt
