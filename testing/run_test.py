@@ -48,7 +48,7 @@ def run_mod(
     
     # Output paths of results
     source_name = os.path.splitext(os.path.basename(source))[0]
-    test_name = f'{source_name}_{model}_{res_width}_{res_height}_{framerate}fps'
+    test_name = f'{source_name}_{res_width}_{res_height}_{framerate}'
 
     # Check for existing files
     if not REPLACE:
@@ -124,23 +124,23 @@ def run_mod(
 if __name__ == '__main__':
     dir_to_vid = './sysml/samples/testing/videos/'
     dir_to_gt = './samples/testing/ground_truth/'
-    test_dir = './testing/test_results/config_testing/framerate/'
+    test_dir = './testing/test_results/config_testing/resolution/'
 
-    with open('./samples/testing/test_pairs.json') as file:
-            pairs = json.load(file)
+    # with open('./samples/testing/test_pairs.json') as file:
+    #         pairs = json.load(file)
 
-    for fps in [1, 3, 5]:
-        vid = 'largefast.mp4'
-        gt = 'largefast_n.csv'
+    for res in [(960, 540), (640, 360)]:
+        vid = 'largeslow2.mp4'
+        gt = 'largeslow2_n.csv'
         print(os.path.join(dir_to_vid, vid))
         run_mod(
-            res_width=1280,
-            res_height=720,
+            res_width=res[0],
+            res_height=res[1],
             model='yolov5n',
             source=os.path.join(dir_to_vid, vid),
             ground_truth=os.path.join(dir_to_gt, gt),
             test_dir=test_dir,
-            framerate=fps,
+            framerate=5,
             max_frames=250,
             conf=0.6,
             save_results=True,
