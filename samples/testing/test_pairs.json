@@ -3,5 +3,6 @@
     "medium.mp4": "medium_n.csv",
     "sparse.mp4": "sparse_n.csv",
     "large3.mp4": "large3_n.csv",
-    "smallslow2.mp4": "smallslow2_n.csv"
+    "smallslow2.mp4": "smallslow2_n.csv",
+    "largeslow.mp4": "largeslow_n.csv"
 }
