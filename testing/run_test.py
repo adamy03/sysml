@@ -130,8 +130,8 @@ if __name__ == '__main__':
     #         pairs = json.load(file)
 
     # for vid, gt in pairs.items():     
-    vid = 'large4.mp4'
-    gt = 'large4_n.csv'
+    vid = 'large5.mp4'
+    gt = 'large5_n.csv'
     for res in [(960, 540), (640, 360)]:
         print(os.path.join(dir_to_vid, vid))
         run_mod(
