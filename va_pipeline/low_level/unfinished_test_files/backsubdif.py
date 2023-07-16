@@ -1,11 +1,18 @@
 from __future__ import print_function
-import cv2 as cv2
+import cv2
 import argparse
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
 
 # Capture the frame from  video source
-def get_frame(cap):
+def get_frame(cap, writer=None):
     # Capture the frame
     ret, frame = cap.read()
+
+    if ret == True and writer != None:
+        # Write the frame into the output file
+        video_writer.write(cap)
 
     if frame is None:
         return None
@@ -15,10 +22,12 @@ def get_frame(cap):
      #       fy=scaling_factor, interpolation=cv2.INTER_AREA)
 
     # Return the grayscale image
-    return cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+    return ret, cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
 
 def frame_diff(prev_frame, cur_frame, next_frame):
     # Absolute difference between current frame and next frame
+    print(next_frame)
+    print(cur_frame)
     diff_frames1 = cv2.absdiff(next_frame, cur_frame)
 
     # Absolute difference between current frame and # previous frame
@@ -36,6 +45,7 @@ if __name__=='__main__':
                                               OpenCV. You can process both videos and images.')
     parser.add_argument('--input', type=str, help='Path to a video or a sequence of image.', default='vtest.avi')
     parser.add_argument('--algo', type=str, help='Background subtraction method (KNN, MOG2).', default='MOG2')
+    parser.add_argument('--output', type=str, help='Type in outputfile path and file name.', default=None)
     args = parser.parse_args()
 
     ## [create]
@@ -46,33 +56,43 @@ if __name__=='__main__':
         backSub = cv2.createBackgroundSubtractorKNN()
     ## [create]
 
+    # Create an empty DataFrame to store the frame number and RGB sum
+    df = pd.DataFrame(columns=['Frame', 'Pixel Sum'])
+    
     ## [capture]
     cap = cv2.VideoCapture(cv2.samples.findFileOrKeep(args.input))
     if not cap.isOpened():
         print('Unable to open: ' + args.input)
 
+    ## Video Writing 
+    output_file = args.output
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    frame_size = (int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Codec
+    video_writer = cv2.VideoWriter(output_file, fourcc, 25, (1280, 720))
+    
     ## [capture]
+    prev_frame = backSub.apply(get_frame(cap)[1])
+    cur_frame = backSub.apply(get_frame(cap)[1])
+    next_frame = backSub.apply(get_frame(cap)[1])
 
-
-
-
-    prev_frame = backSub.apply(get_frame(cap))
-    cur_frame = backSub.apply(get_frame(cap))
-    next_frame = backSub.apply(get_frame(cap))
-
+    frame_number = 0
     while True:
         # Display the result of frame differencing
-        cv2.imshow("Object Movement", frame_diff(prev_frame, cur_frame, next_frame))
+        
 
-        # Update the variables
+        # Update variables, increment frames
         prev_frame = cur_frame
         cur_frame = next_frame
-        next_frame = get_frame(cap)
+        ret, next_frame = get_frame(cap)
         if next_frame is None:
             break
-        #update the background model
-        next_frame = backSub.apply(get_frame(cap))
 
+        #update the background model
+        next_frame = backSub.apply(next_frame)
+        if ret == True:
+            video_writer.write(next_frame)
 
         ## [display_frame_number]
         #get the frame number and write it on the current frame
@@ -84,10 +104,23 @@ if __name__=='__main__':
         ## [show]
         #show the current frame and the fg masks
         #cv2.imshow('Frame', frame)
-        cv2.imshow('FG Mask', cur_frame)
+        #processed_frame = frame_diff(prev_frame, cur_frame, next_frame)
+        #cv2.imshow("Object Movement", processed_frame)
+        cv2.imshow('FG Mask', next_frame)
+        # Write the manipulated frame to the output video
         ## [show]
+
+        b = np.sum(cv2.split(cur_frame))
+        df = df.append({'Frame': frame_number, 'Pixel Sum': b}, ignore_index=True)
 
         keyboard = cv2.waitKey(30)
         if keyboard == 'q' or keyboard == 27:
             break
+        #print(frame_number)
+        frame_number +=1
+
+    cap.release()
+    video_writer.release()
+    print(df)
+    df.to_csv('rgb_data.csv', index=False)
     cv2.destroyAllWindows()

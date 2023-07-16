@@ -16,7 +16,7 @@ ROOT = FILE.parents[0]  # YOLOv5 root directory
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
-FPS = 25
+FPS = 25 # Framerate of video
 INFERENCE_PATH = '~/sysml/testing/test_results/temp.csv'
 
     
@@ -54,7 +54,7 @@ def run(
     # VIDEO ANALYSIS  --------------------------------------------------------
     # Read video, initialize output array, and being frame counter
     if video_path == None:
-        cap = cv2.VideoCapture(f'../samples/testing/videos/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
+        cap = cv2.VideoCapture(f'../samples/testing/videos/test2/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     else:
         cap = cv2.VideoCapture(f'{video_path}/{video_source}.mp4') # Remember to change to './sysml/samples/sparse.mp4' for pi usage
     #subprocess.run("cd", shell=True)
@@ -83,6 +83,7 @@ def run(
         if frame_no % (int(FPS/fps)) == 0:
             output = model(frame, size=(img_width, img_height))
             output = output.pandas().xywh[0]
+            print(output)
             output['frame'] = frame_no
             
             prev_out = output
@@ -130,7 +131,7 @@ def parse_opt():
     parser.add_argument('--video-source', type=str, default='sparse', help='input video path') 
     parser.add_argument('--img-width', type=int, default=1280, help='inference size width')
     parser.add_argument('--img-height', type=int, default=720, help='inference size height')
-    parser.add_argument('--fps', type=int, default=250, help='frames to process per second of the video')
+    parser.add_argument('--fps', type=int, default=25, help='frames to process per second of the video')
     parser.add_argument('--frame-cap', type=int, default=250, help='max number of frames to process')
     parser.add_argument('--conf', type=float, default=0.6, help='model confidence threshold')
     parser.add_argument('--video-path', type=str, default=None, help='directory path for test videos')
