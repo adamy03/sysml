@@ -18,7 +18,7 @@ def draw_boxes(video_path, ground_box, inference_box, out_path):
     output_video = cv2.VideoWriter(out_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (resX, resY))
 
     # Selected colors
-    blue = (255, 0, 0)
+    blue = (0, 0, 255)
     green = (0, 255, 0)
     
     dataframes = [(ground_box, green)]
