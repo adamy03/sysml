@@ -119,29 +119,27 @@ def run_mod(
                     + f'energy per frame: {energy / parsed_out["frames"]}\n'
                     + f'mAP: {mAP}'
                     )
-            
+             
 
 if __name__ == '__main__':
     dir_to_vid = './sysml/samples/testing/videos/'
     dir_to_gt = './samples/testing/ground_truth/'
-    test_dir = './testing/test_results/config_testing/resolution/'
+    test_dir = './testing/test_results/config_testing/framerate/'
 
-    # with open('./samples/testing/test_pairs.json') as file:
-    #         pairs = json.load(file)
+    with open('./samples/testing/test_pairs.json') as file:
+            pairs = json.load(file)
 
-    # for vid, gt in pairs.items():     
-    vid = 'large4.mp4'
-    gt = 'large4_n.csv'
-    for res in [(960, 540), (640, 360)]:
+    for vid, gt in pairs.items():     
+        # for fps in [1, 5, 10]:
         print(os.path.join(dir_to_vid, vid))
         run_mod(
-            res_width=res[0],
-            res_height=res[1],
+            res_width=1280,
+            res_height=720,
             model='yolov5n',
             source=os.path.join(dir_to_vid, vid),
             ground_truth=os.path.join(dir_to_gt, gt),
             test_dir=test_dir,
-            framerate=5,
+            framerate=25,
             max_frames=250,
             conf=0.6,
             save_results=True,
