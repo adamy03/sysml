@@ -48,7 +48,7 @@ def run_mod(
     
     # Output paths of results
     source_name = os.path.splitext(os.path.basename(source))[0]
-    test_name = f'{source_name}_{model}_{res_width}_{res_height}_{framerate}fps'
+    test_name = f'{source_name}_{res_width}_{res_height}_{framerate}'
 
     # Check for existing files
     if not REPLACE:
@@ -110,7 +110,7 @@ def run_mod(
         with open(os.path.join(test_dir, 'stats/', test_name) + '_stats.txt', 'w') as file:
             file.write(
                     f'frames: {no_frames}\n'
-                    + f'frames processed: {str(parsed_out["frames processed"])}'
+                    + f'frames processed: {str(parsed_out["frames processed"])}\n'
                     + f'runtime (inference): {str(parsed_out["runtime (inference)"])}\n'
                     + f'average time per frame: {parsed_out["average time per frame"]}\n'  
                     + f'runtime (total): {runtime}\n'
@@ -124,17 +124,20 @@ def run_mod(
 if __name__ == '__main__':
     dir_to_vid = './sysml/samples/testing/videos/'
     dir_to_gt = './samples/testing/ground_truth/'
-    test_dir = './testing/test_results/config_testing/model/'
+    test_dir = './testing/test_results/config_testing/resolution/'
 
-    with open('./samples/testing/test_pairs.json') as file:
-            pairs = json.load(file)
+    # with open('./samples/testing/test_pairs.json') as file:
+    #         pairs = json.load(file)
 
-    for vid, gt in pairs.items():
+    # for vid, gt in pairs.items():     
+    vid = 'large5.mp4'
+    gt = 'large5_n.csv'
+    for res in [(960, 540), (640, 360)]:
         print(os.path.join(dir_to_vid, vid))
         run_mod(
-            res_width=1280,
-            res_height=720,
-            model='yolov5s',
+            res_width=res[0],
+            res_height=res[1],
+            model='yolov5n',
             source=os.path.join(dir_to_vid, vid),
             ground_truth=os.path.join(dir_to_gt, gt),
             test_dir=test_dir,

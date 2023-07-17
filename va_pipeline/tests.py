@@ -15,10 +15,10 @@ file_names = os.listdir(folder_path)
 commands = []
 #(1280, 720), (960, 540), (640, 360)
 #0.3, 0.4, 0.5, 0.6, 0.7
-file_names = ['small_fast.mp4', 'small_slow.mp4', 'large_fast.mp4', 'large_slow.mp4']
+file_names = ['largeslow.mp4']
 # Loop through all file names
 for model in ['yolov5n']:
-    for res in [(1280, 720)]:
+    for res in [(1280, 720), (960, 540), (640, 360)]:
         for conf in [0.6]:
             for file_name in file_names:
                 # Form the command and add to the list
