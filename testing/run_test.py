@@ -130,20 +130,20 @@ if __name__ == '__main__':
             pairs = json.load(file)
 
     for vid, gt in pairs.items():     
-        # for fps in [1, 5, 10]:
-        print(os.path.join(dir_to_vid, vid))
-        run_mod(
-            res_width=1280,
-            res_height=720,
-            model='yolov5n',
-            source=os.path.join(dir_to_vid, vid),
-            ground_truth=os.path.join(dir_to_gt, gt),
-            test_dir=test_dir,
-            framerate=25,
-            max_frames=250,
-            conf=0.6,
-            save_results=True,
-            get_map=True
-        )
-        time.sleep(2)
-        clear_chart()
+        for res in [(960, 640), (854, 480), (640, 480)]:
+            print(os.path.join(dir_to_vid, vid))
+            run_mod(
+                res_width=res[0],
+                res_height=res[1],
+                model='yolov5n',
+                source=os.path.join(dir_to_vid, vid),
+                ground_truth=os.path.join(dir_to_gt, gt),
+                test_dir=test_dir,
+                framerate=5,
+                max_frames=250,
+                conf=0.6,
+                save_results=True,
+                get_map=True
+            )
+            time.sleep(2)
+            clear_chart()
