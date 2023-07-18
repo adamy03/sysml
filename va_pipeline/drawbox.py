@@ -18,8 +18,8 @@ def draw_boxes(video_path, ground_box, inference_box, out_path):
     output_video = cv2.VideoWriter(out_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (resX, resY))
 
     # Selected colors
-    blue = (0, 0, 255)
-    green = (0, 255, 0)
+    blue = (255, 0, 0) #inf
+    green = (0, 255, 0) #ground
     
     dataframes = [(ground_box, green)]
     if inference_box is not None:
@@ -42,7 +42,7 @@ def draw_boxes(video_path, ground_box, inference_box, out_path):
                 bottomRight = (int(x_center + width/2), int(y_center + height/2))
 
                 # Draw bounding box
-                cv2.rectangle(frame, topLeft, bottomRight, color, 2)
+                cv2.rectangle(frame, topLeft, bottomRight, color, thickness=2)
 
                 # Add class name label
                 cv2.putText(frame, str(row['name']), (topLeft[0], topLeft[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)

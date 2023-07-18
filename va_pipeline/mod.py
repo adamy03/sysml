@@ -83,7 +83,6 @@ def run(
         if frame_no % (int(FPS/fps)) == 0:
             output = model(frame, size=(img_width, img_height))
             output = output.pandas().xywh[0]
-            print(output)
             output['frame'] = frame_no
             
             prev_out = output
