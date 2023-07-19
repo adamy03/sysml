@@ -4,6 +4,7 @@ import torch
 
 # Compute the frame difference
 def frame_diff(prev_frame, cur_frame, next_frame):
+
     # Convert input frames to grayscale
     prev_frame = cv2.cvtColor(prev_frame, cv2.COLOR_RGB2GRAY)
     cur_frame = cv2.cvtColor(cur_frame, cv2.COLOR_RGB2GRAY)
@@ -33,58 +34,72 @@ def get_frame(cap):
 
 
 if __name__=='__main__':
+    # Load the model
     model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
     model.conf = 0.2  # NMS confidence threshold
     model.max_det = 100  # maximum number of detections per image
 
-    videoSource = 0
     # Define video source inputs
     cap = cv2.VideoCapture(0)
     capwidth, capheight = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     cap2 = cv2.VideoCapture(2)
     cap2width, cap2height = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-
+    # We will use temp to swap our camera inputs
     temp = None
-    # scaling_factor = 0.5
+    processalgo = 0 # Do we want to use frame differencing or our model?
+    switching = False # Are we switching from our model to frame differencing? We need to take 3 more frames of input
+    
+    # Bounding Box Color
+    color = (0,0,255)   
 
+    # Get the first 3 frames 
     prev_frame = get_frame(cap)
     cur_frame = get_frame(cap)
     next_frame = get_frame(cap)
+
     
-    processalgo = 0
-    firstTry = False
+    
     # Iterate until the user presses the ESC key
     while True:
         # Display the result of frame differencing
         if processalgo == 0:
-            if firstTry == True: # We resample the next 3 frames to determine whether there is motion
+
+        # TODO: 
+        # - Create a sampling period
+        # - 
+        #
+            if switching == True: # We resample the next 3 frames to determine whether there is motion
                 prev_frame = get_frame(cap)
                 cur_frame = get_frame(cap)
-                next_frame = get_frame(cap)
-
-                firstTry = False
+                next_frame = get_frame(cap) 
+                yoloframecount = 25  # Resets num of frames left to process if switches to yolo
+                switching = False
             output_frame = frame_diff(prev_frame, cur_frame, next_frame)
-            # Update the variables
-            prev_frame = cur_frame
-            cur_frame = next_frame
-            next_frame = get_frame(cap)   
-            yoloframecount = 25
 
+            # sum the grayscale values in our output frame
             b = np.sum(cv2.split(output_frame))
             print(b)
-            if b > 800000:        # TODO: Sometimes randomly stops at beginning, implement a grace period
+
+            if b > 800000:        # TODO: Implement a damper system
                 print("IT WAS HIT IT WAS HIT")
                 processalgo = 1
                 b = 36000000
 
             cv2.imshow("Object Movement", output_frame)
+
+            # Update the variables
+            prev_frame = cur_frame
+            cur_frame = next_frame
+            next_frame = get_frame(cap) 
+
+            
+
         elif processalgo == 1:
             print("hi")
             output_frame = get_frame(cap)   # Might be skipping a single frame
             prev_out = model(output_frame, size=(1920, 1080)).pandas().xywh[0]
             print(prev_out)
-            color = (0,0,255)
             if not prev_out.empty:
                 for _, row in prev_out.iterrows():
                     x_center, y_center, width, height = row['xcenter'], row['ycenter'], row['width'], row['height']
@@ -102,7 +117,7 @@ if __name__=='__main__':
             print(yoloframecount)
             if yoloframecount <= 0:
                 processalgo = 0
-                firstTry = True
+                switching = True
                 
             # Display frame                        
             cv2.imshow("Object Movement", output_frame)
