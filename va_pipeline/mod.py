@@ -40,7 +40,7 @@ def run(
     #INFERENCE_PATH = f'~/sysml/testing/test_results/mAP_experiments/{conf}_conf/{video_source}_{yolov5_model}_{img_width}_{img_height}_{conf}conf.csv'
     # INFERENCE_PATH = f'../testing/test_results/new_video_results/{video_source}_{yolov5_model}_{img_width}_{img_height}_{conf}conf.csv'
     if out_path == None:
-        INFERENCE_PATH = f'~/sysml/samples/testing/ground_truth/{video_source}_{yolov5_model}_{img_width}_{img_height}_{conf}.csv'
+        INFERENCE_PATH = f'~/sysml/samples/testing/ground_truth/test3/{video_source}_{yolov5_model}_{img_width}_{img_height}_{conf}.csv'
         print(INFERENCE_PATH)
     else:
         INFERENCE_PATH = f'{out_path}/{video_source}_{yolov5_model}_{img_width}_{img_height}_{conf}.csv'
