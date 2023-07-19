@@ -1,8 +1,12 @@
 {
+    "largefast.mp4": "largefast_n.csv",
+    "largeslow.mp4": "largeslow_n.csv",
+    "largeslow2.mp4": "largeslow2.csv",
+    "smallslow.mp4": "smallslow.csv",
+    "smallslow2.mp4": "smallslow2.csv",
+    "large2.mp4": "large2_n.csv",
+    "large3.mp4": "large3_n.csv",
     "noisy.mp4": "noisy_n.csv",
     "medium.mp4": "medium_n.csv",
-    "sparse.mp4": "sparse_n.csv",
-    "large3.mp4": "large3_n.csv",
-    "smallslow2.mp4": "smallslow2_n.csv",
-    "largeslow.mp4": "largeslow_n.csv"
+    "sparse.mp4": "sparse_n.csv"
 }
