@@ -1,0 +1,20 @@
+5sec vid: 1280x720, 15 fps
+
+resnet18: 
+Frame count: 67
+Total time for preprocessing: 5.207789659500122
+Time per frame: 0.07772820387313616
+Total time for prediction: 71.56924223899841
+Time per frame: 1.0681976453581852
+
+resnet32:
+Total time for preprocessing: 5.04067325592041
+Time per frame: 0.07523392919284194
+Total time for prediction: 126.69167685508728
+Time per frame: 1.8909205500759296
+
+resnet50:
+Total time for preprocessing: 4.948086977005005
+Time per frame: 0.07385204443291052
+Total time for prediction: 145.3525002002716
+Time per frame: 2.16944030149659
