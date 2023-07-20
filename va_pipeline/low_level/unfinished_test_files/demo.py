@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 import torch
+import collections
+
 
 # Compute the frame difference
 def frame_diff(prev_frame, cur_frame, next_frame):
@@ -20,7 +22,7 @@ def frame_diff(prev_frame, cur_frame, next_frame):
     return cv2.bitwise_and(diff_frames1, diff_frames2)
 
 # Capture the frame from webcam
-def get_frame(cap):
+def get_frame(cap, fps):
     # Capture the frame
     ret, frame = cap.read()
 
