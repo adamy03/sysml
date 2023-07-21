@@ -1,7 +1,10 @@
+""" Helper functions and architectures for mod.py file
+"""
 import cv2 
 import os
 import time
 import numpy as np
+import collections
 
 from PIL import Image
 
@@ -123,14 +126,62 @@ def process_frame_diff_alternate(frame, frame_no, queue):
     else: 
         return False
 
-
+    
+# Compute the frame difference
 def frame_diff(prev_frame, cur_frame, next_frame):
-    """
-    Generates difference between frames
-    """
+
+    # Convert input frames to grayscale if not already grayscale
+    prev_frame = ensure_gray(prev_frame)
+    cur_frame = ensure_gray(cur_frame)
+    next_frame = ensure_gray(next_frame)
+
+    # Absolute difference between current frame and next frame
     diff_frames1 = cv2.absdiff(next_frame, cur_frame)
+
+    # Absolute difference between current frame and # previous frame
     diff_frames2 = cv2.absdiff(cur_frame, prev_frame)
 
-    return cv2.bitwise_and(diff_frames1, diff_frames2)
+    # Return the result of bitwise 'AND' between the # above two resultant images
+    # Then sum all of the pixel strengths
+    diff_frame_out = cv2.bitwise_and(diff_frames1, diff_frames2)
+    sum_pixels = np.sum(cv2.split(diff_frame_out))
+    return sum_pixels
 
-    
+
+def ensure_gray(frame):
+    # If frame is not grayscale
+    if len(frame.shape) > 2 and frame.shape[2] > 1:
+        return cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+    else: # if frame is already grayscale
+        return frame
+            
+            
+
+class FrameQueue: # allows us to store previous current and next frames for analysis
+    def __init__(self, max_frames=3):
+        self.max_frames = max_frames
+        self.frames = collections.deque(maxlen=max_frames)
+
+    def append(self, frame):
+        self.frames.append(frame)
+
+    def get_previous(self):
+        if len(self.frames) < 2:
+            return None
+        return self.frames[-2]
+
+    def get_current(self):
+        if len(self.frames) < 1:
+            return None
+        return self.frames[-1]
+
+    def get_next(self):
+        # This function should be used only after appending the next frame.
+        if len(self.frames) < 3:
+            return None
+        return self.frames[0]
+
+    def fill_frames(self, cap):
+        for i in range(3):
+            ret, frame = cap.read()
+            self.append(frame)

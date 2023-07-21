@@ -1,3 +1,6 @@
+""" Splices video into subsegments
+"""
+
 from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 from moviepy.editor import VideoFileClip
 

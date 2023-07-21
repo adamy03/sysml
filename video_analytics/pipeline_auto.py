@@ -1,8 +1,8 @@
+"""
+For automatically running mod.py on multiple test videos. Does not test for energy
+"""
 import os
 import subprocess
-"""
-For rerunning mod.py
-"""
 
 # Get all file names from the directory
 folder_path = '../samples/testing/videos/test3'
@@ -24,7 +24,8 @@ for model in ['yolov5n']:
                 # Form the command and add to the list
                 print(file_name)
                 file_name = file_name[0:-4]
-                command = f"python C:/Users/holli/sysml/va_pipeline/mod.py --img-width {res[0]} --img-height {res[1]} --yolov5-model {model} --conf {conf} --video-source \"{file_name}\""
+                command = f"python C:/Users/holli/sysml/va_pipeline/mod.py --img-width {res[0]} \
+                    --img-height {res[1]} --yolov5-model {model} --conf {conf} --video-source \"{file_name}\""
                 commands.append(command)
 
 # Run each command using subprocess

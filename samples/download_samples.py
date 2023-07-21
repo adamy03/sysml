@@ -1,7 +1,9 @@
+"""Downloads videos from youtube link specified in download_links file
+"""
 import subprocess
 
 directory = "."
-file_path = "downloadLinks.txt"  
+file_path = "download_links.txt"  
 
 with open(file_path, "r") as file:
     videoList = [line.rstrip('\n') for line in file]
