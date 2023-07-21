@@ -107,13 +107,11 @@ def mAP_resolution(df, vid_names, vid_sizes):
             res_height = size[1]
             
             # Get ground truth list
-            gt = get_ground_truth_list(1280, 720, '~/sysml/testing/test_results/config_testing/resolution/' + 
-                                       f'{source}_1280_720_25_inference.csv',
+            gt = get_ground_truth_list(1280, 720, f'~/sysml/testing/test_results/frame_diff_sparse_0.5.csv',
                                     200)
 
             # Get predictions list
-            preds = get_predictions_list(res_width, res_height, '~/sysml/testing/test_results/config_testing/resolution/' + 
-                                        f'{source}_{res_width}_{res_height}_25_inference.csv',
+            preds = get_predictions_list(res_width, res_height, f'~/sysml/testing/test_results/sparse_0.5.csv',
                                         200)
 
             mAP = calculate_accuracy(gt, preds)
@@ -123,7 +121,36 @@ def mAP_resolution(df, vid_names, vid_sizes):
             df.loc[len(df)] = new_row
             
             # Write mAP to file
-            file_dir = f'C:/Users/shiva/sysml/testing/test_results/config_testing/resolution/' + f'{source}_{res_width}_{res_height}_25_stats.txt'
+            file_dir = f'../testing/test_results/{vid_names[0]}.txt'
+
+            with open(file_dir, 'a') as f:
+                f.write(f'\nmAP: {mAP}\n')
+            
+            
+    return df
+
+def mAP_resolution(df, vid_names, vid_sizes):
+    for source in vid_names:
+        for size in vid_sizes:
+            res_width = size[0]
+            res_height = size[1]
+            
+            # Get ground truth list
+            gt = get_ground_truth_list(1280, 720, f'~/sysml/testing/test_results/frame_diff_sparse_0.5.csv',
+                                    200)
+
+            # Get predictions list
+            preds = get_predictions_list(res_width, res_height, f'~/sysml/testing/test_results/sparse_0.5.csv',
+                                        200)
+
+            mAP = calculate_accuracy(gt, preds)
+            
+            # Add new row to dataframe
+            new_row = {'Video': source, 'Width': res_width, 'Height': res_height, 'Framerate': 25, '' 'mAP': mAP}
+            df.loc[len(df)] = new_row
+            
+            # Write mAP to file
+            file_dir = f'../testing/test_results/{vid_names[0]}.txt'
 
             with open(file_dir, 'a') as f:
                 f.write(f'\nmAP: {mAP}\n')
@@ -134,7 +161,7 @@ def mAP_resolution(df, vid_names, vid_sizes):
 """
 Calculate mAP for different vids & frame rates of testing suite; append to df
 """
-def mAP_framerate(df, vid_names, frame_rates):
+def mAP_frame_diff(df, vid_names, frame_rates):
     for source in vid_names:
         for fps in frame_rates:
             # Get ground truth list
@@ -154,7 +181,7 @@ def mAP_framerate(df, vid_names, frame_rates):
             df.loc[len(df)] = new_row
             
             # Write mAP to file
-            file_dir = f'C:/Users/shiva/sysml/testing/test_results/config_testing/framerate/' + f'{source}_1280_720_{fps}_stats.txt'
+            file_dir = f'C:/Users/holli/sysml/va_pipeline/temp.txt'
 
             with open(file_dir, 'a') as f:
                 f.write(f'\nmAP: {mAP}\n')
@@ -174,15 +201,16 @@ if __name__ == '__main__':
     
     # Calculate mAP for diff vids & resolutions
     #vid_names = ['largefast', 'largeslow', 'smallfast', 'smallslow']
-    vid_names = ['largefast']
-    vid_sizes = [[1280, 720], [960, 540], [640, 360]]
+    vid_names = ['sparse']
+    vid_sizes = [[1280, 720]]
     df = mAP_resolution(df, vid_names, vid_sizes)
     
     print(df)
 
+
     # Calculate mAP for diff vids & frame rates
     frame_rates = [1, 3, 5]
-    df = mAP_framerate(df, vid_names, frame_rates)
+    #df = mAP_framerate(df, vid_names, frame_rates)
 
     print(df)
     #df.to_csv("mAPscores.csv")
@@ -191,3 +219,4 @@ if __name__ == '__main__':
     #mAP = calculate_accuracy(gt, preds)
     #print(f"{source}, {model}, {conf}, {res_width}, {res_height}")
     #print("mAP: ", " ", mAP)
+

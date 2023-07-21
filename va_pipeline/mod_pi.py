@@ -49,13 +49,20 @@ class FrameQueue: # allows us to store previous current and next frames for anal
             ret, frame = cap.read()
             self.append(frame)
 
+def ensure_gray(frame):
+    # If frame is not grayscale
+    if len(frame.shape) > 2 and frame.shape[2] > 1:
+        return cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+    else: # if frame is already grayscale
+        return frame
+    
 # Compute the frame difference
 def frame_diff(prev_frame, cur_frame, next_frame):
 
-    # Convert input frames to grayscale
-    prev_frame = cv2.cvtColor(prev_frame, cv2.COLOR_RGB2GRAY)
-    cur_frame = cv2.cvtColor(cur_frame, cv2.COLOR_RGB2GRAY)
-    next_frame = cv2.cvtColor(next_frame, cv2.COLOR_RGB2GRAY)
+    # Convert input frames to grayscale if not already grayscale
+    prev_frame = ensure_gray(prev_frame)
+    cur_frame = ensure_gray(cur_frame)
+    next_frame = ensure_gray(next_frame)
 
     # Absolute difference between current frame and next frame
     diff_frames1 = cv2.absdiff(next_frame, cur_frame)
@@ -77,7 +84,8 @@ def run(
         img_height,
         fps,          # TODO:no implementation yet
         max_frames,
-        conf
+        conf,
+        differencing_toggle
         ):
     """
     Runs object detection pipeline given a model and video. 
@@ -121,28 +129,39 @@ def run(
             # TODO: We now perform frame differencing to determine whether we run the model on the current 
             # frame (and probably the next few frames)
             # - We can choose to run frame differencing more often than our model to improve reaction time
-            # - We can choose 
+            # - We want to be able to process the next x frames
 
-            sum_pixels = frame_diff(frame_queue.get_previous(), frame_queue.get_current(), frame_queue.get_next())
-            print(sum_pixels)
-            cv2.imshow("Video Proccessing", frame)
-            keyboard = cv2.waitKey(30)
-            if keyboard == 'q' or keyboard == 27:
-                break
+            if differencing_toggle:
 
-            if sum_pixels > 3500000: # TODO: Automatically determining this threshold is our next area of research
-                print("processed")
+                sum_pixels = frame_diff(frame_queue.get_previous(), frame_queue.get_current(), frame_queue.get_next())
+                print(sum_pixels)
+                cv2.imshow("Video Proccessing", frame)
+                keyboard = cv2.waitKey(30)
+                if keyboard == 'q' or keyboard == 27:
+                    break
+                
+                if sum_pixels > 3500000: # TODO: Automatically determining this threshold is our next area of research
+                    print("processed")
+                    output = model(frame_queue.get_current(), size=(img_width, img_height))
+                    output = output.pandas().xywh[0]
+                    output['frame'] = frame_no
+                    frames_processed += 1
+                    outputs.append(output)
+                    prev_out = output
+                else:
+                    prev_out = prev_out.copy()
+                    prev_out['frame'] = frame_no
+                    print("appended previous frame")
+                    outputs.append(prev_out)
+            else:
+                # Regularly run model if frame differencing is not toggled
+                cv2.imshow("Video Proccessing", frame)
                 output = model(frame_queue.get_current(), size=(img_width, img_height))
                 output = output.pandas().xywh[0]
                 output['frame'] = frame_no
                 frames_processed += 1
                 outputs.append(output)
                 prev_out = output
-            else:
-                prev_out = prev_out.copy()
-                prev_out['frame'] = frame_no
-                print("appended previous frame")
-                outputs.append(prev_out)
             
         else:
             ret, frame = cap.read()
@@ -195,7 +214,8 @@ def parse_opt():
     parser.add_argument('--img-height', type=int, default=720, help='inference size height')
     parser.add_argument('--fps', type=int, default=25, help='frames to process per second of the video')
     parser.add_argument('--max-frames', type=int, default=250, help='max number of frames to process')
-    parser.add_argument('--conf', type=float, default=0.6, help='model confidence threshold')
+    parser.add_argument('--conf', type=float, default=0.5, help='model confidence threshold')
+    parser.add_argument('--differencing-toggle', action='store_true', help='turns on frame-differencing energy saving')
     opt = parser.parse_args()
     return opt
 

@@ -11,6 +11,7 @@ def frame_diff(prev_frame, cur_frame, next_frame):
     prev_frame = cv2.cvtColor(prev_frame, cv2.COLOR_RGB2GRAY)
     cur_frame = cv2.cvtColor(cur_frame, cv2.COLOR_RGB2GRAY)
     next_frame = cv2.cvtColor(next_frame, cv2.COLOR_RGB2GRAY)
+    
 
     # Absolute difference between current frame and next frame
     diff_frames1 = cv2.absdiff(next_frame, cur_frame)
@@ -22,7 +23,7 @@ def frame_diff(prev_frame, cur_frame, next_frame):
     return cv2.bitwise_and(diff_frames1, diff_frames2)
 
 # Capture the frame from webcam
-def get_frame(cap, fps):
+def get_frame(cap):
     # Capture the frame
     ret, frame = cap.read()
 
@@ -37,15 +38,15 @@ def get_frame(cap, fps):
 
 if __name__=='__main__':
     # Load the model
-    model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
-    model.conf = 0.2  # NMS confidence threshold
+    model = torch.hub.load('ultralytics/yolov5', 'yolov5n')
+    model.conf = 0.35  # NMS confidence threshold
     model.max_det = 100  # maximum number of detections per image
 
     # Define video source inputs
     cap = cv2.VideoCapture(0)
     capwidth, capheight = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    cap2 = cv2.VideoCapture(2)
-    cap2width, cap2height = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    # cap2 = cv2.VideoCapture(2)
+    # cap2width, cap2height = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
     # We will use temp to swap our camera inputs
     temp = None
@@ -54,6 +55,7 @@ if __name__=='__main__':
     
     # Bounding Box Color
     color = (0,0,255)   
+    yoloframecount = 25
 
     # Get the first 3 frames 
     prev_frame = get_frame(cap)
@@ -108,6 +110,7 @@ if __name__=='__main__':
 
                     # Get top left corner coordinates
                     topLeft = (int(x_center - width/2), int(y_center - height/2))
+                    topRight = (int(x_center + width/2), int(y_center - height/2))
                     bottomRight = (int(x_center + width/2), int(y_center + height/2))
 
                     # Draw bounding box
@@ -115,6 +118,7 @@ if __name__=='__main__':
 
                     # Add class name label
                     cv2.putText(output_frame, str(row['name']), (topLeft[0], topLeft[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
+                    cv2.putText(output_frame, str(row['confidence']), (topRight[0], topRight[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
             yoloframecount -= 1
             print(yoloframecount)
             if yoloframecount <= 0:
