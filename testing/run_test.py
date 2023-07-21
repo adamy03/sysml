@@ -31,7 +31,7 @@ def run_mod(
     max_frames: int,
     conf: float,
     save_results: bool,
-    get_map:bool
+    get_map: bool
     ):
     """Runs mod.py given parameters
 
@@ -124,7 +124,7 @@ def run_mod(
 if __name__ == '__main__':
     dir_to_vid = './sysml/samples/testing/videos/'
     dir_to_gt = './samples/testing/ground_truth/'
-    test_dir = './testing/test_results/config_testing/framerate/'
+    test_dir = './testing/test_results/frame_differencing/'
 
     with open('./samples/testing/test_pairs.json') as file:
             pairs = json.load(file)

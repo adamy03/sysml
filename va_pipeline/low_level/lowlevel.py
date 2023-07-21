@@ -39,7 +39,8 @@ parser.add_argument('--input', type=str, help='Path to a video or a sequence of 
 parser.add_argument('--output', type=str, help='Type in outputfile path and file name.', default=None)
 parser.add_argument('--algo', type=str, help='Background subtraction method (KNN, MOG2).', default='MOG2')
 parser.add_argument('--fdif', action='store_true', help='Turns on frame differencing after background subtraction ')
-parser.add_argument('--capframe', type=int, help='Type name of the frame you want to capture', default=None)
+parser.add_argument('--capframe', type=int, help='Type the frame # you want to capture', default=None)
+parser.add_argument('--compcapture', nargs='+', type=int, help='Type your desired compressed resolution (960, 540)', default=None)
 args = parser.parse_args()
 
 ## [create]
@@ -68,8 +69,9 @@ fps = capture.get(cv2.CAP_PROP_FPS)
 print(f'FPS: {fps}')
 
 # Define codec and create VideoWriter object. 
-fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-out = cv2.VideoWriter(args.output, fourcc, fps, (frame_width, frame_height))
+if args.compcapture == None:
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out = cv2.VideoWriter(args.output, fourcc, fps, (frame_width, frame_height))
 ## [write]
 
 if args.fdif == True:
@@ -92,6 +94,14 @@ while True:
         output_frame = frame_diff(prev_frame, cur_frame, next_frame)
         output_frame_color = cv2.cvtColor(output_frame, cv2.COLOR_GRAY2BGR)
         ## [apply]
+
+    if args.compcapture != None:
+        ret, frame = capture.read()
+        if frame is None:
+            print("No more frames to process")
+            break
+        print(args.compcapture)
+        output_frame_color = cv2.resize(frame, args.compcapture)
 
 
     else:                  # Default Back Subtraction
@@ -118,13 +128,20 @@ while True:
     ## [write data]
     if args.capframe != None: # Checks if capframe argument was included
         if capture.get(cv2.CAP_PROP_POS_FRAMES) == args.capframe:
-            cv2.imwrite('capture.jpg', frame)
-            cv2.imwrite('processed_capture.jpg', output_frame_color)
-
-    out.write(output_frame_color)  # Video Output 
-
-    b = np.sum(cv2.split(output_frame)) # Sums all pixel values of output frame
-    df = df.append({'Frame': capture.get(cv2.CAP_PROP_POS_FRAMES), 'Pixel Sum': b}, ignore_index=True) 
+            for i in range(5): # Num frames skipped
+                cv2.imwrite(f'capture{i}.jpg', frame)
+                cv2.imwrite(f'processed_capture{i}.jpg', output_frame_color)
+                for i in range(5):
+                    ret, frame = capture.read()
+                    if frame is None:
+                        print("No more frames to process")
+                        break
+            capture.release()
+    if args.compcapture == None:
+        out.write(output_frame_color)  # Video Output 
+        
+        b = np.sum(cv2.split(output_frame)) # Sums all pixel values of output frame
+        df = df.append({'Frame': capture.get(cv2.CAP_PROP_POS_FRAMES), 'Pixel Sum': b}, ignore_index=True) 
     ## [write data]
 
     ## [show]
@@ -139,7 +156,9 @@ while True:
 
 # When all done, release video capture and video write objects
 capture.release()
-out.release()
+
+if args.compcapture == None:
+    out.release()
 print('all cv2 objects are released')
 
 # Write Collected data
