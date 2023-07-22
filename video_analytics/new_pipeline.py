@@ -37,7 +37,7 @@ def parse_opt():
     opt = parser.parse_args()
     return opt
 
-""" summary: allows us to store prev_frame curr_frame and next_frame for analysis
+""" summary: allows us to store prev_frame curr_frame and next_frame for low level (frame differencing) analysis
 """
 class FrameQueue: 
     def __init__(self, max_frames=3):
@@ -95,7 +95,6 @@ class Video:
         self.fill_frames = fill_frames
 
         self.frame_number = 1
-        self.frame_queue = frame_queue
         
         return None
 
@@ -147,6 +146,8 @@ class LowLevelDecider:
     ):
         
         def ensure_gray(frame):
+            """ function: ensures that input frames are in grayscale for low level processing
+            """
             # If frame is not grayscale
             if len(frame.shape) > 2 and frame.shape[2] > 1:
                 return cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
@@ -172,10 +173,17 @@ class LowLevelDecider:
             sum_pixels = np.sum(cv2.split(diff_frame_out))
             return sum_pixels
 
-
+        def constant_threshold():
+            return 30000
 
         if frame_differencing:
-            frame_diff() # we want to have frame_diff return true or false, and 
+            grayscale_pix_sum = frame_diff(frame_queue.get_previous, frame_queue.get_current, frame_queue.get_next) # processes videos in the queue
+            print(f"Frame Differencing Output: {grayscale_pix_sum}")
+
+            if grayscale_pix_sum > constant_threshold():
+                model = Model()
+
+
         return
                 
 
@@ -227,7 +235,12 @@ class Model():
         self.model = model
     
     def run_inference():
-        print('I am here to stop errors!')
+        return
+        
+    
+        model = torch.hub.load('ultralytics/yolov5', yolov5_model)
+        model.conf = conf  # NMS confidence threshold
+        model.max_det = 100  # maximum number of detections per image
         
             
 def RENAME_ME(
