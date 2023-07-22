@@ -154,8 +154,7 @@ def ensure_gray(frame):
         return cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
     else: # if frame is already grayscale
         return frame
-            
-            
+                      
 
 class FrameQueue: # allows us to store previous current and next frames for analysis
     def __init__(self, max_frames=3):
