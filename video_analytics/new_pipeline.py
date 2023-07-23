@@ -23,7 +23,6 @@ frame = Analyze(frame, args)
 frame = Preprocess(frame)
 
 
-
 def parse_opt(): 
     parser = argparse.ArgumentParser()
     parser.add_argument('--yolov5-model', type=str, default='yolov5n', help='yolov5 model size')
@@ -43,6 +42,8 @@ class FrameQueue:
     def __init__(self, max_frames=3):
         self.max_frames = max_frames
         self.frames = collections.deque(maxlen=max_frames)
+        
+        return None
 
     def append(self, frame):
         self.frames.append(frame)
@@ -72,12 +73,11 @@ class FrameQueue:
 For reading video into our Frame Queue
 """
 class Video:
-    
     def __init__(
-        self: cv2.VideoCapture, 
-        cap,
-        framerate =25,
-        resolution =(1280, 720),
+        self:cv2.VideoCapture, 
+        cap:str,
+        framerate=25,
+        resolution=(1280, 720),
         fill_frames = True, # If analysis is not run, fills using previous analyzed frame bounding boxes
         ) -> None:
         
@@ -138,7 +138,7 @@ Functions: frame differencing, background subtraction
 Returns: True or False as to whether we run a model, along with model config (future)
 """
 class LowLevelDecider:
-    
+
     def __init__(
         self,
         frame_differencing: bool,
@@ -183,11 +183,8 @@ class LowLevelDecider:
             if grayscale_pix_sum > constant_threshold():
                 model = Model()
 
-
-        return
+        return None
                 
-
-
 
 """
 AnalyzeFrame: 
@@ -196,7 +193,7 @@ Functions: frame differencing
 class AnalyzeFrame:
 
     def __init__():
-        return
+        return None
     
 
 """
@@ -207,7 +204,7 @@ Functions: compress, crop
 class Preprocess:
 
     def __init__():
-        return
+        return None
 
     def compress(
             img: np.array,
@@ -226,30 +223,52 @@ class Preprocess:
 """
 Architecture of model within pipeline
 """
-class Model():
-    
+class Model:
     def __init__(
         self,
         model
         ) -> None:
         self.model = model
-    
-    def run_inference():
-        return
         
+        return None
     
-        model = torch.hub.load('ultralytics/yolov5', yolov5_model)
-        model.conf = conf  # NMS confidence threshold
-        model.max_det = 100  # maximum number of detections per image
+    def run(self, frame):
+        return self.model(frame)
         
+"""
+Framework for running test. 
+"""   
+class Test:
+    def __init__(
+        self,
+        test_set:dict,
+        save_inference:bool=False,
+        inference_path:str='',
+        run_energy:bool=False,
+        energy_path:str=None
+        ) -> None:
+        
+        self.test_set = test_set
+        self.save_inference = save_inference
+        self.inference_path = inference_path
+        self.run_energy = run_energy
+        self.energy_path = energy_path
+        
+        if self.save_inference and not inference_path:
+            raise ValueError('No path for inference given.')
+        if self.run_energy and not energy_path:
+            raise ValueError('No path for energy given.')
+        
+        return None
+    
+    def run_test(self, as_csv, as_json):
+        for video in self.test_set.items():
+            cap = Video(video)
             
-def RENAME_ME(
-    video_path,
-    model
-):
-    video = Video(cv2.VideoCapture(video_path))
+            
+            
 
-    while True:
-        ret, frame = video.read_frame()
+        
+
         
         
