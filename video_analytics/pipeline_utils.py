@@ -137,21 +137,40 @@ def ensure_gray(frame):
         return frame
 
 
-def draw_boxes(self, frame, model_out):
-        """ Takes model's outputs (bounding box coordinates) and draws onto frame
-            Returns the annotated frame 
-        """
-        color = (0,0,255)
-        # Loops through all detections in frame
-        for _, row in model_out.iterrows():
-            x_center, y_center, width, height = row['xcenter'], row['ycenter'], row['width'], row['height']
+def draw_boxes(self, frame, model_out, color=(0, 0, 255)):
+    """ Takes model's outputs (bounding box coordinates) and draws onto frame
+        Returns the annotated frame 
+    """
+    # Loops through all detections in frame
+    for _, row in model_out.iterrows():
+        x_center, y_center, width, height = row['xcenter'], row['ycenter'], row['width'], row['height']
 
-            # Get top left corner coordinates
-            topLeft = (int(x_center - width/2), int(y_center - height/2))
-            bottomRight = (int(x_center + width/2), int(y_center + height/2))
+        # Get top left corner coordinates
+        topLeft = (int(x_center - width/2), int(y_center - height/2))
+        bottomRight = (int(x_center + width/2), int(y_center + height/2))
 
-            # Draw bounding box
-            cv2.rectangle(frame, topLeft, bottomRight, color, thickness=2)
+        # Draw bounding box
+        cv2.rectangle(frame, topLeft, bottomRight, color, thickness=2)
 
-            # Add class name label
-            cv2.putText(frame, str(row['name']), (topLeft[0], topLeft[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
+        # Add class name label
+        cv2.putText(frame, str(row['name']), (topLeft[0], topLeft[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
+        
+    return frame
+    
+def write_to_video(frame, output_video):
+    """
+    Write annotated video to frame.
+    """
+    output_video.write(frame)
+
+            
+       # Initialize a Video Writer object to create output video with annotated bounding boxes
+        if output_video_dir is not None: 
+            # TODO: Video writing will have to be called by both model and low level
+            codec = codec = cv2.VideoWriter_fourcc(*'mp4v')
+            self.video_writer = cv2.VideoWriter(output_video_dir,
+                                                codec,
+                                                self.framerate,
+                                                resolution
+                                                )
+            
