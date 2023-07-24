@@ -100,28 +100,9 @@ def cropped_detection(model, frame_in, frame_out):
 def process_frame_diff(frame, prev, thresh) -> bool:
     """
     Determines whether or not to process a given frame
-
-    Args:
-        frame (_type_): _description_
-        prev (_type_): _description_
-
-    Returns:
-        bool: _description_
     """
     frame_var = np.var(frame)
     if get_diff(frame, prev, frame_var) > thresh:
-        return True
-    else: 
-        return False
-    
-    
-def process_frame_diff_alternate(frame, frame_no, queue):
-    if len(queue) == 3:
-        return False
-        
-    if frame_no % 3 == 0:
-        queue.append(frame)
-        queue.pop(0)
         return True
     else: 
         return False
@@ -154,33 +135,23 @@ def ensure_gray(frame):
         return cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
     else: # if frame is already grayscale
         return frame
-                      
 
-class FrameQueue: # allows us to store previous current and next frames for analysis
-    def __init__(self, max_frames=3):
-        self.max_frames = max_frames
-        self.frames = collections.deque(maxlen=max_frames)
 
-    def append(self, frame):
-        self.frames.append(frame)
+def draw_boxes(self, frame, model_out):
+        """ Takes model's outputs (bounding box coordinates) and draws onto frame
+            Returns the annotated frame 
+        """
+        color = (0,0,255)
+        # Loops through all detections in frame
+        for _, row in model_out.iterrows():
+            x_center, y_center, width, height = row['xcenter'], row['ycenter'], row['width'], row['height']
 
-    def get_previous(self):
-        if len(self.frames) < 2:
-            return None
-        return self.frames[-2]
+            # Get top left corner coordinates
+            topLeft = (int(x_center - width/2), int(y_center - height/2))
+            bottomRight = (int(x_center + width/2), int(y_center + height/2))
 
-    def get_current(self):
-        if len(self.frames) < 1:
-            return None
-        return self.frames[-1]
+            # Draw bounding box
+            cv2.rectangle(frame, topLeft, bottomRight, color, thickness=2)
 
-    def get_next(self):
-        # This function should be used only after appending the next frame.
-        if len(self.frames) < 3:
-            return None
-        return self.frames[0]
-
-    def fill_frames(self, cap):
-        for i in range(3):
-            ret, frame = cap.read()
-            self.append(frame)
+            # Add class name label
+            cv2.putText(frame, str(row['name']), (topLeft[0], topLeft[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
