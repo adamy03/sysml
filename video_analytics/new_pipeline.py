@@ -100,29 +100,34 @@ class Video:
         """ Adds one frame to the cache, a FrameCache object
             Skips frames to emulate a specific fps reading
         """
-
-        # Skip frames (to emulate fps) until we reach the one we wish to add
-        print('hi')
-        frames_passed = 0
-        while frames_passed < frames_skip:
-            self.ret = self.cap.grab()  # advances to next frame
-            if self.ret:  # Frame was returned
-                self.curr_frame_num += 1
-                frames_passed += 1
-            else:  # No frame returned
-                print('HI NUMBER 1')
-                print(f'No frame returned from {self}')
-            print(self.curr_frame_num)
+        
+        if self.curr_frame_num != 1:
+            # Skip frames (to emulate fps) until we reach the one we wish to add
+            frames_passed = 0
+            while frames_passed < frames_skip and self.ret:
+                self.ret = self.cap.grab()  # advances to next frame
+                if self.ret:  # Frame was returned
+                    self.curr_frame_num += 1
+                    frames_passed += 1
+                else:  # No frame returned
+                    print(f'No frame returned from {self}')
     
         # Read frame and add to cache
         self.ret, frame = self.cap.read()
         if self.ret:  # Frame was returned
-            self.curr_frame_num += 1
-            frame_cache.add_frame(self.curr_frame_num, frame)           
+            frame_cache.add_frame(self.curr_frame_num, frame)  
+            self.curr_frame_num += 1         
         else:  # No frame returned
-            print('HI NUMBER 2')
             print(f'No frame returned from {self}')
 
+        return frame_cache
+    
+    def fill_cache(self, frames_skip, frame_cache: FrameCache):
+        """ Fills cache; called at the beginning of video analysis execution
+        """
+        # Loop and add frame to cache until cache is full
+        for i in range(frame_cache.max_frames):
+            self.add_to_cache(frames_skip, frame_cache)
         return frame_cache
 
 
@@ -171,7 +176,7 @@ class Model:
             self.outputs[video.curr_frame_num] = detections
             
         # Go back and fill in detections for any skipped frames 
-        self.fill_prev_frames(self, video.curr_frame_num)
+        self.fill_prev_frames(video.curr_frame_num)
     
         return detections
 
@@ -182,7 +187,7 @@ class Model:
             Ex. If model was run on frames 1 and 4, this function will fill in the detections
             for frames 2 and 3 using the detections for frame 1
         """
-        last_frame_num = self.outputs.keys()[-1]
+        last_frame_num = list(self.outputs.keys())[-1]
         frame_num_diff = curr_frame_num - last_frame_num
 
         if frame_num_diff < 1:
