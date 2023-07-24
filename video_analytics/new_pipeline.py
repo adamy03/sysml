@@ -50,25 +50,28 @@ Video: wrapper around cv2 Video Capture object that reads frames
 class Video:
     def __init__(
         self, 
-        cap:cv2.VideoCapture,
+        cap_path:str=None,
         cap_framerate=25,
         resolution=None,
         output_video_dir=None,
         show_output=False
         ) -> None:
+    
         
+        # Set other parameters
+        self.output_video_dir = output_video_dir
+        self.cap_path = cap_path
+        self.cap = cv2.VideoCapture(cap_path)
+        self.cap_framerate = cap_framerate
+        self.ret = True
+
         # Use input video resolution if 'resolution' not specified
         if resolution is None:
             width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
             height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
             print(f'Using default video resolution: {width}, {height}')
             resolution = (width, height)
-        
-        # Set other parameters
-        self.output_video_dir = output_video_dir
-        self.cap = cap
-        self.cap_framerate = cap_framerate
-        self.ret = True
+
 
         self.x_res = resolution[0]
         self.y_res = resolution[1]
