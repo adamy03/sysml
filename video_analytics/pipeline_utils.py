@@ -172,4 +172,3 @@ def write_to_video(frame, output_video):
     #                                         self.framerate,
     #                                         resolution
     #                                         )
-            
