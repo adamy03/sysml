@@ -160,19 +160,15 @@ def draw_boxes(self, frame, model_out, color=(0, 0, 255)):
 def write_to_video(frame, output_video):
     """
     Write annotated video to frame.
-    """
-    output_video.write(frame)
-
-"""
-            
-       # Initialize a Video Writer object to create output video with annotated bounding boxes
-        if output_video_dir is not None: 
-            # TODO: Video writing will have to be called by both model and low level
-            codec = codec = cv2.VideoWriter_fourcc(*'mp4v')
-            self.video_writer = cv2.VideoWriter(output_video_dir,
-                                                codec,
-                                                self.framerate,
-                                                resolution
-                                                )
-            
-"""
+    # """
+    # output_video.write(frame)
+     
+    # # Initialize a Video Writer object to create output video with annotated bounding boxes
+    # if output_video_dir is not None:  # Doesn't work unless it is in Video()
+    #     # TODO: Video writing will have to be called by both model and low level
+    #     codec = codec = cv2.VideoWriter_fourcc(*'mp4v')
+    #     self.video_writer = cv2.VideoWriter(output_video_dir,
+    #                                         codec,
+    #                                         self.framerate,
+    #                                         resolution
+    #                                         )
