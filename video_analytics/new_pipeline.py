@@ -43,7 +43,7 @@ class FrameCache:
         """ Returns copy of frame at index in the cache
             If index not specified, returns oldest frame in the cache (index=0)
         """
-        return self.frames[index].copy()
+        return self.frames[index][1]
 
 
 
@@ -101,6 +101,7 @@ class Video:
         """
 
         # Skip frames (to emulate fps) until we reach the one we wish to add
+        print('hi')
         frames_passed = 0
         while frames_passed < frames_skip:
             self.ret = self.cap.grab()  # advances to next frame
@@ -109,6 +110,7 @@ class Video:
                 frames_passed += 1
             else:  # No frame returned
                 print(f'No frame returned from {self}')
+            print(self.curr_frame_num)
     
         # Read frame and add to cache
         self.ret, frame = self.cap.read()

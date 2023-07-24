@@ -157,7 +157,7 @@ def draw_boxes(self, frame, model_out, color=(0, 0, 255)):
         
     return frame
     
-def write_to_video(frame, output_video):
+# def write_to_video(frame, output_video):
     """
     Write annotated video to frame.
     # """
