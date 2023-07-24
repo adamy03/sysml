@@ -163,6 +163,7 @@ def write_to_video(frame, output_video):
     """
     output_video.write(frame)
 
+"""
             
        # Initialize a Video Writer object to create output video with annotated bounding boxes
         if output_video_dir is not None: 
@@ -174,3 +175,4 @@ def write_to_video(frame, output_video):
                                                 resolution
                                                 )
             
+"""
