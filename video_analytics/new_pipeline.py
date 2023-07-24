@@ -25,6 +25,7 @@ class FrameCache:
         self.max_frames = max_frames
         self.frames = []
 
+
     def __str__(self) -> str:
         return str(self.frames)
 
@@ -117,7 +118,7 @@ class Video:
         while frames_passed < frames_skip:
             self.ret = self.cap.grab()  # advances to next frame
             if not self.ret:  # if self.ret is False
-                print(f'No frame returned' from {self})
+                print(f'No frame returned from {self}')
                 self.frame_number += 1
             frames_passed += 1
     
@@ -166,21 +167,10 @@ class Model:
         self.model.max_det = max_det  # maximum number of detections per image
 
         # Settings for model outputs
-        self.outputs = {}
+        self.outputs = {}  # key: frame num; value: dataframe of model outputs
         self.prev_out = None
         self.frames_processed = 0
         self.as_json = as_json
-
-
-    def write_annotated_frame(self, frame, video, detections):
-        """ Annotates a frame with bounding box detections and writes frame to video
-            Called by run()
-        """
-        annotated_frame = draw_boxes(frame, detections)  # Draws boxes onto frame
-        video.write_frame(annotated_frame)  # Writes frame to Video Writer in Video() object
-
-        if video.show_output: # Shows annotated frame
-            cv2.imshow('Writing Video', frame)
 
 
     def run(self, frame, video: Video):
@@ -204,9 +194,20 @@ class Model:
 
         # If we wish to save the video annotated with detections
         if video.output_video_dir != None:
-            write_annotated_frame(self, frame, video, detections)
+            self.write_annotated_frame(self, frame, video, detections)
         
         return detections
+    
+    
+    def write_annotated_frame(self, frame, video, detections):
+        """ Annotates a frame with bounding box detections and writes frame to video
+            Called by run()
+        """
+        annotated_frame = draw_boxes(frame, detections)  # Draws boxes onto frame
+        video.write_frame(annotated_frame)  # Writes frame to Video Writer in Video() object
+
+        if video.show_output: # Shows annotated frame
+            cv2.imshow('Writing Video', frame)
 
 
     def fill_prev_frames(self, curr_frame_number):
@@ -268,32 +269,6 @@ Framework for running test.
             
 
 # Function Graveyard: to be revived
-
-# model = Model(yolov5n)
-# video = Video(path)
-
-
-# cache = FrameCache(maxlen=3)
-# outputs = []
-# while cache.has_frames():
-#     video.add_frame(cache)  # adds certain frames to cache depending on FPS
-    
-#     # GET FRAME TO PROCESS
-#     frame = cache.pop()     # gets most recent frame and adds new one to cache 
-
-#     # SHOULD WE PROCESS FRAME? 
-#     # add funcs here as desired for testing; ex:
-#     if not processornot.frame_diff(cache):
-#         # fill in output detections
-#         pass
-
-#     # PREPROCESS THE FRAME IF U WANT
-#     # no implementation as of yet
-#     frame = preprocess.crop(frame)
-#     frame = preprocess.resize(frame)
-
-#     # RUN INFERENCE
-#     model.infer(frame)  # infer should take the frame size into consideration   
 
 
 # check: ccan this do frame differencing, background subtraction
