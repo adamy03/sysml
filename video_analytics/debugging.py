@@ -7,14 +7,17 @@ cache = FrameCache(max_frames=5)
 model = Model('yolov5n')
 
 # initialize cache
-cache = vid.read_frame()
+cache = vid.fill_cache(frames_skip=50, frame_cache=cache)
 print(len(cache.frames))
 print('---------------------')
 for c in cache.frames:
     print(c[0])
+print('######################')
 
 while vid.ret:
-    print(model.run(cache.get_frame(0), vid))
-    vid.add_to_cache(frames_skip=5, frame_cache=cache)
+    frame_num, frame = cache.get_frame()
+    print(frame_num)
+    det = model.run(frame, vid)
+    vid.add_to_cache(frames_skip=50, frame_cache=cache)
     
-add_to_cache(5, cache)
+print(model.outputs)
