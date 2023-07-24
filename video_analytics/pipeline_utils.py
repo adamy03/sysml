@@ -172,4 +172,3 @@ def draw_boxes(self, frame, model_out, color=(0, 0, 255)):
     #                                         self.framerate,
     #                                         resolution
     #                                         )
-            

@@ -40,10 +40,11 @@ class FrameCache:
     
     
     def get_frame(self, index=0):
-        """ Returns copy of frame at index in the cache
+        """ Returns copy of tuple (frame_num, frame_data) at index in the cache
             If index not specified, returns oldest frame in the cache (index=0)
         """
-        return self.frames[index][1]
+        frame_info = tuple(self.frames[index])
+        return frame_info
 
 
 
@@ -109,6 +110,7 @@ class Video:
                 self.curr_frame_num += 1
                 frames_passed += 1
             else:  # No frame returned
+                print('HI NUMBER 1')
                 print(f'No frame returned from {self}')
             print(self.curr_frame_num)
     
@@ -118,8 +120,10 @@ class Video:
             self.curr_frame_num += 1
             frame_cache.add_frame(self.curr_frame_num, frame)           
         else:  # No frame returned
+            print('HI NUMBER 2')
             print(f'No frame returned from {self}')
 
+        return frame_cache
 
 
 
