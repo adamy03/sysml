@@ -58,10 +58,12 @@ class Video:
         path:str=None,  # file path of video
         framerate=25,
         resolution=None,
+        show_feed=False
         ) -> None:
     
         self.path = path
         self.framerate = framerate
+        self.show_feed = show_feed
 
         # Define other variables
         self.cap = cv2.VideoCapture(path)  # Video Capture object to iterate through video frames
