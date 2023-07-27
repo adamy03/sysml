@@ -48,7 +48,6 @@ class FrameCache:
 
 
 
-
 """ 
 Video: wrapper around cv2 Video Capture object that reads frames
 """
@@ -65,6 +64,8 @@ class Video:
 
         # Define other variables
         self.cap = cv2.VideoCapture(path)  # Video Capture object to iterate through video frames
+        if not self.cap.isOpened():
+            raise ValueError('Could not read file path.')
         self.curr_frame_num = 1
         self.ret = True  # True until all frames are retrieved from video 
 
