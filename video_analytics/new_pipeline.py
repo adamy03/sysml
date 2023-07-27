@@ -93,44 +93,61 @@ class Video:
     def read_frame(self):
         """ Returns ret, frame from the video
         """ 
-        self.frame_number += 1
+        self.curr_frame_num += 1
         return self.cap.read()
-
-
-    def add_to_cache(self, frames_skip: int, frame_cache: FrameCache) -> None:
-        """ Adds one frame to the cache, a FrameCache object
-            Skips frames to emulate a specific fps reading
-        """
-        
-        if self.curr_frame_num != 1:
-            # Skip frames (to emulate fps) until we reach the one we wish to add
-            frames_passed = 0
-            while frames_passed < frames_skip and self.ret:
-                self.ret = self.cap.grab()  # advances to next frame
-                if self.ret:  # Frame was returned
-                    self.curr_frame_num += 1
-                    frames_passed += 1
-                else:  # No frame returned
-                    print(f'No frame returned from {self}')
     
-        # Read frame and add to cache
-        self.ret, frame = self.cap.read()
-        if self.ret:  # Frame was returned
-            frame_cache.add_frame(self.curr_frame_num, frame)  
-            self.curr_frame_num += 1         
-        else:  # No frame returned
+    
+    def skip_frame(self):
+        self.ret = self.cap.grab()  # advances to next frame
+        self.curr_frame_num += 1
+
+
+    def add_to_cache(self, fps: int, frame_cache: FrameCache) -> None:
+        """ Adds one frame to the cache, a FrameCache object
+            Skips frames to emulate a specific fps reading.
+            fps - denotes frames processed per second
+        """
+        # When video has not been read, initial cache will be filled 
+        if self.curr_frame_num == 1:
+            self.fill_cache(fps, frame_cache)
+            return frame_cache
+        
+        while self.curr_frame_num % (int(self.framerate/fps)) == 0 and self.ret:
+            self.skip_frame()
+            
+        self.ret, frame = self.read_frame()
+        if not self.ret:
             print(f'No frame returned from {self}')
+        
+        frame_cache.add_frame(self.curr_frame_num, frame)
 
         return frame_cache
     
-    def fill_cache(self, frames_skip, frame_cache: FrameCache):
+    def fill_cache(self, fps, frame_cache: FrameCache):
         """ Fills cache; called at the beginning of video analysis execution
         """
         # Loop and add frame to cache until cache is full
-        for i in range(frame_cache.max_frames):
-            self.add_to_cache(frames_skip, frame_cache)
-        return frame_cache
+        self.ret, frame = self.read_frame()
+            
+        if not self.ret:
+            print(f'No frame returned from {self}')
+            return None
+        else:
+            frame_cache.add_frame(self.curr_frame_num, frame)
+        
+        while(len(frame_cache.frames)) < frame_cache.max_frames:
+            self.ret, frame = self.read_frame()
 
+            if not self.ret:
+                print(f'No frame returned from {self}')
+                return None
+            
+            if self.curr_frame_num % (int(self.framerate/fps)) == 0:
+                frame_cache.add_frame(self.curr_frame_num, frame)
+            else:
+                self.skip_frame()
+            
+        return frame_cache
 
 
 """
