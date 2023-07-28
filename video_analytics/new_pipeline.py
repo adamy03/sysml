@@ -95,7 +95,7 @@ class Video:
     def read_frame(self):
         """ Returns ret, frame from the video
         """ 
-        self.frame_number += 1
+        self.curr_frame_number += 1
         return self.cap.read()
 
 
